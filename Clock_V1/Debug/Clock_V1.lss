@@ -1,0 +1,1353 @@
+
+Clock_V1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000007c8  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000e  00800060  000007c8  0000085c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000064  0080006e  0080006e  0000086a  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000086a  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000089c  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000210  00000000  00000000  000008d8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000205c  00000000  00000000  00000ae8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000da4  00000000  00000000  00002b44  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00001184  00000000  00000000  000038e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000474  00000000  00000000  00004a6c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000b6c  00000000  00000000  00004ee0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000010cd  00000000  00000000  00005a4c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000190  00000000  00000000  00006b19  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   8:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  10:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  14:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  18:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  1c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  20:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  24:	0c 94 94 02 	jmp	0x528	; 0x528 <__vector_9>
+  28:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  2c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  30:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  34:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  38:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  3c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  40:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  44:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  48:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  4c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  50:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	e8 ec       	ldi	r30, 0xC8	; 200
+  68:	f7 e0       	ldi	r31, 0x07	; 7
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+  70:	ae 36       	cpi	r26, 0x6E	; 110
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
+
+00000076 <__do_clear_bss>:
+  76:	20 e0       	ldi	r18, 0x00	; 0
+  78:	ae e6       	ldi	r26, 0x6E	; 110
+  7a:	b0 e0       	ldi	r27, 0x00	; 0
+  7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
+
+0000007e <.do_clear_bss_loop>:
+  7e:	1d 92       	st	X+, r1
+
+00000080 <.do_clear_bss_start>:
+  80:	a2 3d       	cpi	r26, 0xD2	; 210
+  82:	b2 07       	cpc	r27, r18
+  84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
+  86:	0e 94 68 01 	call	0x2d0	; 0x2d0 <main>
+  8a:	0c 94 e2 03 	jmp	0x7c4	; 0x7c4 <_exit>
+
+0000008e <__bad_interrupt>:
+  8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000092 <ControlInit>:
+ButtonState buttonState[BUTTON_COUNT] = {};
+static uint16_t counter[BUTTON_COUNT] = {};
+
+void ControlInit(void)
+{
+    controlHandleConfig = ControlCfgInitAndGet();
+  92:	0e 94 d9 00 	call	0x1b2	; 0x1b2 <ControlCfgInitAndGet>
+  96:	90 93 8b 00 	sts	0x008B, r25	; 0x80008b <controlHandleConfig+0x1>
+  9a:	80 93 8a 00 	sts	0x008A, r24	; 0x80008a <controlHandleConfig>
+    ControlCfgAllLedsOff();
+  9e:	0e 94 46 01 	call	0x28c	; 0x28c <ControlCfgAllLedsOff>
+  a2:	08 95       	ret
+
+000000a4 <ControlRoutine>:
+}
+
+void ControlRoutine(void)
+{
+  a4:	cf 93       	push	r28
+  a6:	df 93       	push	r29
+    /* for(uint8_t i = 0; i < controlHandleConfig->buttonCount; i++) */
+    /*     if(~(*controlHandleConfig->pinButton & (1 << controlHandleConfig->buttonPinValue[i]))) */
+    /*         if(i<controlHandleConfig->ledCount) */
+    /*             *controlHandleConfig->portLed ^= (1 << controlHandleConfig->ledPinValue[i]); */
+
+    for (uint8_t i = 0; i < controlHandleConfig->buttonCount; i++) {
+  a8:	40 e0       	ldi	r20, 0x00	; 0
+  aa:	78 c0       	rjmp	.+240    	; 0x19c <ControlRoutine+0xf8>
+
+        if (*controlHandleConfig->pinButton & (1 << controlHandleConfig->buttonPinValue[i])) {
+  ac:	c4 81       	ldd	r28, Z+4	; 0x04
+  ae:	d5 81       	ldd	r29, Z+5	; 0x05
+  b0:	84 2f       	mov	r24, r20
+  b2:	90 e0       	ldi	r25, 0x00	; 0
+  b4:	df 01       	movw	r26, r30
+  b6:	a8 0f       	add	r26, r24
+  b8:	b9 1f       	adc	r27, r25
+  ba:	28 81       	ld	r18, Y
+  bc:	30 e0       	ldi	r19, 0x00	; 0
+  be:	1d 96       	adiw	r26, 0x0d	; 13
+  c0:	0c 90       	ld	r0, X
+  c2:	02 c0       	rjmp	.+4      	; 0xc8 <ControlRoutine+0x24>
+  c4:	35 95       	asr	r19
+  c6:	27 95       	ror	r18
+  c8:	0a 94       	dec	r0
+  ca:	e2 f7       	brpl	.-8      	; 0xc4 <ControlRoutine+0x20>
+  cc:	20 ff       	sbrs	r18, 0
+  ce:	1a c0       	rjmp	.+52     	; 0x104 <ControlRoutine+0x60>
+            if (counter[i] != 0) {
+  d0:	dc 01       	movw	r26, r24
+  d2:	aa 0f       	add	r26, r26
+  d4:	bb 1f       	adc	r27, r27
+  d6:	a2 59       	subi	r26, 0x92	; 146
+  d8:	bf 4f       	sbci	r27, 0xFF	; 255
+  da:	2d 91       	ld	r18, X+
+  dc:	3c 91       	ld	r19, X
+  de:	21 15       	cp	r18, r1
+  e0:	31 05       	cpc	r19, r1
+  e2:	51 f0       	breq	.+20     	; 0xf8 <ControlRoutine+0x54>
+                counter[i]--;
+  e4:	dc 01       	movw	r26, r24
+  e6:	aa 0f       	add	r26, r26
+  e8:	bb 1f       	adc	r27, r27
+  ea:	a2 59       	subi	r26, 0x92	; 146
+  ec:	bf 4f       	sbci	r27, 0xFF	; 255
+  ee:	21 50       	subi	r18, 0x01	; 1
+  f0:	31 09       	sbc	r19, r1
+  f2:	2d 93       	st	X+, r18
+  f4:	3c 93       	st	X, r19
+  f6:	1e c0       	rjmp	.+60     	; 0x134 <ControlRoutine+0x90>
+            } else 
+			{
+                buttonState[i] = ButtonStateRealesed;
+  f8:	21 e0       	ldi	r18, 0x01	; 1
+  fa:	dc 01       	movw	r26, r24
+  fc:	a4 58       	subi	r26, 0x84	; 132
+  fe:	bf 4f       	sbci	r27, 0xFF	; 255
+ 100:	2c 93       	st	X, r18
+ 102:	18 c0       	rjmp	.+48     	; 0x134 <ControlRoutine+0x90>
+            }
+        } else {
+            if (counter[i] <= MAX_COUNTER_VALUE) {
+ 104:	dc 01       	movw	r26, r24
+ 106:	aa 0f       	add	r26, r26
+ 108:	bb 1f       	adc	r27, r27
+ 10a:	a2 59       	subi	r26, 0x92	; 146
+ 10c:	bf 4f       	sbci	r27, 0xFF	; 255
+ 10e:	2d 91       	ld	r18, X+
+ 110:	3c 91       	ld	r19, X
+ 112:	25 36       	cpi	r18, 0x65	; 101
+ 114:	31 05       	cpc	r19, r1
+ 116:	50 f4       	brcc	.+20     	; 0x12c <ControlRoutine+0x88>
+                counter[i]++;
+ 118:	dc 01       	movw	r26, r24
+ 11a:	aa 0f       	add	r26, r26
+ 11c:	bb 1f       	adc	r27, r27
+ 11e:	a2 59       	subi	r26, 0x92	; 146
+ 120:	bf 4f       	sbci	r27, 0xFF	; 255
+ 122:	2f 5f       	subi	r18, 0xFF	; 255
+ 124:	3f 4f       	sbci	r19, 0xFF	; 255
+ 126:	2d 93       	st	X+, r18
+ 128:	3c 93       	st	X, r19
+ 12a:	04 c0       	rjmp	.+8      	; 0x134 <ControlRoutine+0x90>
+            } 
+			else 
+			{
+                buttonState[i] = ButtonStatePressed;
+ 12c:	dc 01       	movw	r26, r24
+ 12e:	a4 58       	subi	r26, 0x84	; 132
+ 130:	bf 4f       	sbci	r27, 0xFF	; 255
+ 132:	1c 92       	st	X, r1
+            }
+        }
+
+        if (buttonState[i] == ButtonStateRealesed) {
+ 134:	dc 01       	movw	r26, r24
+ 136:	a4 58       	subi	r26, 0x84	; 132
+ 138:	bf 4f       	sbci	r27, 0xFF	; 255
+ 13a:	2c 91       	ld	r18, X
+ 13c:	21 30       	cpi	r18, 0x01	; 1
+ 13e:	29 f4       	brne	.+10     	; 0x14a <ControlRoutine+0xa6>
+            togglState[i] = TogglStateNo;
+ 140:	dc 01       	movw	r26, r24
+ 142:	ad 57       	subi	r26, 0x7D	; 125
+ 144:	bf 4f       	sbci	r27, 0xFF	; 255
+ 146:	1c 92       	st	X, r1
+ 148:	0b c0       	rjmp	.+22     	; 0x160 <ControlRoutine+0xbc>
+        } else {
+            if (togglState[i] == TogglStateNo) {
+ 14a:	dc 01       	movw	r26, r24
+ 14c:	ad 57       	subi	r26, 0x7D	; 125
+ 14e:	bf 4f       	sbci	r27, 0xFF	; 255
+ 150:	2c 91       	ld	r18, X
+ 152:	21 11       	cpse	r18, r1
+ 154:	05 c0       	rjmp	.+10     	; 0x160 <ControlRoutine+0xbc>
+                togglState[i] = TogglStateWaiting;
+ 156:	21 e0       	ldi	r18, 0x01	; 1
+ 158:	dc 01       	movw	r26, r24
+ 15a:	ad 57       	subi	r26, 0x7D	; 125
+ 15c:	bf 4f       	sbci	r27, 0xFF	; 255
+ 15e:	2c 93       	st	X, r18
+            }
+        }
+
+        if (togglState[i] == TogglStateWaiting) {
+ 160:	dc 01       	movw	r26, r24
+ 162:	ad 57       	subi	r26, 0x7D	; 125
+ 164:	bf 4f       	sbci	r27, 0xFF	; 255
+ 166:	2c 91       	ld	r18, X
+ 168:	21 30       	cpi	r18, 0x01	; 1
+ 16a:	b9 f4       	brne	.+46     	; 0x19a <ControlRoutine+0xf6>
+			if(i < controlHandleConfig->ledCount)
+ 16c:	26 81       	ldd	r18, Z+6	; 0x06
+ 16e:	42 17       	cp	r20, r18
+ 170:	78 f4       	brcc	.+30     	; 0x190 <ControlRoutine+0xec>
+			    *controlHandleConfig->portLed ^= (1 << controlHandleConfig->ledPinValue[i]);
+ 172:	a0 81       	ld	r26, Z
+ 174:	b1 81       	ldd	r27, Z+1	; 0x01
+ 176:	e8 0f       	add	r30, r24
+ 178:	f9 1f       	adc	r31, r25
+ 17a:	21 e0       	ldi	r18, 0x01	; 1
+ 17c:	30 e0       	ldi	r19, 0x00	; 0
+ 17e:	00 84       	ldd	r0, Z+8	; 0x08
+ 180:	02 c0       	rjmp	.+4      	; 0x186 <ControlRoutine+0xe2>
+ 182:	22 0f       	add	r18, r18
+ 184:	33 1f       	adc	r19, r19
+ 186:	0a 94       	dec	r0
+ 188:	e2 f7       	brpl	.-8      	; 0x182 <ControlRoutine+0xde>
+ 18a:	3c 91       	ld	r19, X
+ 18c:	23 27       	eor	r18, r19
+ 18e:	2c 93       	st	X, r18
+            /* PORTD ^= (1 << LED); */
+            togglState[i] = TogglStateDone;
+ 190:	fc 01       	movw	r30, r24
+ 192:	ed 57       	subi	r30, 0x7D	; 125
+ 194:	ff 4f       	sbci	r31, 0xFF	; 255
+ 196:	22 e0       	ldi	r18, 0x02	; 2
+ 198:	20 83       	st	Z, r18
+    /* for(uint8_t i = 0; i < controlHandleConfig->buttonCount; i++) */
+    /*     if(~(*controlHandleConfig->pinButton & (1 << controlHandleConfig->buttonPinValue[i]))) */
+    /*         if(i<controlHandleConfig->ledCount) */
+    /*             *controlHandleConfig->portLed ^= (1 << controlHandleConfig->ledPinValue[i]); */
+
+    for (uint8_t i = 0; i < controlHandleConfig->buttonCount; i++) {
+ 19a:	4f 5f       	subi	r20, 0xFF	; 255
+ 19c:	e0 91 8a 00 	lds	r30, 0x008A	; 0x80008a <controlHandleConfig>
+ 1a0:	f0 91 8b 00 	lds	r31, 0x008B	; 0x80008b <controlHandleConfig+0x1>
+ 1a4:	87 81       	ldd	r24, Z+7	; 0x07
+ 1a6:	48 17       	cp	r20, r24
+ 1a8:	08 f4       	brcc	.+2      	; 0x1ac <ControlRoutine+0x108>
+ 1aa:	80 cf       	rjmp	.-256    	; 0xac <ControlRoutine+0x8>
+			    *controlHandleConfig->portLed ^= (1 << controlHandleConfig->ledPinValue[i]);
+            /* PORTD ^= (1 << LED); */
+            togglState[i] = TogglStateDone;
+        }
+    }
+}
+ 1ac:	df 91       	pop	r29
+ 1ae:	cf 91       	pop	r28
+ 1b0:	08 95       	ret
+
+000001b2 <ControlCfgInitAndGet>:
+
+static ControlHandleConfig controlHandleConfig;
+
+ControlHandleConfig* ControlCfgInitAndGet()
+{
+    controlHandleConfig.portLed = &PORT_LED;
+ 1b2:	ec e8       	ldi	r30, 0x8C	; 140
+ 1b4:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b6:	8b e3       	ldi	r24, 0x3B	; 59
+ 1b8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ba:	91 83       	std	Z+1, r25	; 0x01
+ 1bc:	80 83       	st	Z, r24
+    controlHandleConfig.portButton = &PORT_BUTTON;
+ 1be:	82 e3       	ldi	r24, 0x32	; 50
+ 1c0:	90 e0       	ldi	r25, 0x00	; 0
+ 1c2:	93 83       	std	Z+3, r25	; 0x03
+ 1c4:	82 83       	std	Z+2, r24	; 0x02
+    controlHandleConfig.pinButton = &PIN_BUTTON;
+ 1c6:	80 e3       	ldi	r24, 0x30	; 48
+ 1c8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ca:	95 83       	std	Z+5, r25	; 0x05
+ 1cc:	84 83       	std	Z+4, r24	; 0x04
+
+    controlHandleConfig.ledPinValue[0] = PIN_LED_CLOCK;
+ 1ce:	10 86       	std	Z+8, r1	; 0x08
+    controlHandleConfig.ledPinValue[1] = PIN_LED_TIMER;
+ 1d0:	41 e0       	ldi	r20, 0x01	; 1
+ 1d2:	41 87       	std	Z+9, r20	; 0x09
+    controlHandleConfig.ledPinValue[2] = PIN_LED_ALARM;
+ 1d4:	32 e0       	ldi	r19, 0x02	; 2
+ 1d6:	32 87       	std	Z+10, r19	; 0x0a
+    controlHandleConfig.ledPinValue[3] = PIN_LED_CONTDOWN;
+ 1d8:	23 e0       	ldi	r18, 0x03	; 3
+ 1da:	23 87       	std	Z+11, r18	; 0x0b
+    controlHandleConfig.ledPinValue[4] = PIN_LED_TEMPERATURE;
+ 1dc:	94 e0       	ldi	r25, 0x04	; 4
+ 1de:	94 87       	std	Z+12, r25	; 0x0c
+    controlHandleConfig.ledCount = LED_COUNT;
+ 1e0:	85 e0       	ldi	r24, 0x05	; 5
+ 1e2:	86 83       	std	Z+6, r24	; 0x06
+
+    controlHandleConfig.buttonPinValue[0] = PIN_BUTTON_POWER;
+ 1e4:	15 86       	std	Z+13, r1	; 0x0d
+    controlHandleConfig.buttonPinValue[1] = PIN_BUTTON_NEXT;
+ 1e6:	46 87       	std	Z+14, r20	; 0x0e
+    controlHandleConfig.buttonPinValue[2] = PIN_BUTTON_TOGGLE;
+ 1e8:	37 87       	std	Z+15, r19	; 0x0f
+    controlHandleConfig.buttonPinValue[3] = PIN_BUTTON_INCREASE;
+ 1ea:	20 8b       	std	Z+16, r18	; 0x10
+    controlHandleConfig.buttonPinValue[4] = PIN_BUTTON_DECREASE;
+ 1ec:	91 8b       	std	Z+17, r25	; 0x11
+    controlHandleConfig.buttonPinValue[5] = PIN_BUTTON_OK;
+ 1ee:	82 8b       	std	Z+18, r24	; 0x12
+    controlHandleConfig.buttonPinValue[6] = PIN_BUTTON_ABORT;
+ 1f0:	86 e0       	ldi	r24, 0x06	; 6
+ 1f2:	83 8b       	std	Z+19, r24	; 0x13
+    controlHandleConfig.buttonCount = BUTTON_COUNT;
+ 1f4:	87 e0       	ldi	r24, 0x07	; 7
+ 1f6:	87 83       	std	Z+7, r24	; 0x07
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+ 1f8:	20 e0       	ldi	r18, 0x00	; 0
+ 1fa:	10 c0       	rjmp	.+32     	; 0x21c <ControlCfgInitAndGet+0x6a>
+        PORT_DIRECTION_LED |= (1 << controlHandleConfig.ledPinValue[i]);
+ 1fc:	3a b3       	in	r19, 0x1a	; 26
+ 1fe:	e2 2f       	mov	r30, r18
+ 200:	f0 e0       	ldi	r31, 0x00	; 0
+ 202:	e4 57       	subi	r30, 0x74	; 116
+ 204:	ff 4f       	sbci	r31, 0xFF	; 255
+ 206:	81 e0       	ldi	r24, 0x01	; 1
+ 208:	90 e0       	ldi	r25, 0x00	; 0
+ 20a:	00 84       	ldd	r0, Z+8	; 0x08
+ 20c:	02 c0       	rjmp	.+4      	; 0x212 <ControlCfgInitAndGet+0x60>
+ 20e:	88 0f       	add	r24, r24
+ 210:	99 1f       	adc	r25, r25
+ 212:	0a 94       	dec	r0
+ 214:	e2 f7       	brpl	.-8      	; 0x20e <ControlCfgInitAndGet+0x5c>
+ 216:	83 2b       	or	r24, r19
+ 218:	8a bb       	out	0x1a, r24	; 26
+    controlHandleConfig.buttonPinValue[4] = PIN_BUTTON_DECREASE;
+    controlHandleConfig.buttonPinValue[5] = PIN_BUTTON_OK;
+    controlHandleConfig.buttonPinValue[6] = PIN_BUTTON_ABORT;
+    controlHandleConfig.buttonCount = BUTTON_COUNT;
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+ 21a:	2f 5f       	subi	r18, 0xFF	; 255
+ 21c:	80 91 92 00 	lds	r24, 0x0092	; 0x800092 <controlHandleConfig+0x6>
+ 220:	28 17       	cp	r18, r24
+ 222:	60 f3       	brcs	.-40     	; 0x1fc <ControlCfgInitAndGet+0x4a>
+ 224:	20 e0       	ldi	r18, 0x00	; 0
+ 226:	11 c0       	rjmp	.+34     	; 0x24a <ControlCfgInitAndGet+0x98>
+        PORT_DIRECTION_LED |= (1 << controlHandleConfig.ledPinValue[i]);
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+        PORT_DIRECTION_BUTTON &= ~(1 << controlHandleConfig.ledPinValue[i]);
+ 228:	31 b3       	in	r19, 0x11	; 17
+ 22a:	e2 2f       	mov	r30, r18
+ 22c:	f0 e0       	ldi	r31, 0x00	; 0
+ 22e:	e4 57       	subi	r30, 0x74	; 116
+ 230:	ff 4f       	sbci	r31, 0xFF	; 255
+ 232:	81 e0       	ldi	r24, 0x01	; 1
+ 234:	90 e0       	ldi	r25, 0x00	; 0
+ 236:	00 84       	ldd	r0, Z+8	; 0x08
+ 238:	02 c0       	rjmp	.+4      	; 0x23e <ControlCfgInitAndGet+0x8c>
+ 23a:	88 0f       	add	r24, r24
+ 23c:	99 1f       	adc	r25, r25
+ 23e:	0a 94       	dec	r0
+ 240:	e2 f7       	brpl	.-8      	; 0x23a <ControlCfgInitAndGet+0x88>
+ 242:	80 95       	com	r24
+ 244:	83 23       	and	r24, r19
+ 246:	81 bb       	out	0x11, r24	; 17
+    controlHandleConfig.buttonCount = BUTTON_COUNT;
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+        PORT_DIRECTION_LED |= (1 << controlHandleConfig.ledPinValue[i]);
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+ 248:	2f 5f       	subi	r18, 0xFF	; 255
+ 24a:	80 91 92 00 	lds	r24, 0x0092	; 0x800092 <controlHandleConfig+0x6>
+ 24e:	28 17       	cp	r18, r24
+ 250:	58 f3       	brcs	.-42     	; 0x228 <ControlCfgInitAndGet+0x76>
+ 252:	20 e0       	ldi	r18, 0x00	; 0
+ 254:	14 c0       	rjmp	.+40     	; 0x27e <ControlCfgInitAndGet+0xcc>
+        PORT_DIRECTION_BUTTON &= ~(1 << controlHandleConfig.ledPinValue[i]);
+		
+	for(uint8_t i = 0; i < controlHandleConfig.buttonCount; i++)
+		*controlHandleConfig.portButton |= (1 << controlHandleConfig.buttonPinValue[i]);
+ 256:	a0 91 8e 00 	lds	r26, 0x008E	; 0x80008e <controlHandleConfig+0x2>
+ 25a:	b0 91 8f 00 	lds	r27, 0x008F	; 0x80008f <controlHandleConfig+0x3>
+ 25e:	e2 2f       	mov	r30, r18
+ 260:	f0 e0       	ldi	r31, 0x00	; 0
+ 262:	e4 57       	subi	r30, 0x74	; 116
+ 264:	ff 4f       	sbci	r31, 0xFF	; 255
+ 266:	81 e0       	ldi	r24, 0x01	; 1
+ 268:	90 e0       	ldi	r25, 0x00	; 0
+ 26a:	05 84       	ldd	r0, Z+13	; 0x0d
+ 26c:	02 c0       	rjmp	.+4      	; 0x272 <ControlCfgInitAndGet+0xc0>
+ 26e:	88 0f       	add	r24, r24
+ 270:	99 1f       	adc	r25, r25
+ 272:	0a 94       	dec	r0
+ 274:	e2 f7       	brpl	.-8      	; 0x26e <ControlCfgInitAndGet+0xbc>
+ 276:	9c 91       	ld	r25, X
+ 278:	89 2b       	or	r24, r25
+ 27a:	8c 93       	st	X, r24
+        PORT_DIRECTION_LED |= (1 << controlHandleConfig.ledPinValue[i]);
+
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+        PORT_DIRECTION_BUTTON &= ~(1 << controlHandleConfig.ledPinValue[i]);
+		
+	for(uint8_t i = 0; i < controlHandleConfig.buttonCount; i++)
+ 27c:	2f 5f       	subi	r18, 0xFF	; 255
+ 27e:	80 91 93 00 	lds	r24, 0x0093	; 0x800093 <controlHandleConfig+0x7>
+ 282:	28 17       	cp	r18, r24
+ 284:	40 f3       	brcs	.-48     	; 0x256 <ControlCfgInitAndGet+0xa4>
+		*controlHandleConfig.portButton |= (1 << controlHandleConfig.buttonPinValue[i]);
+
+    return &controlHandleConfig;
+}
+ 286:	8c e8       	ldi	r24, 0x8C	; 140
+ 288:	90 e0       	ldi	r25, 0x00	; 0
+ 28a:	08 95       	ret
+
+0000028c <ControlCfgAllLedsOff>:
+
+void ControlCfgAllLedsOff(void)
+{
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+ 28c:	20 e0       	ldi	r18, 0x00	; 0
+ 28e:	14 c0       	rjmp	.+40     	; 0x2b8 <ControlCfgAllLedsOff+0x2c>
+        *controlHandleConfig.portLed |= (1 << controlHandleConfig.ledPinValue[i]);
+ 290:	a0 91 8c 00 	lds	r26, 0x008C	; 0x80008c <controlHandleConfig>
+ 294:	b0 91 8d 00 	lds	r27, 0x008D	; 0x80008d <controlHandleConfig+0x1>
+ 298:	e2 2f       	mov	r30, r18
+ 29a:	f0 e0       	ldi	r31, 0x00	; 0
+ 29c:	e4 57       	subi	r30, 0x74	; 116
+ 29e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 2a0:	81 e0       	ldi	r24, 0x01	; 1
+ 2a2:	90 e0       	ldi	r25, 0x00	; 0
+ 2a4:	00 84       	ldd	r0, Z+8	; 0x08
+ 2a6:	02 c0       	rjmp	.+4      	; 0x2ac <ControlCfgAllLedsOff+0x20>
+ 2a8:	88 0f       	add	r24, r24
+ 2aa:	99 1f       	adc	r25, r25
+ 2ac:	0a 94       	dec	r0
+ 2ae:	e2 f7       	brpl	.-8      	; 0x2a8 <ControlCfgAllLedsOff+0x1c>
+ 2b0:	9c 91       	ld	r25, X
+ 2b2:	89 2b       	or	r24, r25
+ 2b4:	8c 93       	st	X, r24
+    return &controlHandleConfig;
+}
+
+void ControlCfgAllLedsOff(void)
+{
+    for (uint8_t i = 0; i < controlHandleConfig.ledCount; i++)
+ 2b6:	2f 5f       	subi	r18, 0xFF	; 255
+ 2b8:	80 91 92 00 	lds	r24, 0x0092	; 0x800092 <controlHandleConfig+0x6>
+ 2bc:	28 17       	cp	r18, r24
+ 2be:	40 f3       	brcs	.-48     	; 0x290 <ControlCfgAllLedsOff+0x4>
+        *controlHandleConfig.portLed |= (1 << controlHandleConfig.ledPinValue[i]);
+}
+ 2c0:	08 95       	ret
+
+000002c2 <init_Timer>:
+}
+
+void init_Timer()
+{
+
+    TimerInitCfg();
+ 2c2:	0e 94 bd 02 	call	0x57a	; 0x57a <TimerInitCfg>
+    TimerEnableCfg(true);
+ 2c6:	81 e0       	ldi	r24, 0x01	; 1
+ 2c8:	0e 94 cd 02 	call	0x59a	; 0x59a <TimerEnableCfg>
+
+    sei();
+ 2cc:	78 94       	sei
+ 2ce:	08 95       	ret
+
+000002d0 <main>:
+void init_Timer();
+
+int main(void)
+{
+    /* Replace with your application code */
+    init_Timer();
+ 2d0:	0e 94 61 01 	call	0x2c2	; 0x2c2 <init_Timer>
+    SevSegInit();
+ 2d4:	0e 94 06 02 	call	0x40c	; 0x40c <SevSegInit>
+
+    StatusError err;
+    TimerSwInitParam* pTimerSwInitParam = TimerGetIntervalPointerCfg();
+ 2d8:	0e 94 d6 02 	call	0x5ac	; 0x5ac <TimerGetIntervalPointerCfg>
+    err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
+ 2dc:	62 ea       	ldi	r22, 0xA2	; 162
+ 2de:	70 e0       	ldi	r23, 0x00	; 0
+ 2e0:	0e 94 9d 03 	call	0x73a	; 0x73a <TimerSwInit>
+
+    if (err == StatusErrNone) {
+ 2e4:	81 11       	cpse	r24, r1
+ 2e6:	08 c0       	rjmp	.+16     	; 0x2f8 <main+0x28>
+        TimerSwStartup(&timerSwHandle, 1000);
+ 2e8:	48 ee       	ldi	r20, 0xE8	; 232
+ 2ea:	53 e0       	ldi	r21, 0x03	; 3
+ 2ec:	60 e0       	ldi	r22, 0x00	; 0
+ 2ee:	70 e0       	ldi	r23, 0x00	; 0
+ 2f0:	82 ea       	ldi	r24, 0xA2	; 162
+ 2f2:	90 e0       	ldi	r25, 0x00	; 0
+ 2f4:	0e 94 a9 03 	call	0x752	; 0x752 <TimerSwStartup>
+    }
+
+    ControlInit();
+ 2f8:	0e 94 49 00 	call	0x92	; 0x92 <ControlInit>
+    while (1) {
+        ControlRoutine();
+ 2fc:	0e 94 52 00 	call	0xa4	; 0xa4 <ControlRoutine>
+
+        err = TimerSwIsExpired(&timerSwHandle);
+ 300:	82 ea       	ldi	r24, 0xA2	; 162
+ 302:	90 e0       	ldi	r25, 0x00	; 0
+ 304:	0e 94 c2 03 	call	0x784	; 0x784 <TimerSwIsExpired>
+        if (err == StatusErrTime) {
+ 308:	80 31       	cpi	r24, 0x10	; 16
+ 30a:	c9 f4       	brne	.+50     	; 0x33e <main+0x6e>
+            currentTime.minutes++;
+ 30c:	e0 e6       	ldi	r30, 0x60	; 96
+ 30e:	f0 e0       	ldi	r31, 0x00	; 0
+ 310:	81 81       	ldd	r24, Z+1	; 0x01
+ 312:	8f 5f       	subi	r24, 0xFF	; 255
+ 314:	81 83       	std	Z+1, r24	; 0x01
+            if(currentTime.minutes>=60){
+ 316:	8c 33       	cpi	r24, 0x3C	; 60
+ 318:	50 f0       	brcs	.+20     	; 0x32e <main+0x5e>
+                currentTime.minutes-=60;
+ 31a:	8c 53       	subi	r24, 0x3C	; 60
+ 31c:	81 83       	std	Z+1, r24	; 0x01
+                currentTime.hours++;
+ 31e:	80 81       	ld	r24, Z
+ 320:	8f 5f       	subi	r24, 0xFF	; 255
+ 322:	80 83       	st	Z, r24
+                if (currentTime.hours>=24)
+ 324:	88 31       	cpi	r24, 0x18	; 24
+ 326:	18 f0       	brcs	.+6      	; 0x32e <main+0x5e>
+                    currentTime.hours-=24;
+ 328:	88 51       	subi	r24, 0x18	; 24
+ 32a:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+            }
+            TimerSwStartup(&timerSwHandle, 1000);
+ 32e:	48 ee       	ldi	r20, 0xE8	; 232
+ 330:	53 e0       	ldi	r21, 0x03	; 3
+ 332:	60 e0       	ldi	r22, 0x00	; 0
+ 334:	70 e0       	ldi	r23, 0x00	; 0
+ 336:	82 ea       	ldi	r24, 0xA2	; 162
+ 338:	90 e0       	ldi	r25, 0x00	; 0
+ 33a:	0e 94 a9 03 	call	0x752	; 0x752 <TimerSwStartup>
+        }
+
+        if (oldTime.hours != currentTime.hours || oldTime.minutes != currentTime.minutes) {
+ 33e:	90 91 a0 00 	lds	r25, 0x00A0	; 0x8000a0 <oldTime>
+ 342:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 346:	98 13       	cpse	r25, r24
+ 348:	06 c0       	rjmp	.+12     	; 0x356 <main+0x86>
+ 34a:	90 91 a1 00 	lds	r25, 0x00A1	; 0x8000a1 <oldTime+0x1>
+ 34e:	80 91 61 00 	lds	r24, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 352:	98 17       	cp	r25, r24
+ 354:	71 f0       	breq	.+28     	; 0x372 <main+0xa2>
+            SevSegSetTimeVal(currentTime);
+ 356:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 35a:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 35e:	0e 94 4d 02 	call	0x49a	; 0x49a <SevSegSetTimeVal>
+			//SevSegSetFloatVal(a);
+            oldTime = currentTime;
+ 362:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 366:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+ 36a:	90 93 a1 00 	sts	0x00A1, r25	; 0x8000a1 <oldTime+0x1>
+ 36e:	80 93 a0 00 	sts	0x00A0, r24	; 0x8000a0 <oldTime>
+        }
+
+        SevSegRutine();
+ 372:	0e 94 25 02 	call	0x44a	; 0x44a <SevSegRutine>
+    }
+ 376:	c2 cf       	rjmp	.-124    	; 0x2fc <main+0x2c>
+
+00000378 <TimeToBuff>:
+		localdecValue -= (float)tmp * decVal;
+		decVal /= 10;
+	}
+	
+	return;
+ 378:	db 01       	movw	r26, r22
+ 37a:	8a 30       	cpi	r24, 0x0A	; 10
+ 37c:	20 f4       	brcc	.+8      	; 0x386 <TimeToBuff+0xe>
+ 37e:	20 91 62 00 	lds	r18, 0x0062	; 0x800062 <segCode>
+ 382:	2c 93       	st	X, r18
+ 384:	13 c0       	rjmp	.+38     	; 0x3ac <TimeToBuff+0x34>
+ 386:	2d ec       	ldi	r18, 0xCD	; 205
+ 388:	82 9f       	mul	r24, r18
+ 38a:	21 2d       	mov	r18, r1
+ 38c:	11 24       	eor	r1, r1
+ 38e:	26 95       	lsr	r18
+ 390:	26 95       	lsr	r18
+ 392:	26 95       	lsr	r18
+ 394:	e2 2f       	mov	r30, r18
+ 396:	f0 e0       	ldi	r31, 0x00	; 0
+ 398:	ee 59       	subi	r30, 0x9E	; 158
+ 39a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 39c:	30 81       	ld	r19, Z
+ 39e:	3c 93       	st	X, r19
+ 3a0:	22 0f       	add	r18, r18
+ 3a2:	32 2f       	mov	r19, r18
+ 3a4:	33 0f       	add	r19, r19
+ 3a6:	33 0f       	add	r19, r19
+ 3a8:	23 0f       	add	r18, r19
+ 3aa:	82 1b       	sub	r24, r18
+ 3ac:	e8 2f       	mov	r30, r24
+ 3ae:	f0 e0       	ldi	r31, 0x00	; 0
+ 3b0:	ee 59       	subi	r30, 0x9E	; 158
+ 3b2:	ff 4f       	sbci	r31, 0xFF	; 255
+ 3b4:	20 81       	ld	r18, Z
+ 3b6:	80 91 6c 00 	lds	r24, 0x006C	; 0x80006c <segCode+0xa>
+ 3ba:	82 2b       	or	r24, r18
+ 3bc:	11 96       	adiw	r26, 0x01	; 1
+ 3be:	8c 93       	st	X, r24
+ 3c0:	11 97       	sbiw	r26, 0x01	; 1
+ 3c2:	9a 30       	cpi	r25, 0x0A	; 10
+ 3c4:	30 f4       	brcc	.+12     	; 0x3d2 <TimeToBuff+0x5a>
+ 3c6:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <segCode>
+ 3ca:	12 96       	adiw	r26, 0x02	; 2
+ 3cc:	8c 93       	st	X, r24
+ 3ce:	12 97       	sbiw	r26, 0x02	; 2
+ 3d0:	15 c0       	rjmp	.+42     	; 0x3fc <TimeToBuff+0x84>
+ 3d2:	8d ec       	ldi	r24, 0xCD	; 205
+ 3d4:	98 9f       	mul	r25, r24
+ 3d6:	81 2d       	mov	r24, r1
+ 3d8:	11 24       	eor	r1, r1
+ 3da:	86 95       	lsr	r24
+ 3dc:	86 95       	lsr	r24
+ 3de:	86 95       	lsr	r24
+ 3e0:	e8 2f       	mov	r30, r24
+ 3e2:	f0 e0       	ldi	r31, 0x00	; 0
+ 3e4:	ee 59       	subi	r30, 0x9E	; 158
+ 3e6:	ff 4f       	sbci	r31, 0xFF	; 255
+ 3e8:	20 81       	ld	r18, Z
+ 3ea:	12 96       	adiw	r26, 0x02	; 2
+ 3ec:	2c 93       	st	X, r18
+ 3ee:	12 97       	sbiw	r26, 0x02	; 2
+ 3f0:	88 0f       	add	r24, r24
+ 3f2:	28 2f       	mov	r18, r24
+ 3f4:	22 0f       	add	r18, r18
+ 3f6:	22 0f       	add	r18, r18
+ 3f8:	82 0f       	add	r24, r18
+ 3fa:	98 1b       	sub	r25, r24
+ 3fc:	e9 2f       	mov	r30, r25
+ 3fe:	f0 e0       	ldi	r31, 0x00	; 0
+ 400:	ee 59       	subi	r30, 0x9E	; 158
+ 402:	ff 4f       	sbci	r31, 0xFF	; 255
+ 404:	80 81       	ld	r24, Z
+ 406:	13 96       	adiw	r26, 0x03	; 3
+ 408:	8c 93       	st	X, r24
+ 40a:	08 95       	ret
+
+0000040c <SevSegInit>:
+
+/* Global functions */
+void SevSegInit(void)
+{
+	StatusError err;
+	for(uint8_t index = 0; index < DISPLAY_7_SEGMENT_DIGITS_COUNT; index++)
+ 40c:	80 e0       	ldi	r24, 0x00	; 0
+ 40e:	06 c0       	rjmp	.+12     	; 0x41c <SevSegInit+0x10>
+	{
+		digitsValue[index] = 0;
+ 410:	e8 2f       	mov	r30, r24
+ 412:	f0 e0       	ldi	r31, 0x00	; 0
+ 414:	e6 54       	subi	r30, 0x46	; 70
+ 416:	ff 4f       	sbci	r31, 0xFF	; 255
+ 418:	10 82       	st	Z, r1
+
+/* Global functions */
+void SevSegInit(void)
+{
+	StatusError err;
+	for(uint8_t index = 0; index < DISPLAY_7_SEGMENT_DIGITS_COUNT; index++)
+ 41a:	8f 5f       	subi	r24, 0xFF	; 255
+ 41c:	84 30       	cpi	r24, 0x04	; 4
+ 41e:	c0 f3       	brcs	.-16     	; 0x410 <SevSegInit+0x4>
+	{
+		digitsValue[index] = 0;
+	}
+	disp7SegHandleConfig = SevSegCfgInitAndGet();	
+ 420:	0e 94 53 02 	call	0x4a6	; 0x4a6 <SevSegCfgInitAndGet>
+	
+	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
+ 424:	0e 94 d6 02 	call	0x5ac	; 0x5ac <TimerGetIntervalPointerCfg>
+	
+	err = TimerSwInit(pTimerSwInitParam,&timerSwHandle);
+ 428:	6e eb       	ldi	r22, 0xBE	; 190
+ 42a:	70 e0       	ldi	r23, 0x00	; 0
+ 42c:	0e 94 9d 03 	call	0x73a	; 0x73a <TimerSwInit>
+	
+	if (err == StatusErrNone)
+ 430:	81 11       	cpse	r24, r1
+ 432:	08 c0       	rjmp	.+16     	; 0x444 <SevSegInit+0x38>
+	{
+		TimerSwStartup(&timerSwHandle,DISPLAY_7_SEGMENT_TIMER_MS);
+ 434:	44 e0       	ldi	r20, 0x04	; 4
+ 436:	50 e0       	ldi	r21, 0x00	; 0
+ 438:	60 e0       	ldi	r22, 0x00	; 0
+ 43a:	70 e0       	ldi	r23, 0x00	; 0
+ 43c:	8e eb       	ldi	r24, 0xBE	; 190
+ 43e:	90 e0       	ldi	r25, 0x00	; 0
+ 440:	0e 94 a9 03 	call	0x752	; 0x752 <TimerSwStartup>
+	}
+	digitCount = 0;
+ 444:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <digitCount>
+ 448:	08 95       	ret
+
+0000044a <SevSegRutine>:
+}
+
+void SevSegRutine(void)
+{
+	StatusError err;
+	err = TimerSwIsExpired(&timerSwHandle);
+ 44a:	8e eb       	ldi	r24, 0xBE	; 190
+ 44c:	90 e0       	ldi	r25, 0x00	; 0
+ 44e:	0e 94 c2 03 	call	0x784	; 0x784 <TimerSwIsExpired>
+	if (err == StatusErrTime)
+ 452:	80 31       	cpi	r24, 0x10	; 16
+ 454:	09 f5       	brne	.+66     	; 0x498 <SevSegRutine+0x4e>
+	{
+		if (digitCount >= DISPLAY_7_SEGMENT_DIGITS_COUNT)
+ 456:	80 91 b2 00 	lds	r24, 0x00B2	; 0x8000b2 <digitCount>
+ 45a:	84 30       	cpi	r24, 0x04	; 4
+ 45c:	10 f0       	brcs	.+4      	; 0x462 <SevSegRutine+0x18>
+		{
+			digitCount = 0;
+ 45e:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <digitCount>
+		}
+		SevSegCfgAllDigitsOff();
+ 462:	0e 94 71 02 	call	0x4e2	; 0x4e2 <SevSegCfgAllDigitsOff>
+		
+		SevSegCfgSetDigitValue(digitsValue[digitCount]);
+ 466:	e0 91 b2 00 	lds	r30, 0x00B2	; 0x8000b2 <digitCount>
+ 46a:	f0 e0       	ldi	r31, 0x00	; 0
+ 46c:	e6 54       	subi	r30, 0x46	; 70
+ 46e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 470:	80 81       	ld	r24, Z
+ 472:	0e 94 7e 02 	call	0x4fc	; 0x4fc <SevSegCfgSetDigitValue>
+		
+		SevSegCfgDigitOn(digitCount);
+ 476:	80 91 b2 00 	lds	r24, 0x00B2	; 0x8000b2 <digitCount>
+ 47a:	0e 94 81 02 	call	0x502	; 0x502 <SevSegCfgDigitOn>
+		
+		TimerSwStartup(&timerSwHandle,DISPLAY_7_SEGMENT_TIMER_MS);
+ 47e:	44 e0       	ldi	r20, 0x04	; 4
+ 480:	50 e0       	ldi	r21, 0x00	; 0
+ 482:	60 e0       	ldi	r22, 0x00	; 0
+ 484:	70 e0       	ldi	r23, 0x00	; 0
+ 486:	8e eb       	ldi	r24, 0xBE	; 190
+ 488:	90 e0       	ldi	r25, 0x00	; 0
+ 48a:	0e 94 a9 03 	call	0x752	; 0x752 <TimerSwStartup>
+		
+		digitCount++;
+ 48e:	80 91 b2 00 	lds	r24, 0x00B2	; 0x8000b2 <digitCount>
+ 492:	8f 5f       	subi	r24, 0xFF	; 255
+ 494:	80 93 b2 00 	sts	0x00B2, r24	; 0x8000b2 <digitCount>
+ 498:	08 95       	ret
+
+0000049a <SevSegSetTimeVal>:
+	}
+}
+
+StatusError SevSegSetTimeVal(Time time)
+{
+	TimeToBuff(time,digitsValue);
+ 49a:	6a eb       	ldi	r22, 0xBA	; 186
+ 49c:	70 e0       	ldi	r23, 0x00	; 0
+ 49e:	0e 94 bc 01 	call	0x378	; 0x378 <TimeToBuff>
+	
+	return StatusErrNone;
+}
+ 4a2:	80 e0       	ldi	r24, 0x00	; 0
+ 4a4:	08 95       	ret
+
+000004a6 <SevSegCfgInitAndGet>:
+
+static SevSegHandleConfig disp7SegHandleConfig;
+
+SevSegHandleConfig* SevSegCfgInitAndGet()
+{
+	disp7SegHandleConfig.port = DISPLAY_7_SEGMENT_PORT;
+ 4a6:	85 b3       	in	r24, 0x15	; 21
+ 4a8:	e3 eb       	ldi	r30, 0xB3	; 179
+ 4aa:	f0 e0       	ldi	r31, 0x00	; 0
+ 4ac:	80 83       	st	Z, r24
+	disp7SegHandleConfig.portDig = DISPLAY_7_SEGMENT_DIGIT_PORT;
+ 4ae:	88 b3       	in	r24, 0x18	; 24
+ 4b0:	81 83       	std	Z+1, r24	; 0x01
+	
+	DISPLAY_7_SEGMENT_PORT_DIR = 0xFF;
+ 4b2:	8f ef       	ldi	r24, 0xFF	; 255
+ 4b4:	84 bb       	out	0x14, r24	; 20
+	
+	disp7SegHandleConfig.digitsPinValue[0] = DISPLAY_7_SEGMENT_DIGIT_1_PIN;
+ 4b6:	84 e0       	ldi	r24, 0x04	; 4
+ 4b8:	83 83       	std	Z+3, r24	; 0x03
+	disp7SegHandleConfig.digitsPinValue[1] = DISPLAY_7_SEGMENT_DIGIT_2_PIN;
+ 4ba:	85 e0       	ldi	r24, 0x05	; 5
+ 4bc:	84 83       	std	Z+4, r24	; 0x04
+	disp7SegHandleConfig.digitsPinValue[2] = DISPLAY_7_SEGMENT_DIGIT_3_PIN;
+ 4be:	86 e0       	ldi	r24, 0x06	; 6
+ 4c0:	85 83       	std	Z+5, r24	; 0x05
+	disp7SegHandleConfig.digitsPinValue[3] = DISPLAY_7_SEGMENT_DIGIT_4_PIN;
+ 4c2:	87 e0       	ldi	r24, 0x07	; 7
+ 4c4:	86 83       	std	Z+6, r24	; 0x06
+		
+	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_1_PIN);
+ 4c6:	87 b3       	in	r24, 0x17	; 23
+ 4c8:	80 61       	ori	r24, 0x10	; 16
+ 4ca:	87 bb       	out	0x17, r24	; 23
+	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_2_PIN);
+ 4cc:	87 b3       	in	r24, 0x17	; 23
+ 4ce:	80 62       	ori	r24, 0x20	; 32
+ 4d0:	87 bb       	out	0x17, r24	; 23
+	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_3_PIN);
+ 4d2:	87 b3       	in	r24, 0x17	; 23
+ 4d4:	80 64       	ori	r24, 0x40	; 64
+ 4d6:	87 bb       	out	0x17, r24	; 23
+	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_4_PIN);
+ 4d8:	87 b3       	in	r24, 0x17	; 23
+ 4da:	80 68       	ori	r24, 0x80	; 128
+ 4dc:	87 bb       	out	0x17, r24	; 23
+	
+	return &disp7SegHandleConfig;
+}
+ 4de:	cf 01       	movw	r24, r30
+ 4e0:	08 95       	ret
+
+000004e2 <SevSegCfgAllDigitsOff>:
+
+void SevSegCfgAllDigitsOff(void)
+{
+	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_1_PIN);
+ 4e2:	88 b3       	in	r24, 0x18	; 24
+ 4e4:	80 61       	ori	r24, 0x10	; 16
+ 4e6:	88 bb       	out	0x18, r24	; 24
+	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_2_PIN);
+ 4e8:	88 b3       	in	r24, 0x18	; 24
+ 4ea:	80 62       	ori	r24, 0x20	; 32
+ 4ec:	88 bb       	out	0x18, r24	; 24
+	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_3_PIN);
+ 4ee:	88 b3       	in	r24, 0x18	; 24
+ 4f0:	80 64       	ori	r24, 0x40	; 64
+ 4f2:	88 bb       	out	0x18, r24	; 24
+	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_4_PIN);
+ 4f4:	88 b3       	in	r24, 0x18	; 24
+ 4f6:	80 68       	ori	r24, 0x80	; 128
+ 4f8:	88 bb       	out	0x18, r24	; 24
+ 4fa:	08 95       	ret
+
+000004fc <SevSegCfgSetDigitValue>:
+}
+
+void SevSegCfgSetDigitValue(uint8_t value)
+{
+#if (DISPLAY_7_SEGMENT_MODE == COMUN_POWER_SUPPLY)
+	DISPLAY_7_SEGMENT_PORT = ~value;
+ 4fc:	80 95       	com	r24
+ 4fe:	85 bb       	out	0x15, r24	; 21
+ 500:	08 95       	ret
+
+00000502 <SevSegCfgDigitOn>:
+#endif
+}
+
+void SevSegCfgDigitOn(uint8_t digit)
+{
+	if (digit < DISPLAY_7_SEGMENT_DIGITS_COUNT)
+ 502:	84 30       	cpi	r24, 0x04	; 4
+ 504:	80 f4       	brcc	.+32     	; 0x526 <SevSegCfgDigitOn+0x24>
+	{
+		DISPLAY_7_SEGMENT_DIGIT_PORT &= ~(1 << disp7SegHandleConfig.digitsPinValue[digit]);		
+ 506:	28 b3       	in	r18, 0x18	; 24
+ 508:	e8 2f       	mov	r30, r24
+ 50a:	f0 e0       	ldi	r31, 0x00	; 0
+ 50c:	ed 54       	subi	r30, 0x4D	; 77
+ 50e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 510:	81 e0       	ldi	r24, 0x01	; 1
+ 512:	90 e0       	ldi	r25, 0x00	; 0
+ 514:	03 80       	ldd	r0, Z+3	; 0x03
+ 516:	02 c0       	rjmp	.+4      	; 0x51c <SevSegCfgDigitOn+0x1a>
+ 518:	88 0f       	add	r24, r24
+ 51a:	99 1f       	adc	r25, r25
+ 51c:	0a 94       	dec	r0
+ 51e:	e2 f7       	brpl	.-8      	; 0x518 <SevSegCfgDigitOn+0x16>
+ 520:	80 95       	com	r24
+ 522:	82 23       	and	r24, r18
+ 524:	88 bb       	out	0x18, r24	; 24
+ 526:	08 95       	ret
+
+00000528 <__vector_9>:
+ ******************************************************************************/
+
+TimerSwInitParam timerSwInitParam;
+
+ISR (TIMER1_OVF_vect)    // Timer1 ISR
+{
+ 528:	1f 92       	push	r1
+ 52a:	0f 92       	push	r0
+ 52c:	0f b6       	in	r0, 0x3f	; 63
+ 52e:	0f 92       	push	r0
+ 530:	11 24       	eor	r1, r1
+ 532:	8f 93       	push	r24
+ 534:	9f 93       	push	r25
+ 536:	af 93       	push	r26
+ 538:	bf 93       	push	r27
+	timerSwInitParam.interval++;
+ 53a:	80 91 ce 00 	lds	r24, 0x00CE	; 0x8000ce <timerSwInitParam>
+ 53e:	90 91 cf 00 	lds	r25, 0x00CF	; 0x8000cf <timerSwInitParam+0x1>
+ 542:	a0 91 d0 00 	lds	r26, 0x00D0	; 0x8000d0 <timerSwInitParam+0x2>
+ 546:	b0 91 d1 00 	lds	r27, 0x00D1	; 0x8000d1 <timerSwInitParam+0x3>
+ 54a:	01 96       	adiw	r24, 0x01	; 1
+ 54c:	a1 1d       	adc	r26, r1
+ 54e:	b1 1d       	adc	r27, r1
+ 550:	80 93 ce 00 	sts	0x00CE, r24	; 0x8000ce <timerSwInitParam>
+ 554:	90 93 cf 00 	sts	0x00CF, r25	; 0x8000cf <timerSwInitParam+0x1>
+ 558:	a0 93 d0 00 	sts	0x00D0, r26	; 0x8000d0 <timerSwInitParam+0x2>
+ 55c:	b0 93 d1 00 	sts	0x00D1, r27	; 0x8000d1 <timerSwInitParam+0x3>
+	TCNT1 = TTIMER_CFG_COUNTER_INIT_STATE;   // for 1 sec at 16 MHz  63974
+ 560:	8f e7       	ldi	r24, 0x7F	; 127
+ 562:	91 ec       	ldi	r25, 0xC1	; 193
+ 564:	9d bd       	out	0x2d, r25	; 45
+ 566:	8c bd       	out	0x2c, r24	; 44
+}
+ 568:	bf 91       	pop	r27
+ 56a:	af 91       	pop	r26
+ 56c:	9f 91       	pop	r25
+ 56e:	8f 91       	pop	r24
+ 570:	0f 90       	pop	r0
+ 572:	0f be       	out	0x3f, r0	; 63
+ 574:	0f 90       	pop	r0
+ 576:	1f 90       	pop	r1
+ 578:	18 95       	reti
+
+0000057a <TimerInitCfg>:
+
+void TimerInitCfg(){
+	TCNT1 = TTIMER_CFG_COUNTER_INIT_STATE;   // for 1 sec at 16 MHz
+ 57a:	8f e7       	ldi	r24, 0x7F	; 127
+ 57c:	91 ec       	ldi	r25, 0xC1	; 193
+ 57e:	9d bd       	out	0x2d, r25	; 45
+ 580:	8c bd       	out	0x2c, r24	; 44
+	TCCR1A = 0x00;
+ 582:	1f bc       	out	0x2f, r1	; 47
+	TCCR1B = (1<<CS10);  // Timer mode with 1 prescler
+ 584:	81 e0       	ldi	r24, 0x01	; 1
+ 586:	8e bd       	out	0x2e, r24	; 46
+	
+	timerSwInitParam.interval = 0;
+ 588:	10 92 ce 00 	sts	0x00CE, r1	; 0x8000ce <timerSwInitParam>
+ 58c:	10 92 cf 00 	sts	0x00CF, r1	; 0x8000cf <timerSwInitParam+0x1>
+ 590:	10 92 d0 00 	sts	0x00D0, r1	; 0x8000d0 <timerSwInitParam+0x2>
+ 594:	10 92 d1 00 	sts	0x00D1, r1	; 0x8000d1 <timerSwInitParam+0x3>
+ 598:	08 95       	ret
+
+0000059a <TimerEnableCfg>:
+}
+
+void TimerEnableCfg(bool state){
+	
+	if(state == false)
+ 59a:	81 11       	cpse	r24, r1
+ 59c:	04 c0       	rjmp	.+8      	; 0x5a6 <TimerEnableCfg+0xc>
+	{
+		TIMSK &= ~(1UL << TOIE1); // Disable timer1 overflow interrupt(TOIE1)			
+ 59e:	89 b7       	in	r24, 0x39	; 57
+ 5a0:	8b 7f       	andi	r24, 0xFB	; 251
+ 5a2:	89 bf       	out	0x39, r24	; 57
+ 5a4:	08 95       	ret
+	}
+	else
+	{
+		TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1)
+ 5a6:	84 e0       	ldi	r24, 0x04	; 4
+ 5a8:	89 bf       	out	0x39, r24	; 57
+ 5aa:	08 95       	ret
+
+000005ac <TimerGetIntervalPointerCfg>:
+}
+
+TimerSwInitParam* TimerGetIntervalPointerCfg(void)
+{
+	return &timerSwInitParam;
+ 5ac:	8e ec       	ldi	r24, 0xCE	; 206
+ 5ae:	90 e0       	ldi	r25, 0x00	; 0
+ 5b0:	08 95       	ret
+
+000005b2 <s_IsValidHandle>:
+    {
+        return err;
+    }
+
+    return s_IsActive(handle);
+}
+ 5b2:	00 97       	sbiw	r24, 0x00	; 0
+ 5b4:	31 f0       	breq	.+12     	; 0x5c2 <s_IsValidHandle+0x10>
+ 5b6:	fc 01       	movw	r30, r24
+ 5b8:	80 81       	ld	r24, Z
+ 5ba:	81 11       	cpse	r24, r1
+ 5bc:	04 c0       	rjmp	.+8      	; 0x5c6 <s_IsValidHandle+0x14>
+ 5be:	82 e1       	ldi	r24, 0x12	; 18
+ 5c0:	08 95       	ret
+ 5c2:	81 e0       	ldi	r24, 0x01	; 1
+ 5c4:	08 95       	ret
+ 5c6:	80 e0       	ldi	r24, 0x00	; 0
+ 5c8:	08 95       	ret
+
+000005ca <s_IsValidAndActiveHandle>:
+ 5ca:	cf 93       	push	r28
+ 5cc:	df 93       	push	r29
+ 5ce:	ec 01       	movw	r28, r24
+ 5d0:	0e 94 d9 02 	call	0x5b2	; 0x5b2 <s_IsValidHandle>
+ 5d4:	81 11       	cpse	r24, r1
+ 5d6:	06 c0       	rjmp	.+12     	; 0x5e4 <s_IsValidAndActiveHandle+0x1a>
+ 5d8:	89 81       	ldd	r24, Y+1	; 0x01
+ 5da:	81 11       	cpse	r24, r1
+ 5dc:	02 c0       	rjmp	.+4      	; 0x5e2 <s_IsValidAndActiveHandle+0x18>
+ 5de:	8f e0       	ldi	r24, 0x0F	; 15
+ 5e0:	01 c0       	rjmp	.+2      	; 0x5e4 <s_IsValidAndActiveHandle+0x1a>
+ 5e2:	80 e0       	ldi	r24, 0x00	; 0
+ 5e4:	df 91       	pop	r29
+ 5e6:	cf 91       	pop	r28
+ 5e8:	08 95       	ret
+
+000005ea <s_Init>:
+ 5ea:	cf 93       	push	r28
+ 5ec:	df 93       	push	r29
+ 5ee:	fb 01       	movw	r30, r22
+ 5f0:	21 e0       	ldi	r18, 0x01	; 1
+ 5f2:	20 83       	st	Z, r18
+ 5f4:	97 87       	std	Z+15, r25	; 0x0f
+ 5f6:	86 87       	std	Z+14, r24	; 0x0e
+ 5f8:	ec 01       	movw	r28, r24
+ 5fa:	88 81       	ld	r24, Y
+ 5fc:	99 81       	ldd	r25, Y+1	; 0x01
+ 5fe:	aa 81       	ldd	r26, Y+2	; 0x02
+ 600:	bb 81       	ldd	r27, Y+3	; 0x03
+ 602:	82 87       	std	Z+10, r24	; 0x0a
+ 604:	93 87       	std	Z+11, r25	; 0x0b
+ 606:	a4 87       	std	Z+12, r26	; 0x0c
+ 608:	b5 87       	std	Z+13, r27	; 0x0d
+ 60a:	80 e0       	ldi	r24, 0x00	; 0
+ 60c:	df 91       	pop	r29
+ 60e:	cf 91       	pop	r28
+ 610:	08 95       	ret
+
+00000612 <s_Startup>:
+ 612:	fc 01       	movw	r30, r24
+ 614:	a6 85       	ldd	r26, Z+14	; 0x0e
+ 616:	b7 85       	ldd	r27, Z+15	; 0x0f
+ 618:	8d 91       	ld	r24, X+
+ 61a:	9d 91       	ld	r25, X+
+ 61c:	0d 90       	ld	r0, X+
+ 61e:	bc 91       	ld	r27, X
+ 620:	a0 2d       	mov	r26, r0
+ 622:	21 e0       	ldi	r18, 0x01	; 1
+ 624:	20 83       	st	Z, r18
+ 626:	21 83       	std	Z+1, r18	; 0x01
+ 628:	82 83       	std	Z+2, r24	; 0x02
+ 62a:	93 83       	std	Z+3, r25	; 0x03
+ 62c:	a4 83       	std	Z+4, r26	; 0x04
+ 62e:	b5 83       	std	Z+5, r27	; 0x05
+ 630:	84 0f       	add	r24, r20
+ 632:	95 1f       	adc	r25, r21
+ 634:	a6 1f       	adc	r26, r22
+ 636:	b7 1f       	adc	r27, r23
+ 638:	86 83       	std	Z+6, r24	; 0x06
+ 63a:	97 83       	std	Z+7, r25	; 0x07
+ 63c:	a0 87       	std	Z+8, r26	; 0x08
+ 63e:	b1 87       	std	Z+9, r27	; 0x09
+ 640:	42 87       	std	Z+10, r20	; 0x0a
+ 642:	53 87       	std	Z+11, r21	; 0x0b
+ 644:	64 87       	std	Z+12, r22	; 0x0c
+ 646:	75 87       	std	Z+13, r23	; 0x0d
+ 648:	80 e0       	ldi	r24, 0x00	; 0
+ 64a:	08 95       	ret
+
+0000064c <s_GetTimerStateProp>:
+ 64c:	cf 92       	push	r12
+ 64e:	df 92       	push	r13
+ 650:	ef 92       	push	r14
+ 652:	ff 92       	push	r15
+ 654:	0f 93       	push	r16
+ 656:	1f 93       	push	r17
+ 658:	cf 93       	push	r28
+ 65a:	df 93       	push	r29
+ 65c:	fc 01       	movw	r30, r24
+ 65e:	a6 85       	ldd	r26, Z+14	; 0x0e
+ 660:	b7 85       	ldd	r27, Z+15	; 0x0f
+ 662:	cd 90       	ld	r12, X+
+ 664:	dd 90       	ld	r13, X+
+ 666:	ed 90       	ld	r14, X+
+ 668:	fc 90       	ld	r15, X
+ 66a:	02 81       	ldd	r16, Z+2	; 0x02
+ 66c:	13 81       	ldd	r17, Z+3	; 0x03
+ 66e:	24 81       	ldd	r18, Z+4	; 0x04
+ 670:	35 81       	ldd	r19, Z+5	; 0x05
+ 672:	86 81       	ldd	r24, Z+6	; 0x06
+ 674:	97 81       	ldd	r25, Z+7	; 0x07
+ 676:	a0 85       	ldd	r26, Z+8	; 0x08
+ 678:	b1 85       	ldd	r27, Z+9	; 0x09
+ 67a:	08 17       	cp	r16, r24
+ 67c:	19 07       	cpc	r17, r25
+ 67e:	2a 07       	cpc	r18, r26
+ 680:	3b 07       	cpc	r19, r27
+ 682:	80 f4       	brcc	.+32     	; 0x6a4 <s_GetTimerStateProp+0x58>
+ 684:	c8 16       	cp	r12, r24
+ 686:	d9 06       	cpc	r13, r25
+ 688:	ea 06       	cpc	r14, r26
+ 68a:	fb 06       	cpc	r15, r27
+ 68c:	30 f5       	brcc	.+76     	; 0x6da <s_GetTimerStateProp+0x8e>
+ 68e:	c0 16       	cp	r12, r16
+ 690:	d1 06       	cpc	r13, r17
+ 692:	e2 06       	cpc	r14, r18
+ 694:	f3 06       	cpc	r15, r19
+ 696:	30 f1       	brcs	.+76     	; 0x6e4 <s_GetTimerStateProp+0x98>
+ 698:	8c 19       	sub	r24, r12
+ 69a:	9d 09       	sbc	r25, r13
+ 69c:	ae 09       	sbc	r26, r14
+ 69e:	bf 09       	sbc	r27, r15
+ 6a0:	10 e0       	ldi	r17, 0x00	; 0
+ 6a2:	29 c0       	rjmp	.+82     	; 0x6f6 <s_GetTimerStateProp+0xaa>
+ 6a4:	c8 16       	cp	r12, r24
+ 6a6:	d9 06       	cpc	r13, r25
+ 6a8:	ea 06       	cpc	r14, r26
+ 6aa:	fb 06       	cpc	r15, r27
+ 6ac:	28 f0       	brcs	.+10     	; 0x6b8 <s_GetTimerStateProp+0x6c>
+ 6ae:	c0 16       	cp	r12, r16
+ 6b0:	d1 06       	cpc	r13, r17
+ 6b2:	e2 06       	cpc	r14, r18
+ 6b4:	f3 06       	cpc	r15, r19
+ 6b6:	d8 f0       	brcs	.+54     	; 0x6ee <s_GetTimerStateProp+0xa2>
+ 6b8:	c8 16       	cp	r12, r24
+ 6ba:	d9 06       	cpc	r13, r25
+ 6bc:	ea 06       	cpc	r14, r26
+ 6be:	fb 06       	cpc	r15, r27
+ 6c0:	30 f4       	brcc	.+12     	; 0x6ce <s_GetTimerStateProp+0x82>
+ 6c2:	8c 19       	sub	r24, r12
+ 6c4:	9d 09       	sbc	r25, r13
+ 6c6:	ae 09       	sbc	r26, r14
+ 6c8:	bf 09       	sbc	r27, r15
+ 6ca:	10 e0       	ldi	r17, 0x00	; 0
+ 6cc:	14 c0       	rjmp	.+40     	; 0x6f6 <s_GetTimerStateProp+0xaa>
+ 6ce:	8c 19       	sub	r24, r12
+ 6d0:	9d 09       	sbc	r25, r13
+ 6d2:	ae 09       	sbc	r26, r14
+ 6d4:	bf 09       	sbc	r27, r15
+ 6d6:	10 e0       	ldi	r17, 0x00	; 0
+ 6d8:	0e c0       	rjmp	.+28     	; 0x6f6 <s_GetTimerStateProp+0xaa>
+ 6da:	10 e1       	ldi	r17, 0x10	; 16
+ 6dc:	80 e0       	ldi	r24, 0x00	; 0
+ 6de:	90 e0       	ldi	r25, 0x00	; 0
+ 6e0:	dc 01       	movw	r26, r24
+ 6e2:	09 c0       	rjmp	.+18     	; 0x6f6 <s_GetTimerStateProp+0xaa>
+ 6e4:	10 e1       	ldi	r17, 0x10	; 16
+ 6e6:	80 e0       	ldi	r24, 0x00	; 0
+ 6e8:	90 e0       	ldi	r25, 0x00	; 0
+ 6ea:	dc 01       	movw	r26, r24
+ 6ec:	04 c0       	rjmp	.+8      	; 0x6f6 <s_GetTimerStateProp+0xaa>
+ 6ee:	10 e1       	ldi	r17, 0x10	; 16
+ 6f0:	80 e0       	ldi	r24, 0x00	; 0
+ 6f2:	90 e0       	ldi	r25, 0x00	; 0
+ 6f4:	dc 01       	movw	r26, r24
+ 6f6:	41 15       	cp	r20, r1
+ 6f8:	51 05       	cpc	r21, r1
+ 6fa:	29 f0       	breq	.+10     	; 0x706 <s_GetTimerStateProp+0xba>
+ 6fc:	ea 01       	movw	r28, r20
+ 6fe:	88 83       	st	Y, r24
+ 700:	99 83       	std	Y+1, r25	; 0x01
+ 702:	aa 83       	std	Y+2, r26	; 0x02
+ 704:	bb 83       	std	Y+3, r27	; 0x03
+ 706:	61 15       	cp	r22, r1
+ 708:	71 05       	cpc	r23, r1
+ 70a:	69 f0       	breq	.+26     	; 0x726 <s_GetTimerStateProp+0xda>
+ 70c:	eb 01       	movw	r28, r22
+ 70e:	22 81       	ldd	r18, Z+2	; 0x02
+ 710:	33 81       	ldd	r19, Z+3	; 0x03
+ 712:	44 81       	ldd	r20, Z+4	; 0x04
+ 714:	55 81       	ldd	r21, Z+5	; 0x05
+ 716:	c7 01       	movw	r24, r14
+ 718:	b6 01       	movw	r22, r12
+ 71a:	0e 94 d3 03 	call	0x7a6	; 0x7a6 <TimerSwBasePassed>
+ 71e:	68 83       	st	Y, r22
+ 720:	79 83       	std	Y+1, r23	; 0x01
+ 722:	8a 83       	std	Y+2, r24	; 0x02
+ 724:	9b 83       	std	Y+3, r25	; 0x03
+ 726:	81 2f       	mov	r24, r17
+ 728:	df 91       	pop	r29
+ 72a:	cf 91       	pop	r28
+ 72c:	1f 91       	pop	r17
+ 72e:	0f 91       	pop	r16
+ 730:	ff 90       	pop	r15
+ 732:	ef 90       	pop	r14
+ 734:	df 90       	pop	r13
+ 736:	cf 90       	pop	r12
+ 738:	08 95       	ret
+
+0000073a <TimerSwInit>:
+ 73a:	00 97       	sbiw	r24, 0x00	; 0
+ 73c:	31 f0       	breq	.+12     	; 0x74a <TimerSwInit+0x10>
+ 73e:	61 15       	cp	r22, r1
+ 740:	71 05       	cpc	r23, r1
+ 742:	29 f0       	breq	.+10     	; 0x74e <TimerSwInit+0x14>
+ 744:	0e 94 f5 02 	call	0x5ea	; 0x5ea <s_Init>
+ 748:	08 95       	ret
+ 74a:	81 e0       	ldi	r24, 0x01	; 1
+ 74c:	08 95       	ret
+ 74e:	81 e0       	ldi	r24, 0x01	; 1
+ 750:	08 95       	ret
+
+00000752 <TimerSwStartup>:
+ 752:	cf 92       	push	r12
+ 754:	df 92       	push	r13
+ 756:	ef 92       	push	r14
+ 758:	ff 92       	push	r15
+ 75a:	cf 93       	push	r28
+ 75c:	df 93       	push	r29
+ 75e:	ec 01       	movw	r28, r24
+ 760:	6a 01       	movw	r12, r20
+ 762:	7b 01       	movw	r14, r22
+ 764:	0e 94 d9 02 	call	0x5b2	; 0x5b2 <s_IsValidHandle>
+ 768:	81 11       	cpse	r24, r1
+ 76a:	05 c0       	rjmp	.+10     	; 0x776 <TimerSwStartup+0x24>
+ 76c:	b7 01       	movw	r22, r14
+ 76e:	a6 01       	movw	r20, r12
+ 770:	ce 01       	movw	r24, r28
+ 772:	0e 94 09 03 	call	0x612	; 0x612 <s_Startup>
+ 776:	df 91       	pop	r29
+ 778:	cf 91       	pop	r28
+ 77a:	ff 90       	pop	r15
+ 77c:	ef 90       	pop	r14
+ 77e:	df 90       	pop	r13
+ 780:	cf 90       	pop	r12
+ 782:	08 95       	ret
+
+00000784 <TimerSwIsExpired>:
+
+StatusError TimerSwIsExpired(
+        const TimerSwHandle * const handle)
+{
+ 784:	cf 93       	push	r28
+ 786:	df 93       	push	r29
+ 788:	ec 01       	movw	r28, r24
+    const StatusError err = s_IsValidAndActiveHandle(handle);
+ 78a:	0e 94 e5 02 	call	0x5ca	; 0x5ca <s_IsValidAndActiveHandle>
+
+    if (StatusErrNone != err)
+ 78e:	81 11       	cpse	r24, r1
+ 790:	07 c0       	rjmp	.+14     	; 0x7a0 <TimerSwIsExpired+0x1c>
+    {
+        return err;
+    }
+
+    return s_GetTimerStateProp(
+ 792:	40 e0       	ldi	r20, 0x00	; 0
+ 794:	50 e0       	ldi	r21, 0x00	; 0
+ 796:	60 e0       	ldi	r22, 0x00	; 0
+ 798:	70 e0       	ldi	r23, 0x00	; 0
+ 79a:	ce 01       	movw	r24, r28
+ 79c:	0e 94 26 03 	call	0x64c	; 0x64c <s_GetTimerStateProp>
+            handle,
+            NULL,
+            NULL);
+}
+ 7a0:	df 91       	pop	r29
+ 7a2:	cf 91       	pop	r28
+ 7a4:	08 95       	ret
+
+000007a6 <TimerSwBasePassed>:
+ ******************************************************************************/
+TimerSwValue TimerSwBasePassed(
+        const TimerSwValue timeCurr,
+        const TimerSwValue timeStart)
+{
+    if (timeCurr >= timeStart)
+ 7a6:	62 17       	cp	r22, r18
+ 7a8:	73 07       	cpc	r23, r19
+ 7aa:	84 07       	cpc	r24, r20
+ 7ac:	95 07       	cpc	r25, r21
+ 7ae:	28 f0       	brcs	.+10     	; 0x7ba <TimerSwBasePassed+0x14>
+    {
+        return timeCurr - timeStart;
+ 7b0:	62 1b       	sub	r22, r18
+ 7b2:	73 0b       	sbc	r23, r19
+ 7b4:	84 0b       	sbc	r24, r20
+ 7b6:	95 0b       	sbc	r25, r21
+ 7b8:	08 95       	ret
+    }
+    else
+    {
+        return (TIMER_SW_VALUE_MAX - timeStart) + 1 + timeCurr;
+ 7ba:	62 1b       	sub	r22, r18
+ 7bc:	73 0b       	sbc	r23, r19
+ 7be:	84 0b       	sbc	r24, r20
+ 7c0:	95 0b       	sbc	r25, r21
+    }
+}
+ 7c2:	08 95       	ret
+
+000007c4 <_exit>:
+ 7c4:	f8 94       	cli
+
+000007c6 <__stop_program>:
+ 7c6:	ff cf       	rjmp	.-2      	; 0x7c6 <__stop_program>
