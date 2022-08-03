@@ -16,6 +16,11 @@ typedef struct
 
 AdcHandleConfig* AdcCfgInitAndGet(void);
 
+void AdcEnable(void);
+void AdcDisable(void);
+void AdcStartConversion(void);
+void AdcEnableInterrupt(void);
+
 
 
 

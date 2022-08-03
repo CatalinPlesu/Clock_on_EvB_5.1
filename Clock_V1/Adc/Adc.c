@@ -1,21 +1,24 @@
 #include "Adc.h"
 
-static AdcHandleConfig* adcHandleConfig;
+static AdcHandleConfig* adcHandleConfig = (void*)0;
 static AdcValue adcValue = {};
 
-//TODO vector intrerupt 
-//uint16_t ADCRead(uint8_t channel){
-	//ADMUX &= 0xF0;                            // Clear the older channel that was read
-	//ADMUX |= channel;                            // Defines the new ADC channel to be read
-	//ADCSRA |= (1<<ADSC);                            // Starts a new conversion
-	//while(ADCSRA & (1<<ADSC));                        // Wait until the conversion is done
-	//return ADCW;                                // Returns the ADC value of the chosen channel
+//ISR(ADC_vect){
+		//
+	//adcValue.adcChannel[adcHandleConfig->adcActiveChannel] = ADCW;				// Saves adc value for current channel
+	//
+	//adcHandleConfig->adcActiveChannel++;
+	//if (adcHandleConfig->adcActiveChannel == adcHandleConfig->adcChannelsCount)
+		//adcHandleConfig->adcActiveChannel = 0;
+	//
+	//ADMUX &= 0xF0;																 // Clear the older channel that was read
+	//ADMUX |= adcHandleConfig->adcPinValue[adcHandleConfig->adcActiveChannel];    // Defines the new ADC channel to be read
 //}
 
-void AdcInit(void){
-	adcHandleConfig = AdcCfgInitAndGet();
-}
+//void AdcInit(void){
+	//adcHandleConfig = AdcCfgInitAndGet();
+//}
 
-const AdcValue* GetAdcValue(uint8_t channel){
+const AdcValue* GetAdcValue(){
 	return &adcValue;
 }

@@ -16,9 +16,9 @@ typedef struct {
 	uint16_t adcChannel[ADC_CHANNELS_USED];
 }AdcValue;
 
-void AdcInit(void);
+//void AdcInit(void);
 
-const AdcValue* GetAdcValue(uint8_t channel);
+const AdcValue* GetAdcValue();
 
 
 #endif /* ADC_H_ */

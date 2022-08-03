@@ -1,5 +1,5 @@
 #define F_CPU 16000000
-#include "Adc.h"
+//#include "Adc.h"
 #include "Rtc.h"
 #include "SevSeg.h"
 #include "TimerCfg.h"
@@ -15,28 +15,41 @@ Time currentTime = { 16, 26 };
 Time oldTime = { 0, 0 };
 float a = 9752;
 
-void init_Timer();
+//const AdcValue* adcValue = NULL;
+ISR(ADC_vect){
+	a = ADC;
+}
+
+void AdcInit();
 
 int main(void)
 {
-    /* Replace with your application code */
-    init_Timer();
+	TimerInitCfg();
+	TimerEnableCfg(true);
+	
     SevSegInit();
-
-    StatusError err;
-    TimerSwInitParam* pTimerSwInitParam = TimerGetIntervalPointerCfg();
-    err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
-
-    if (err == StatusErrNone) {
-        TimerSwStartup(&timerSwHandle, 1000);
-    }
-
     ControlInit();
+	
+	AdcInit();
+	//adcValue = GetAdcValue();
+	
+    sei();
+	
+	StatusError err;
+	TimerSwInitParam* pTimerSwInitParam = TimerGetIntervalPointerCfg();
+	err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
+	if (err == StatusErrNone) {
+		TimerSwStartup(&timerSwHandle, 1000);
+	}
+
     while (1) {
         ControlRoutine();
-
+        
         err = TimerSwIsExpired(&timerSwHandle);
         if (err == StatusErrTime) {
+			ADCSRA |= (1<<ADSC);	   // Start to convert
+			//AdcStartConversion();
+			
             currentTime.minutes++;
             if(currentTime.minutes>=60){
                 currentTime.minutes-=60;
@@ -48,8 +61,9 @@ int main(void)
         }
 
         if (oldTime.hours != currentTime.hours || oldTime.minutes != currentTime.minutes) {
-            SevSegSetTimeVal(currentTime);
-			//SevSegSetFloatVal(a);
+            //SevSegSetTimeVal(currentTime);
+			SevSegSetFloatVal(a);
+			//SevSegSetFloatVal((float)adcValue->adcChannel[0]);
             oldTime = currentTime;
         }
 
@@ -57,11 +71,11 @@ int main(void)
     }
 }
 
-void init_Timer()
-{
-
-    TimerInitCfg();
-    TimerEnableCfg(true);
-
-    sei();
+void AdcInit(){
+	ADCSRA |= ((1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0));								 // 16Mhz/128 = 125Khz the ADC reference clock
+	ADMUX  |= (1<<REFS0);														 // Voltage reference from Avcc (5v)
+	ADMUX  |= PA7;
+	ADCSRA |= (1<<ADEN);		// Turn on ADC
+	ADCSRA |= (1<<ADIE);	   // Conversion Complete	interrupt is activated.
+	ADCSRA |= (1<<ADSC);	   // Start to convert
 }
