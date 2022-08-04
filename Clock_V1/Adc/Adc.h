@@ -11,6 +11,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
+#include <stddef.h>
 #include "AdcCfg.h"
 
 typedef struct {

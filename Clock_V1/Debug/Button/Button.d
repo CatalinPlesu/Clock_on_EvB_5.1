@@ -1,5 +1,4 @@
-Control/ControlCfg.d Control/ControlCfg.o: ../Control/ControlCfg.c \
- ../Control/ControlCfg.h \
+Button/Button.d Button/Button.o: ../Button/Button.c ../Button/Button.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -10,9 +9,10 @@ Control/ControlCfg.d Control/ControlCfg.o: ../Control/ControlCfg.c \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\common.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
- c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h
+ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
+ ../Led/Led.h
 
-../Control/ControlCfg.h:
+../Button/Button.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -35,3 +35,5 @@ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\in
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
+
+../Led/Led.h:

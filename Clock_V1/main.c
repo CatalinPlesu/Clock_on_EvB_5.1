@@ -1,27 +1,27 @@
-#define F_CPU 16000000
+// ./avrdude.exe -p atmega32 -P usb -c usbasp -U flash:w:../Clock_V1/Clock_V1/Debug/Clock_V1.hex:i
+
+#include <stdbool.h>
+#include <avr/interrupt.h>
+#include <avr/io.h>
+
 #include "Adc.h"
 #include "Rtc.h"
 #include "SevSeg.h"
 #include "TimerCfg.h"
 #include "TimerSw.h"
-#include "Control.h"
-#include <stdbool.h>
-#include <avr/interrupt.h>
-#include <avr/io.h>
-// ./avrdude.exe -p atmega32 -P usb -c usbasp -U flash:w:../Clock_V1/Clock_V1/Debug/Clock_V1.hex:i
+#include "Button.h"
+#include "Led.h"
+
 
 static TimerSwHandle timerSwHandle;
-static TimerSwHandle timerSwAdcHandle;
-Time currentTime = { 16, 26 };
+//static TimerSwHandle timerSwAdcHandle;
+Time currentTime = { 17, 32 };
 Time oldTime = { 0, 0 };
-float a = 9752;
-uint8_t display = 0;
 
 const AdcValue* adcValue = NULL;
 
-//ISR(ADC_vect){
-	//a = ADCW;
-//}
+static ButtonFunctionPtr buttonFunctionPtr = {LedToggle,LedToggle,LedToggle,LedToggle,LedToggle};
+
 
 int main(void)
 {
@@ -29,9 +29,9 @@ int main(void)
 	TimerEnableCfg(true);
 	
     SevSegInit();
-    ControlInit(&display);
+    ButtonInit(&buttonFunctionPtr);
+	LedInit();
 	
-	//adcHandleConfig = AdcCfgInitAndGet();
 	AdcInit();
 	adcValue = GetAdcValue();
 	
@@ -44,14 +44,12 @@ int main(void)
 		TimerSwStartup(&timerSwHandle, 1000);
 	}
 	
-	err = TimerSwInit(pTimerSwInitParam, &timerSwAdcHandle);
-	if (err == StatusErrNone) {
-		TimerSwStartup(&timerSwHandle, 8);
-	}
+	//err = TimerSwInit(pTimerSwInitParam, &timerSwAdcHandle);
+	//if (err == StatusErrNone) {
+		//TimerSwStartup(&timerSwHandle, 8);
+	//}
 
     while (1) {
-        ControlRoutine();
-        
         err = TimerSwIsExpired(&timerSwHandle);
         if (err == StatusErrTime) {
 			
@@ -64,22 +62,19 @@ int main(void)
             }
             TimerSwStartup(&timerSwHandle, 1000);
         }
-		   err = TimerSwIsExpired(&timerSwAdcHandle);
-		   if (err == StatusErrTime) {
-			   AdcStartConversion();
-			   SevSegSetFloatVal((float)adcValue->adcChannel[display]);
-			   TimerSwStartup(&timerSwAdcHandle, 8);
-		   }
+		   //err = TimerSwIsExpired(&timerSwAdcHandle);
+		   //if (err == StatusErrTime) {
+			   //AdcStartConversion();
+			   //SevSegSetFloatVal((float)adcValue->adcChannel[display]);
+			   //TimerSwStartup(&timerSwAdcHandle, 8);
+		   //}
 
         if (oldTime.hours != currentTime.hours || oldTime.minutes != currentTime.minutes) {
-			AdcStartConversion();
-			
-            //SevSegSetTimeVal(currentTime);
-			//SevSegSetFloatVal(a);
-			SevSegSetFloatVal((float)adcValue->adcChannel[display]);
+            SevSegSetTimeVal(currentTime);
             oldTime = currentTime;
         }
 
         SevSegRutine();
+        ButtonRoutine();
     }
 }

@@ -15,7 +15,7 @@ c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../
 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
                               SevSeg/SevSeg.o (__fixunssfsi)
 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
-                              main.o (__floatunsisf)
+                              SevSeg/SevSeg.o (__floatunsisf)
 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
                               c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o) (__fp_cmp)
 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
@@ -51,6 +51,7 @@ Common symbol       size              file
 digitsValue         0x4               SevSeg/SevSeg.o
 timerSwInitParam    0x4               Timer/TimerCfg.o
 timerSwHandle       0x10              SevSeg/SevSeg.o
+buttonFunctionPtr   0x2               Button/Button.o
 
 Discarded input sections
 
@@ -65,22 +66,21 @@ Discarded input sections
  .bss           0x00000000        0x0 Adc/AdcCfg.o
  .text.AdcDisable
                 0x00000000        0x8 Adc/AdcCfg.o
- .text          0x00000000        0x0 Control/Control.o
- .data          0x00000000        0x0 Control/Control.o
- .bss           0x00000000        0x0 Control/Control.o
- .text          0x00000000        0x0 Control/ControlCfg.o
- .data          0x00000000        0x0 Control/ControlCfg.o
- .bss           0x00000000        0x0 Control/ControlCfg.o
- .text.ControlCfgAllLedOff
-                0x00000000       0x28 Control/ControlCfg.o
- .text.ControlCfgAllLedsOn
-                0x00000000       0x38 Control/ControlCfg.o
- .text.ControlCfgAllLedOn
-                0x00000000       0x2a Control/ControlCfg.o
+ .text          0x00000000        0x0 Button/Button.o
+ .data          0x00000000        0x0 Button/Button.o
+ .bss           0x00000000        0x0 Button/Button.o
+ .text          0x00000000        0x0 Led/Led.o
+ .data          0x00000000        0x0 Led/Led.o
+ .bss           0x00000000        0x0 Led/Led.o
+ .text.LedAllOn
+                0x00000000       0x30 Led/Led.o
+ .text.LedAllToggle
+                0x00000000       0x2e Led/Led.o
+ .text.LedOn    0x00000000       0x22 Led/Led.o
+ .text.LedOff   0x00000000       0x20 Led/Led.o
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
- .data.a        0x00000000        0x4 main.o
  .text          0x00000000        0x0 Rtc/Rtc.o
  .data          0x00000000        0x0 Rtc/Rtc.o
  .bss           0x00000000        0x0 Rtc/Rtc.o
@@ -103,9 +103,9 @@ Discarded input sections
  .text          0x00000000        0x0 SevSeg/SevSeg.o
  .data          0x00000000        0x0 SevSeg/SevSeg.o
  .bss           0x00000000        0x0 SevSeg/SevSeg.o
- .text.TimeToBuff
-                0x00000000       0x94 SevSeg/SevSeg.o
- .text.SevSegSetTimeVal
+ .text.FloatToBuff
+                0x00000000      0x284 SevSeg/SevSeg.o
+ .text.SevSegSetFloatVal
                 0x00000000        0xc SevSeg/SevSeg.o
  .text.SevSegSetByDigit
                 0x00000000       0x32 SevSeg/SevSeg.o
@@ -161,60 +161,98 @@ Discarded input sections
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
+ .text.avr-libc.fplib
+                0x00000000        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
+ .text.avr-libc.fplib
+                0x00000000       0xcc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o)
+ .text.avr-libc.fplib
+                0x00000000        0xa c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
+ .text.avr-libc.fplib
+                0x00000000        0x8 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
+ .text.avr-libc.fplib
+                0x00000000       0xdc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixsfsi.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixsfsi.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixsfsi.o)
+ .text.avr-libc.fplib
+                0x00000000        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixsfsi.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
+ .text.avr-libc.fplib
+                0x00000000       0x5e c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
+ .text.avr-libc.fplib
+                0x00000000       0x7a c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
+ .text.avr-libc.fplib
+                0x00000000       0x48 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
+ .text.avr-libc.fplib
+                0x00000000        0xc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
+ .text.avr-libc.fplib
+                0x00000000        0x6 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
+ .text.avr-libc.fplib
+                0x00000000        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
+ .text.avr-libc.fplib
+                0x00000000        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
+ .text.avr-libc.fplib
+                0x00000000       0x22 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
+ .text.avr-libc.fplib
+                0x00000000       0x44 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
+ .text.avr-libc.fplib
+                0x00000000        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(gesf2.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(gesf2.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(gesf2.o)
+ .text.avr-libc.fplib
+                0x00000000        0xa c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(gesf2.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
+ .text.avr-libc.fplib
+                0x00000000        0x8 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
+ .text.avr-libc.fplib
+                0x00000000       0xd2 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
  .text          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -281,8 +319,8 @@ Linker script and memory map
 LOAD C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
 LOAD Adc/Adc.o
 LOAD Adc/AdcCfg.o
-LOAD Control/Control.o
-LOAD Control/ControlCfg.o
+LOAD Button/Button.o
+LOAD Led/Led.o
 LOAD main.o
 LOAD Rtc/Rtc.o
 LOAD Rtc/RtcCfg.o
@@ -401,7 +439,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xffa
+.text           0x00000000      0x8bc
  *(.vectors)
  .vectors       0x00000000       0x54 C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
                 0x00000000                __vector_default
@@ -501,149 +539,83 @@ END GROUP
  .text.AdcCfgInitAndGet
                 0x00000134       0x70 Adc/AdcCfg.o
                 0x00000134                AdcCfgInitAndGet
- .text.ControlInit
-                0x000001a4       0x1a Control/Control.o
-                0x000001a4                ControlInit
- .text.ControlRoutine
-                0x000001be      0x124 Control/Control.o
-                0x000001be                ControlRoutine
- .text.ControlCfgInitAndGet
-                0x000002e2       0xda Control/ControlCfg.o
-                0x000002e2                ControlCfgInitAndGet
- .text.ControlCfgAllLedsOff
-                0x000003bc       0x36 Control/ControlCfg.o
-                0x000003bc                ControlCfgAllLedsOff
- .text.main     0x000003f2      0x14c main.o
-                0x000003f2                main
- .text.FloatToBuff
-                0x0000053e      0x284 SevSeg/SevSeg.o
+ .text.ButtonInit
+                0x000001a4       0x86 Button/Button.o
+                0x000001a4                ButtonInit
+ .text.ButtonRoutine
+                0x0000022a       0xe0 Button/Button.o
+                0x0000022a                ButtonRoutine
+ .text.LedAllOff
+                0x0000030a       0x2e Led/Led.o
+                0x0000030a                LedAllOff
+ .text.LedInit  0x00000338       0x4c Led/Led.o
+                0x00000338                LedInit
+ .text.LedToggle
+                0x00000384       0x20 Led/Led.o
+                0x00000384                LedToggle
+ .text.main     0x000003a4       0xc8 main.o
+                0x000003a4                main
+ .text.TimeToBuff
+                0x0000046c       0x94 SevSeg/SevSeg.o
  .text.SevSegInit
-                0x000007c2       0x3e SevSeg/SevSeg.o
-                0x000007c2                SevSegInit
+                0x00000500       0x3e SevSeg/SevSeg.o
+                0x00000500                SevSegInit
  .text.SevSegRutine
-                0x00000800       0x50 SevSeg/SevSeg.o
-                0x00000800                SevSegRutine
- .text.SevSegSetFloatVal
-                0x00000850        0xc SevSeg/SevSeg.o
-                0x00000850                SevSegSetFloatVal
+                0x0000053e       0x50 SevSeg/SevSeg.o
+                0x0000053e                SevSegRutine
+ .text.SevSegSetTimeVal
+                0x0000058e        0xc SevSeg/SevSeg.o
+                0x0000058e                SevSegSetTimeVal
  .text.SevSegCfgInitAndGet
-                0x0000085c       0x3c SevSeg/SevSegCfg.o
-                0x0000085c                SevSegCfgInitAndGet
+                0x0000059a       0x3c SevSeg/SevSegCfg.o
+                0x0000059a                SevSegCfgInitAndGet
  .text.SevSegCfgAllDigitsOff
-                0x00000898       0x1a SevSeg/SevSegCfg.o
-                0x00000898                SevSegCfgAllDigitsOff
+                0x000005d6       0x1a SevSeg/SevSegCfg.o
+                0x000005d6                SevSegCfgAllDigitsOff
  .text.SevSegCfgSetDigitValue
-                0x000008b2        0x6 SevSeg/SevSegCfg.o
-                0x000008b2                SevSegCfgSetDigitValue
+                0x000005f0        0x6 SevSeg/SevSegCfg.o
+                0x000005f0                SevSegCfgSetDigitValue
  .text.SevSegCfgDigitOn
-                0x000008b8       0x26 SevSeg/SevSegCfg.o
-                0x000008b8                SevSegCfgDigitOn
+                0x000005f6       0x26 SevSeg/SevSegCfg.o
+                0x000005f6                SevSegCfgDigitOn
  .text.__vector_9
-                0x000008de       0x52 Timer/TimerCfg.o
-                0x000008de                __vector_9
+                0x0000061c       0x52 Timer/TimerCfg.o
+                0x0000061c                __vector_9
  .text.TimerInitCfg
-                0x00000930       0x20 Timer/TimerCfg.o
-                0x00000930                TimerInitCfg
+                0x0000066e       0x20 Timer/TimerCfg.o
+                0x0000066e                TimerInitCfg
  .text.TimerEnableCfg
-                0x00000950       0x12 Timer/TimerCfg.o
-                0x00000950                TimerEnableCfg
+                0x0000068e       0x12 Timer/TimerCfg.o
+                0x0000068e                TimerEnableCfg
  .text.TimerGetIntervalPointerCfg
-                0x00000962        0x6 Timer/TimerCfg.o
-                0x00000962                TimerGetIntervalPointerCfg
+                0x000006a0        0x6 Timer/TimerCfg.o
+                0x000006a0                TimerGetIntervalPointerCfg
  .text.s_IsValidHandle
-                0x00000968       0x18 Timer/TimerSw.o
+                0x000006a6       0x18 Timer/TimerSw.o
  .text.s_IsValidAndActiveHandle
-                0x00000980       0x20 Timer/TimerSw.o
- .text.s_Init   0x000009a0       0x28 Timer/TimerSw.o
+                0x000006be       0x20 Timer/TimerSw.o
+ .text.s_Init   0x000006de       0x28 Timer/TimerSw.o
  .text.s_Startup
-                0x000009c8       0x3a Timer/TimerSw.o
+                0x00000706       0x3a Timer/TimerSw.o
  .text.s_GetTimerStateProp
-                0x00000a02       0xee Timer/TimerSw.o
+                0x00000740       0xee Timer/TimerSw.o
  .text.TimerSwInit
-                0x00000af0       0x18 Timer/TimerSw.o
-                0x00000af0                TimerSwInit
+                0x0000082e       0x18 Timer/TimerSw.o
+                0x0000082e                TimerSwInit
  .text.TimerSwStartup
-                0x00000b08       0x32 Timer/TimerSw.o
-                0x00000b08                TimerSwStartup
+                0x00000846       0x32 Timer/TimerSw.o
+                0x00000846                TimerSwStartup
  .text.TimerSwIsExpired
-                0x00000b3a       0x22 Timer/TimerSw.o
-                0x00000b3a                TimerSwIsExpired
+                0x00000878       0x22 Timer/TimerSw.o
+                0x00000878                TimerSwIsExpired
  .text.TimerSwBasePassed
-                0x00000b5c       0x1e Timer/TimerSwBase.o
-                0x00000b5c                TimerSwBasePassed
- .text.avr-libc.fplib
-                0x00000b7a        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3.o)
-                0x00000b7a                __subsf3
-                0x00000b7c                __addsf3
- .text.avr-libc.fplib
-                0x00000b88       0xcc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(addsf3x.o)
-                0x00000baa                __addsf3x
- .text.avr-libc.fplib
-                0x00000c54        0xa c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(cmpsf2.o)
-                0x00000c54                __nesf2
-                0x00000c54                __eqsf2
-                0x00000c54                __cmpsf2
-                0x00000c54                __ltsf2
-                0x00000c54                __lesf2
- .text.avr-libc.fplib
-                0x00000c5e        0x8 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3.o)
-                0x00000c5e                __divsf3
- .text.avr-libc.fplib
-                0x00000c66       0xdc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(divsf3x.o)
-                0x00000c86                __divsf3x
-                0x00000c8c                __divsf3_pse
- .text.avr-libc.fplib
-                0x00000d42        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixsfsi.o)
-                0x00000d42                __fixsfsi
- .text.avr-libc.fplib
-                0x00000d50       0x5e c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fixunssfsi.o)
-                0x00000d50                __fixunssfsi
- .text.avr-libc.fplib
-                0x00000dae       0x7a c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(floatsisf.o)
-                0x00000dae                __floatunsisf
-                0x00000db2                __floatsisf
- .text.avr-libc.fplib
-                0x00000e28       0x48 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_cmp.o)
-                0x00000e28                __fp_cmp
- .text.avr-libc.fplib
-                0x00000e70        0xc c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_inf.o)
-                0x00000e70                __fp_inf
- .text.avr-libc.fplib
-                0x00000e7c        0x6 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_nan.o)
-                0x00000e7c                __fp_nan
- .text.avr-libc.fplib
-                0x00000e82        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscA.o)
-                0x00000e82                __fp_pscA
- .text.avr-libc.fplib
-                0x00000e90        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_pscB.o)
-                0x00000e90                __fp_pscB
- .text.avr-libc.fplib
-                0x00000e9e       0x22 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_round.o)
-                0x00000e9e                __fp_round
- .text.avr-libc.fplib
-                0x00000ec0       0x44 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_split3.o)
-                0x00000ec0                __fp_split3
-                0x00000ed0                __fp_splitA
- .text.avr-libc.fplib
-                0x00000f04        0xe c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(fp_zero.o)
-                0x00000f04                __fp_zero
-                0x00000f06                __fp_szero
- .text.avr-libc.fplib
-                0x00000f12        0xa c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(gesf2.o)
-                0x00000f12                __gesf2
-                0x00000f12                __gtsf2
- .text.avr-libc.fplib
-                0x00000f1c        0x8 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3.o)
-                0x00000f1c                __mulsf3
- .text.avr-libc.fplib
-                0x00000f24       0xd2 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libm.a(mulsf3x.o)
-                0x00000f42                __mulsf3x
-                0x00000f48                __mulsf3_pse
-                0x00000ff6                . = ALIGN (0x2)
+                0x0000089a       0x1e Timer/TimerSwBase.o
+                0x0000089a                TimerSwBasePassed
+                0x000008b8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000ff6        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00000ff6                _exit
-                0x00000ff6                exit
+ .fini9         0x000008b8        0x0 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000008b8                _exit
+                0x000008b8                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -662,78 +634,74 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000ff6        0x4 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000008b8        0x4 c:/users/user/documents/embedded c/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000ffa                _etext = .
+                0x000008bc                _etext = .
 
-.data           0x00800060        0xe load address 0x00000ffa
+.data           0x00800060       0x1c load address 0x000008bc
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
+ .data.buttonFunctionPtr
+                0x00800060        0xe main.o
  .data.currentTime
-                0x00800060        0x2 main.o
-                0x00800060                currentTime
- .data.segCode  0x00800062        0xc SevSeg/SevSeg.o
-                0x00800062                segCode
+                0x0080006e        0x2 main.o
+                0x0080006e                currentTime
+ .data.segCode  0x00800070        0xc SevSeg/SevSeg.o
+                0x00800070                segCode
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x0080006e                . = ALIGN (0x2)
-                0x0080006e                _edata = .
-                0x0080006e                PROVIDE (__data_end, .)
+                0x0080007c                . = ALIGN (0x2)
+                0x0080007c                _edata = .
+                0x0080007c                PROVIDE (__data_end, .)
 
-.bss            0x0080006e       0x83
-                0x0080006e                PROVIDE (__bss_start, .)
+.bss            0x0080007c       0x63
+                0x0080007c                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.adcValue  0x0080006e        0x4 Adc/Adc.o
+ .bss.adcValue  0x0080007c        0x4 Adc/Adc.o
  .bss.adcHandleConfig
-                0x00800072        0x2 Adc/Adc.o
+                0x00800080        0x2 Adc/Adc.o
  .bss.adcHandleConfig
-                0x00800074        0x4 Adc/AdcCfg.o
- .bss.active    0x00800078        0x2 Control/Control.o
-                0x00800078                active
- .bss.counter   0x0080007a        0xe Control/Control.o
+                0x00800082        0x4 Adc/AdcCfg.o
+ .bss.counter   0x00800086        0x7 Button/Button.o
  .bss.buttonState
-                0x00800088        0x7 Control/Control.o
-                0x00800088                buttonState
+                0x0080008d        0x7 Button/Button.o
  .bss.togglState
-                0x0080008f        0x7 Control/Control.o
-                0x0080008f                togglState
- .bss.controlHandleConfig
-                0x00800096        0x2 Control/Control.o
- .bss.controlHandleConfig
-                0x00800098       0x14 Control/ControlCfg.o
- .bss.adcValue  0x008000ac        0x2 main.o
-                0x008000ac                adcValue
- .bss.display   0x008000ae        0x1 main.o
-                0x008000ae                display
- .bss.oldTime   0x008000af        0x2 main.o
-                0x008000af                oldTime
- .bss.timerSwAdcHandle
-                0x008000b1       0x10 main.o
+                0x00800094        0x7 Button/Button.o
+ .bss.buttonHandleConfig
+                0x0080009b        0x8 Button/Button.o
+ .bss.ledHandleConfig
+                0x008000a3        0x6 Led/Led.o
+ .bss.adcValue  0x008000a9        0x2 main.o
+                0x008000a9                adcValue
+ .bss.oldTime   0x008000ab        0x2 main.o
+                0x008000ab                oldTime
  .bss.timerSwHandle
-                0x008000c1       0x10 main.o
+                0x008000ad       0x10 main.o
  .bss.digitCount
-                0x008000d1        0x1 SevSeg/SevSeg.o
+                0x008000bd        0x1 SevSeg/SevSeg.o
  .bss.disp7SegHandleConfig
-                0x008000d2        0x7 SevSeg/SevSegCfg.o
+                0x008000be        0x7 SevSeg/SevSegCfg.o
  *(COMMON)
- COMMON         0x008000d9       0x14 SevSeg/SevSeg.o
-                0x008000d9                digitsValue
-                0x008000dd                timerSwHandle
- COMMON         0x008000ed        0x4 Timer/TimerCfg.o
-                0x008000ed                timerSwInitParam
-                0x008000f1                PROVIDE (__bss_end, .)
-                0x00000ffa                __data_load_start = LOADADDR (.data)
-                0x00001008                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x008000c5        0x2 Button/Button.o
+                0x008000c5                buttonFunctionPtr
+ COMMON         0x008000c7       0x14 SevSeg/SevSeg.o
+                0x008000c7                digitsValue
+                0x008000cb                timerSwHandle
+ COMMON         0x008000db        0x4 Timer/TimerCfg.o
+                0x008000db                timerSwInitParam
+                0x008000df                PROVIDE (__bss_end, .)
+                0x000008bc                __data_load_start = LOADADDR (.data)
+                0x000008d8                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008000f1        0x0
+.noinit         0x008000df        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x008000f1                _end = .
+                0x008000df                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -778,8 +746,8 @@ END GROUP
  .comment       0x00000000       0x30 Adc/Adc.o
                                  0x31 (size before relaxing)
  .comment       0x00000030       0x31 Adc/AdcCfg.o
- .comment       0x00000030       0x31 Control/Control.o
- .comment       0x00000030       0x31 Control/ControlCfg.o
+ .comment       0x00000030       0x31 Button/Button.o
+ .comment       0x00000030       0x31 Led/Led.o
  .comment       0x00000030       0x31 main.o
  .comment       0x00000030       0x31 SevSeg/SevSeg.o
  .comment       0x00000030       0x31 SevSeg/SevSegCfg.o
@@ -807,123 +775,123 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x278
+.debug_aranges  0x00000000      0x288
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x30 Adc/Adc.o
  .debug_aranges
                 0x00000030       0x40 Adc/AdcCfg.o
  .debug_aranges
-                0x00000070       0x28 Control/Control.o
+                0x00000070       0x28 Button/Button.o
  .debug_aranges
-                0x00000098       0x40 Control/ControlCfg.o
+                0x00000098       0x50 Led/Led.o
  .debug_aranges
-                0x000000d8       0x20 main.o
+                0x000000e8       0x20 main.o
  .debug_aranges
-                0x000000f8       0x58 SevSeg/SevSeg.o
+                0x00000108       0x58 SevSeg/SevSeg.o
  .debug_aranges
-                0x00000150       0x38 SevSeg/SevSegCfg.o
+                0x00000160       0x38 SevSeg/SevSegCfg.o
  .debug_aranges
-                0x00000188       0x38 Timer/TimerCfg.o
+                0x00000198       0x38 Timer/TimerCfg.o
  .debug_aranges
-                0x000001c0       0x98 Timer/TimerSw.o
+                0x000001d0       0x98 Timer/TimerSw.o
  .debug_aranges
-                0x00000258       0x20 Timer/TimerSwBase.o
+                0x00000268       0x20 Timer/TimerSwBase.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x250e
+.debug_info     0x00000000     0x23ef
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x4e6 C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_info    0x000004e6      0x1a2 Adc/Adc.o
  .debug_info    0x00000688      0x186 Adc/AdcCfg.o
- .debug_info    0x0000080e      0x27d Control/Control.o
- .debug_info    0x00000a8b      0x249 Control/ControlCfg.o
- .debug_info    0x00000cd4      0x5b7 main.o
- .debug_info    0x0000128b      0x6f0 SevSeg/SevSeg.o
- .debug_info    0x0000197b      0x16b SevSeg/SevSegCfg.o
- .debug_info    0x00001ae6      0x145 Timer/TimerCfg.o
- .debug_info    0x00001c2b      0x81d Timer/TimerSw.o
- .debug_info    0x00002448       0xc6 Timer/TimerSwBase.o
+ .debug_info    0x0000080e      0x243 Button/Button.o
+ .debug_info    0x00000a51      0x218 Led/Led.o
+ .debug_info    0x00000c69      0x503 main.o
+ .debug_info    0x0000116c      0x6f0 SevSeg/SevSeg.o
+ .debug_info    0x0000185c      0x16b SevSeg/SevSegCfg.o
+ .debug_info    0x000019c7      0x145 Timer/TimerCfg.o
+ .debug_info    0x00001b0c      0x81d Timer/TimerSw.o
+ .debug_info    0x00002329       0xc6 Timer/TimerSwBase.o
 
-.debug_abbrev   0x00000000      0xf78
+.debug_abbrev   0x00000000      0xf70
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4a3 C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_abbrev  0x000004a3       0xfe Adc/Adc.o
  .debug_abbrev  0x000005a1       0xd8 Adc/AdcCfg.o
- .debug_abbrev  0x00000679      0x120 Control/Control.o
- .debug_abbrev  0x00000799       0xf6 Control/ControlCfg.o
- .debug_abbrev  0x0000088f      0x142 main.o
- .debug_abbrev  0x000009d1      0x1d1 SevSeg/SevSeg.o
- .debug_abbrev  0x00000ba2       0xda SevSeg/SevSegCfg.o
- .debug_abbrev  0x00000c7c       0xe0 Timer/TimerCfg.o
- .debug_abbrev  0x00000d5c      0x1a4 Timer/TimerSw.o
- .debug_abbrev  0x00000f00       0x78 Timer/TimerSwBase.o
+ .debug_abbrev  0x00000679      0x142 Button/Button.o
+ .debug_abbrev  0x000007bb       0xcd Led/Led.o
+ .debug_abbrev  0x00000888      0x141 main.o
+ .debug_abbrev  0x000009c9      0x1d1 SevSeg/SevSeg.o
+ .debug_abbrev  0x00000b9a       0xda SevSeg/SevSegCfg.o
+ .debug_abbrev  0x00000c74       0xe0 Timer/TimerCfg.o
+ .debug_abbrev  0x00000d54      0x1a4 Timer/TimerSw.o
+ .debug_abbrev  0x00000ef8       0x78 Timer/TimerSwBase.o
 
-.debug_line     0x00000000     0x144e
+.debug_line     0x00000000     0x142f
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x116 C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_line    0x00000116      0x106 Adc/Adc.o
  .debug_line    0x0000021c      0x168 Adc/AdcCfg.o
- .debug_line    0x00000384      0x16a Control/Control.o
- .debug_line    0x000004ee      0x22a Control/ControlCfg.o
- .debug_line    0x00000718      0x216 main.o
- .debug_line    0x0000092e      0x3b7 SevSeg/SevSeg.o
- .debug_line    0x00000ce5      0x155 SevSeg/SevSegCfg.o
- .debug_line    0x00000e3a      0x131 Timer/TimerCfg.o
- .debug_line    0x00000f6b      0x416 Timer/TimerSw.o
- .debug_line    0x00001381       0xcd Timer/TimerSwBase.o
+ .debug_line    0x00000384      0x1bb Button/Button.o
+ .debug_line    0x0000053f      0x1e8 Led/Led.o
+ .debug_line    0x00000727      0x1e8 main.o
+ .debug_line    0x0000090f      0x3b7 SevSeg/SevSeg.o
+ .debug_line    0x00000cc6      0x155 SevSeg/SevSegCfg.o
+ .debug_line    0x00000e1b      0x131 Timer/TimerCfg.o
+ .debug_line    0x00000f4c      0x416 Timer/TimerSw.o
+ .debug_line    0x00001362       0xcd Timer/TimerSwBase.o
 
-.debug_frame    0x00000000      0x534
+.debug_frame    0x00000000      0x558
  *(.debug_frame)
  .debug_frame   0x00000000       0x6c Adc/Adc.o
  .debug_frame   0x0000006c       0x64 Adc/AdcCfg.o
- .debug_frame   0x000000d0       0x40 Control/Control.o
- .debug_frame   0x00000110       0x64 Control/ControlCfg.o
- .debug_frame   0x00000174       0x24 main.o
- .debug_frame   0x00000198       0xe4 SevSeg/SevSeg.o
- .debug_frame   0x0000027c       0x54 SevSeg/SevSegCfg.o
- .debug_frame   0x000002d0       0x74 Timer/TimerCfg.o
- .debug_frame   0x00000344      0x1cc Timer/TimerSw.o
- .debug_frame   0x00000510       0x24 Timer/TimerSwBase.o
+ .debug_frame   0x000000d0       0x44 Button/Button.o
+ .debug_frame   0x00000114       0x84 Led/Led.o
+ .debug_frame   0x00000198       0x24 main.o
+ .debug_frame   0x000001bc       0xe4 SevSeg/SevSeg.o
+ .debug_frame   0x000002a0       0x54 SevSeg/SevSegCfg.o
+ .debug_frame   0x000002f4       0x74 Timer/TimerCfg.o
+ .debug_frame   0x00000368      0x1cc Timer/TimerSw.o
+ .debug_frame   0x00000534       0x24 Timer/TimerSwBase.o
 
-.debug_str      0x00000000      0xc65
+.debug_str      0x00000000      0xc2d
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Users/User/Documents/embedded C/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_str     0x00000196      0x1c8 Adc/Adc.o
                                 0x205 (size before relaxing)
  .debug_str     0x0000035e       0x4b Adc/AdcCfg.o
                                 0x1fd (size before relaxing)
- .debug_str     0x000003a9      0x161 Control/Control.o
-                                0x2bd (size before relaxing)
- .debug_str     0x0000050a       0x59 Control/ControlCfg.o
-                                0x24b (size before relaxing)
- .debug_str     0x00000563      0x36f main.o
-                                0x547 (size before relaxing)
- .debug_str     0x000008d2      0x1ac SevSeg/SevSeg.o
+ .debug_str     0x000003a9      0x122 Button/Button.o
+                                0x275 (size before relaxing)
+ .debug_str     0x000004cb       0x72 Led/Led.o
+                                0x1d4 (size before relaxing)
+ .debug_str     0x0000053d      0x356 main.o
+                                0x53e (size before relaxing)
+ .debug_str     0x00000893      0x1b3 SevSeg/SevSeg.o
                                 0x642 (size before relaxing)
- .debug_str     0x00000a7e       0x1c SevSeg/SevSegCfg.o
+ .debug_str     0x00000a46       0x1c SevSeg/SevSegCfg.o
                                 0x217 (size before relaxing)
- .debug_str     0x00000a9a       0x36 Timer/TimerCfg.o
+ .debug_str     0x00000a62       0x36 Timer/TimerCfg.o
                                 0x1fb (size before relaxing)
- .debug_str     0x00000ad0      0x16b Timer/TimerSw.o
+ .debug_str     0x00000a98      0x16b Timer/TimerSw.o
                                 0x561 (size before relaxing)
- .debug_str     0x00000c3b       0x2a Timer/TimerSwBase.o
+ .debug_str     0x00000c03       0x2a Timer/TimerSwBase.o
                                 0x19a (size before relaxing)
 
-.debug_loc      0x00000000     0x11b5
+.debug_loc      0x00000000     0x11f7
  *(.debug_loc)
  .debug_loc     0x00000000       0x7d Adc/Adc.o
  .debug_loc     0x0000007d       0x1f Adc/AdcCfg.o
- .debug_loc     0x0000009c       0x74 Control/Control.o
- .debug_loc     0x00000110       0xb2 Control/ControlCfg.o
- .debug_loc     0x000001c2       0x5c main.o
- .debug_loc     0x0000021e      0x532 SevSeg/SevSeg.o
- .debug_loc     0x00000750       0x42 SevSeg/SevSegCfg.o
- .debug_loc     0x00000792       0x9d Timer/TimerCfg.o
- .debug_loc     0x0000082f      0x936 Timer/TimerSw.o
- .debug_loc     0x00001165       0x50 Timer/TimerSwBase.o
+ .debug_loc     0x0000009c       0xaf Button/Button.o
+ .debug_loc     0x0000014b       0xdf Led/Led.o
+ .debug_loc     0x0000022a       0x36 main.o
+ .debug_loc     0x00000260      0x532 SevSeg/SevSeg.o
+ .debug_loc     0x00000792       0x42 SevSeg/SevSegCfg.o
+ .debug_loc     0x000007d4       0x9d Timer/TimerCfg.o
+ .debug_loc     0x00000871      0x936 Timer/TimerSw.o
+ .debug_loc     0x000011a7       0x50 Timer/TimerSwBase.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -943,18 +911,18 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x1d8
+.debug_ranges   0x00000000      0x1e8
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x20 Adc/Adc.o
  .debug_ranges  0x00000020       0x30 Adc/AdcCfg.o
- .debug_ranges  0x00000050       0x18 Control/Control.o
- .debug_ranges  0x00000068       0x30 Control/ControlCfg.o
- .debug_ranges  0x00000098       0x10 main.o
- .debug_ranges  0x000000a8       0x48 SevSeg/SevSeg.o
- .debug_ranges  0x000000f0       0x28 SevSeg/SevSegCfg.o
- .debug_ranges  0x00000118       0x28 Timer/TimerCfg.o
- .debug_ranges  0x00000140       0x88 Timer/TimerSw.o
- .debug_ranges  0x000001c8       0x10 Timer/TimerSwBase.o
+ .debug_ranges  0x00000050       0x18 Button/Button.o
+ .debug_ranges  0x00000068       0x40 Led/Led.o
+ .debug_ranges  0x000000a8       0x10 main.o
+ .debug_ranges  0x000000b8       0x48 SevSeg/SevSeg.o
+ .debug_ranges  0x00000100       0x28 SevSeg/SevSegCfg.o
+ .debug_ranges  0x00000128       0x28 Timer/TimerCfg.o
+ .debug_ranges  0x00000150       0x88 Timer/TimerSw.o
+ .debug_ranges  0x000001d8       0x10 Timer/TimerSwBase.o
 
 .debug_macro
  *(.debug_macro)

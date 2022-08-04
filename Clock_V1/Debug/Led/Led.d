@@ -1,5 +1,4 @@
-Control/Control.d Control/Control.o: ../Control/Control.c \
- ../Control/Control.h ../Control/ControlCfg.h \
+Led/Led.d Led/Led.o: ../Led/Led.c ../Led/Led.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -12,9 +11,7 @@ Control/Control.d Control/Control.o: ../Control/Control.c \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h
 
-../Control/Control.h:
-
-../Control/ControlCfg.h:
+../Led/Led.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 

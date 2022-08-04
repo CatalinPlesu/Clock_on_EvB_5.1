@@ -1,4 +1,6 @@
-main.d main.o: .././main.c ../Adc/Adc.h \
+main.d main.o: .././main.c \
+ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
+ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -10,15 +12,16 @@ main.d main.o: .././main.c ../Adc/Adc.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
+ ../Adc/Adc.h \
+ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  ../Adc/AdcCfg.h ../Rtc/Rtc.h ../SevSeg/SevSeg.h ../Timer/StatuError.h \
  ../SevSeg/SevSegCfg.h ../Timer/TimerSw.h ../Timer/TimerSwCfg.h \
- ../Timer/StatuError.h \
- c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
- ../Timer/TimerCfg.h ../Timer/TimerSw.h ../Control/Control.h \
- ../Control/ControlCfg.h
+ ../Timer/StatuError.h ../Timer/TimerCfg.h ../Timer/TimerSw.h \
+ ../Button/Button.h ../Led/Led.h
 
-../Adc/Adc.h:
+c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
+
+c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -42,7 +45,9 @@ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\in
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
 
-c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
+../Adc/Adc.h:
+
+c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h:
 
 ../Adc/AdcCfg.h:
 
@@ -60,12 +65,10 @@ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\in
 
 ../Timer/StatuError.h:
 
-c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
-
 ../Timer/TimerCfg.h:
 
 ../Timer/TimerSw.h:
 
-../Control/Control.h:
+../Button/Button.h:
 
-../Control/ControlCfg.h:
+../Led/Led.h:

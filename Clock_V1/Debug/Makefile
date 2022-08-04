@@ -33,8 +33,9 @@ LINKER_SCRIPT_DEP:=
 
 # Every subdirectory with source files must be described here
 SUBDIRS :=  \
-../Control \
 ../Adc \
+../Button \
+../Led \
 ../SevSeg \
 ../Rtc \
 ../Timer
@@ -44,8 +45,8 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../Adc/Adc.c \
 ../Adc/AdcCfg.c \
-../Control/Control.c \
-../Control/ControlCfg.c \
+../Button/Button.c \
+../Led/Led.c \
 ../main.c \
 ../Rtc/Rtc.c \
 ../Rtc/RtcCfg.c \
@@ -66,8 +67,8 @@ ASM_SRCS +=
 OBJS +=  \
 Adc/Adc.o \
 Adc/AdcCfg.o \
-Control/Control.o \
-Control/ControlCfg.o \
+Button/Button.o \
+Led/Led.o \
 main.o \
 Rtc/Rtc.o \
 Rtc/RtcCfg.o \
@@ -81,8 +82,8 @@ Timer/TimerSwBase.o
 OBJS_AS_ARGS +=  \
 Adc/Adc.o \
 Adc/AdcCfg.o \
-Control/Control.o \
-Control/ControlCfg.o \
+Button/Button.o \
+Led/Led.o \
 main.o \
 Rtc/Rtc.o \
 Rtc/RtcCfg.o \
@@ -96,8 +97,8 @@ Timer/TimerSwBase.o
 C_DEPS +=  \
 Adc/Adc.d \
 Adc/AdcCfg.d \
-Control/Control.d \
-Control/ControlCfg.d \
+Button/Button.d \
+Led/Led.d \
 main.d \
 Rtc/Rtc.d \
 Rtc/RtcCfg.d \
@@ -111,8 +112,8 @@ Timer/TimerSwBase.d
 C_DEPS_AS_ARGS +=  \
 Adc/Adc.d \
 Adc/AdcCfg.d \
-Control/Control.d \
-Control/ControlCfg.d \
+Button/Button.d \
+Led/Led.d \
 main.d \
 Rtc/Rtc.d \
 Rtc/RtcCfg.d \
@@ -140,91 +141,91 @@ LINKER_SCRIPT_DEP+=
 Adc/Adc.o: ../Adc/Adc.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Adc/AdcCfg.o: ../Adc/AdcCfg.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
-Control/Control.o: ../Control/Control.c
+Button/Button.o: ../Button/Button.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
-Control/ControlCfg.o: ../Control/ControlCfg.c
+Led/Led.o: ../Led/Led.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 ./main.o: .././main.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Rtc/Rtc.o: ../Rtc/Rtc.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Rtc/RtcCfg.o: ../Rtc/RtcCfg.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 SevSeg/SevSeg.o: ../SevSeg/SevSeg.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 SevSeg/SevSegCfg.o: ../SevSeg/SevSegCfg.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Timer/StatuError.o: ../Timer/StatuError.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Timer/TimerCfg.o: ../Timer/TimerCfg.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Timer/TimerSw.o: ../Timer/TimerSw.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
 Timer/TimerSwBase.o: ../Timer/TimerSwBase.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../Control" -I"../SevSeg" -I"../Rtc" -I"../Adc"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	$(QUOTE)C:\Users\User\Documents\embedded C\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\include" -I"../Timer" -I"../SevSeg" -I"../Rtc" -I"../Adc" -I"../Button" -I"../Led"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32 -B "C:\Users\User\Documents\embedded C\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 

@@ -1,6 +1,6 @@
 #include "Adc.h"
 
-static AdcHandleConfig* adcHandleConfig = (void*)0;
+static AdcHandleConfig* adcHandleConfig = NULL;
 static AdcValue adcValue = {};
 uint16_t b =5932;
 	
