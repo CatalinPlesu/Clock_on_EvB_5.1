@@ -18,7 +18,7 @@ typedef enum
 	ButtonStateRealesed,
 }ButtonState;
 
-void ControlInit(void);
+void ControlInit(uint8_t* a);
 
 void ControlRoutine(void);
 

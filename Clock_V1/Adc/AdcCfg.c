@@ -16,7 +16,7 @@ AdcHandleConfig* AdcCfgInitAndGet(void){
 	ADMUX  |= (1<<REFS0);														 // Voltage reference from Avcc (5v)
 	ADMUX  |= adcHandleConfig.adcPinValue[adcHandleConfig.adcActiveChannel];	 // Defines what adc channel to read
 	AdcEnable();
-	//AdcEnableInterrupt();														 
+	AdcEnableInterrupt();														 
 	AdcStartConversion();														// Do an initial conversion because this one is the slowest and to ensure that everything is up and running
 	return &adcHandleConfig;
 }

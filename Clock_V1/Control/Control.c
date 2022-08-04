@@ -4,9 +4,11 @@ static ControlHandleConfig* controlHandleConfig;
 TogglState togglState[BUTTON_COUNT] = {};
 ButtonState buttonState[BUTTON_COUNT] = {};
 static uint16_t counter[BUTTON_COUNT] = {};
+uint8_t *active = (void*)0;
 
-void ControlInit(void)
+void ControlInit(uint8_t* a)
 {
+	active = a;
     controlHandleConfig = ControlCfgInitAndGet();
     ControlCfgAllLedsOff();
 }
@@ -43,6 +45,9 @@ void ControlRoutine(void)
         if (togglState[i] == TogglStateWaiting) {
 			if(i < controlHandleConfig->ledCount)
 			    *controlHandleConfig->portLed ^= (1 << controlHandleConfig->ledPinValue[i]);
+				if(i == 6)
+					*active=*active==0?1:0;
+				
             togglState[i] = TogglStateDone;
         }
     }

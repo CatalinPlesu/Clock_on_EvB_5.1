@@ -10,6 +10,7 @@ Adc/Adc.d Adc/Adc.o: ../Adc/Adc.c ../Adc/Adc.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
+ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
  ../Adc/AdcCfg.h
 
 ../Adc/Adc.h:
@@ -35,5 +36,7 @@ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\in
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
+
+c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 
 ../Adc/AdcCfg.h:

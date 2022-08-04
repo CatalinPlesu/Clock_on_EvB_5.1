@@ -9,6 +9,7 @@
 #define ADC_H_
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <stdint.h>
 #include "AdcCfg.h"
 
@@ -16,7 +17,7 @@ typedef struct {
 	uint16_t adcChannel[ADC_CHANNELS_USED];
 }AdcValue;
 
-//void AdcInit(void);
+void AdcInit(void);
 
 const AdcValue* GetAdcValue();
 
