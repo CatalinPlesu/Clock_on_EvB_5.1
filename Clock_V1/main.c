@@ -14,21 +14,21 @@
 #include "Led.h"
 
 DeviceState deviceState = DeviceStateStartup;
+DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock;
 DisplayState displayState = DisplayStateOff;
+EditState editState = EditStateHours; 
 
 static TimerSwHandle timerSwHandle;
-//static TimerSwHandle timerSwAdcHandle;
-Time currentTime = { 17, 32 };
-Time oldTime = { 0, 0 };
-float a = 1111;
 const AdcValue* adcValue = NULL;
 
-void increase_counter(uint8_t index){
-	a++;
-}
+Time timeTrackers[] = {
+	[DeviceDisplayStateClock] = {12, 53},
+	[DeviceDisplayStateTimer] = {},
+	[DeviceDisplayStateAlarm] = {13, 30},
+	[DeviceDisplayStateContdown] = {1, 30}
+};
 
-static ButtonFunctionPtr buttonFunctionPtr = {
-	LedToggle,LedToggle,LedToggle,LedToggle,LedToggle,increase_counter,increase_counter};
+uint16_t temperature = 27;
 
 void ButtonPowerFunction(uint8_t index);
 void ButtonNextFunction(uint8_t index);
@@ -36,7 +36,20 @@ void ButtonToggleFunction(uint8_t index);
 void ButtonIncreaseFunction(uint8_t index);
 void ButtonDecreaseFunction(uint8_t index);
 void ButtonOkFunction(uint8_t index);
-void ButtonAbortFunction(uint8_t index);
+void ButtonEditFunction(uint8_t index);
+
+static ButtonFunctionPtr buttonFunctionPtr = {
+			ButtonPowerFunction,
+			ButtonNextFunction,
+			ButtonToggleFunction,
+			ButtonIncreaseFunction,
+			ButtonDecreaseFunction,
+			ButtonOkFunction,
+			ButtonEditFunction
+		};
+
+void DeviceDisplayStateLedNormal(void);
+void DeviceDisplayStateLedEdit(void);
 
 int main(void)
 {
@@ -58,48 +71,140 @@ int main(void)
 
 		sei();
 
-
 		err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
 		if (err == StatusErrNone) {
 			TimerSwStartup(&timerSwHandle, 1000);
 		}
-
-		//err = TimerSwInit(pTimerSwInitParam, &timerSwAdcHandle);
-		//if (err == StatusErrNone) {
-			//TimerSwStartup(&timerSwHandle, 8);
-		//}
 	}
 	
     while (1) {
+        ButtonRoutine();
+        
         err = TimerSwIsExpired(&timerSwHandle);
-        if (err == StatusErrTime) {
+        if (err == StatusErrTime && !(deviceDisplayState==DeviceDisplayStateClock&&displayState==DisplayStateEdit)) {
 			
-            currentTime.minutes++;
-            if(currentTime.minutes>=60){
-                currentTime.minutes-=60;
-                currentTime.hours++;
-                if (currentTime.hours>=24)
-                    currentTime.hours-=24;
-            }
+			TimeIncrement(&timeTrackers[DeviceDisplayStateClock]);
+			
+			for(DeviceDisplayState state = DeviceDisplayStateClock; state <= DeviceDisplayStateTemperature; state++)
+			{
+				if (deviceDisplayState == state){
+					if (state == DeviceDisplayStateTemperature)
+						{SevSegSetFloatVal(temperature);}
+					else
+						{SevSegSetTimeVal(timeTrackers[state]);}
+					}
+			}
+						
             TimerSwStartup(&timerSwHandle, 1000);
         }
-		   //err = TimerSwIsExpired(&timerSwAdcHandle);
-		   //if (err == StatusErrTime) {
-			   //AdcStartConversion();
-			   //SevSegSetFloatVal((float)adcValue->adcChannel[display]);
-			   //TimerSwStartup(&timerSwAdcHandle, 8);
-		   //}
-
-        if (oldTime.hours != currentTime.hours || oldTime.minutes != currentTime.minutes) {
-            //SevSegSetTimeVal(currentTime);
-            oldTime = currentTime;
-        }
-
-		SevSegSetFloatVal(a);
 		
-		if(displayState!=DisplayStateOff)
-		  SevSegRutine();
+		if(deviceDisplayState==DeviceDisplayStateTemperature)
+			SevSegSetFloatVal(temperature);
+			
+		if(displayState==DisplayStateOff)
+			SevSegCfgAllDigitsOff();
+		else
+			SevSegRutine();
 
-        ButtonRoutine();
     }
+}
+
+void ButtonPowerFunction(uint8_t index){
+	if(displayState==DisplayStateOff){
+		displayState = DisplayStateNormal;
+		DeviceDisplayStateLedNormal();
+	}
+	else{
+		displayState = DisplayStateOff;
+		LedAllOff();
+		}
+}
+
+void ButtonNextFunction(uint8_t index){
+	if (displayState!=DisplayStateNormal)
+		return;
+		
+	if(deviceDisplayState==DeviceDisplayStateTemperature)
+		deviceDisplayState=0;
+	else
+		deviceDisplayState++;
+	DeviceDisplayStateLedNormal();
+}
+
+void ButtonToggleFunction(uint8_t index){
+	if (displayState!=DisplayStateEdit)
+		return;
+		
+	if(editState==EditStateHours)
+		editState = EditStateMinutes;
+	else
+		editState = EditStateHours;
+}
+
+void ButtonIncreaseFunction(uint8_t index){
+	if (displayState!=DisplayStateEdit)
+		return;
+		
+	for(DeviceDisplayState state = DeviceDisplayStateClock; state <= DeviceDisplayStateTemperature; state++)
+	{
+		if (deviceDisplayState == state){
+			if (state == DeviceDisplayStateTemperature){
+				temperature++;
+				SevSegSetFloatVal(temperature);
+			}
+			else{
+				if(editState==EditStateHours)
+					{
+						timeTrackers[state].hours++;
+					}
+				else
+					{timeTrackers[state].minutes++;}
+				TimeValidate(&timeTrackers[state]);
+				SevSegSetTimeVal(timeTrackers[state]);
+			}
+		}
+	}
+}
+
+void ButtonDecreaseFunction(uint8_t index){
+	if (displayState!=DisplayStateEdit)
+		return;
+		
+	for(DeviceDisplayState state = DeviceDisplayStateClock; state <= DeviceDisplayStateTemperature; state++)
+	{
+		if (deviceDisplayState == state){
+		if (state == DeviceDisplayStateTemperature){
+			temperature--;
+			SevSegSetFloatVal(temperature);
+		}
+		else{
+			if(editState==EditStateHours)
+				{timeTrackers[state].hours--;}
+			else
+				{timeTrackers[state].minutes--;}
+			TimeValidate(&timeTrackers[state]);
+			SevSegSetTimeVal(timeTrackers[state]);
+		}
+		}
+	}
+}
+
+void ButtonOkFunction(uint8_t index){
+	displayState = DisplayStateNormal;
+	DeviceDisplayStateLedNormal();
+}
+void ButtonEditFunction(uint8_t index){
+	displayState = DisplayStateEdit;
+	DeviceDisplayStateLedEdit();
+}
+
+
+void DeviceDisplayStateLedNormal(void){
+	LedAllOff();
+	LedOn(deviceDisplayState);
+}
+
+void DeviceDisplayStateLedEdit(void){
+	LedAllOn();
+	LedOff(deviceDisplayState);
 }

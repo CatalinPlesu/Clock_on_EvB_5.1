@@ -8,6 +8,8 @@ typedef struct{
     uint8_t minutes;
 }Time;
 
-void test();
+void TimeIncrement(Time* time);
+void TimeDecrement(Time* time);
+void TimeValidate(Time* time);
 
 #endif

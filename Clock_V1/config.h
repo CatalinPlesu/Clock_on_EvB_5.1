@@ -6,12 +6,16 @@ typedef enum
 	DeviceStateInit,
 	DeviceStateSleep,
 	DeviceStateWake,
-	DeviceStateDisplayClock,
-	DeviceStateDisplayTimer,
-	DeviceStateDisplayAlarm,
-	DeviceStateDisplayContdown,
-	DeviceStateDisplayTemperature,
 }DeviceState;
+
+typedef enum
+{
+	DeviceDisplayStateClock,
+	DeviceDisplayStateTimer,
+	DeviceDisplayStateAlarm,
+	DeviceDisplayStateContdown,
+	DeviceDisplayStateTemperature,
+}DeviceDisplayState;
 
 typedef enum
 {
@@ -19,5 +23,11 @@ typedef enum
 	DisplayStateNormal,
 	DisplayStateEdit,
 }DisplayState;
+
+typedef enum
+{
+	EditStateHours,
+	EditStateMinutes,
+}EditState;
 
 #endif /* CONFIG_H_ */

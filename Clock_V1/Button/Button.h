@@ -25,7 +25,7 @@ typedef enum
 	ButtonIncrease,
 	ButtonDecrease,
 	ButtonOk,
-	ButtonAbort
+	ButtonEdit
 }Button;
 
 typedef enum
