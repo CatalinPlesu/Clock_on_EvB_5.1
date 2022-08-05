@@ -12,7 +12,7 @@ main.d main.o: .././main.c \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- ../Adc/Adc.h \
+ .././config.h ../Adc/Adc.h \
  c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  ../Adc/AdcCfg.h ../Rtc/Rtc.h ../SevSeg/SevSeg.h ../Timer/StatuError.h \
  ../SevSeg/SevSegCfg.h ../Timer/TimerSw.h ../Timer/TimerSwCfg.h \
@@ -44,6 +44,8 @@ c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\in
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h:
 
 c:\users\user\documents\embedded\ c\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
+
+.././config.h:
 
 ../Adc/Adc.h:
 

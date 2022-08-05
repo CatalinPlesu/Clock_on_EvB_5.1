@@ -53,8 +53,7 @@ void ButtonRoutine(void)
 			togglState[i] = TogglStateWaiting;
 
 		if (togglState[i] == TogglStateWaiting) {
-			if(i < LED_COUNT)
-				(*buttonFunctionPtr)[i](i);
+			(*buttonFunctionPtr)[i](i);
 			togglState[i] = TogglStateDone;
 		}
 	}

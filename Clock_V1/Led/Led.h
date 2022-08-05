@@ -12,26 +12,11 @@
 #define PIN_LED_TEMPERATURE PA4
 #define LED_COUNT 5
 
-typedef enum
-{
-	LedClock,
-	LedTimer,
-	LedAlarm,
-	LedContdown,
-	LedTemperature
-}Led;
-
 typedef struct
 {
 	uint8_t count;
 	uint8_t pinValue[LED_COUNT];
 }LedHandleConfig;
-
-typedef enum
-{
-	DisplayView,
-	DisplaySettings,
-}DisplayMode;
 
 void LedInit(void);
 

@@ -157,6 +157,9 @@
     <Compile Include="Button\Button.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="config.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Led\Led.c">
       <SubType>compile</SubType>
     </Compile>
