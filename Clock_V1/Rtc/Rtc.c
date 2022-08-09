@@ -1,25 +1,127 @@
 #include "Rtc.h"
+#include "Twi.h"
+#include <avr/interrupt.h>
+#include <stddef.h>
 
-void TimeIncrement(Time* time){
-	time->minutes++;
-	TimeValidate(time);
+static TimeBCD timeBcd = {};
+static TimeBCD desiredTimeBcd = {};
+
+RtcTwiState rtcTwiState = RtcTwiStateIdle;
+RtcTwiTask rtcTwiTask = RtcTwiTaskWrite;
+RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataRead;
+RtcTwiData rtcTwiData = RtcTwiDataSla;
+
+void (*RtcFuncArray[])(void) = {
+    RtcSla,
+    RtcRegister,
+    RtcMinutes,
+    RtcHours
+};
+
+ISR(TWI_vect)
+{
+    if (rtcTwiState == RtcTwiStateStop) {
+        TwiStop();
+        rtcTwiState = RtcTwiStateRestart;
+    }
+    else if (rtcTwiState == RtcTwiStateRestart) {
+        TwiStart();
+        rtcTwiData = RtcTwiDataSla;
+        rtcTwiState = RtcTwiStateStart;
+    } else {
+        RtcFuncArray[rtcTwiData]();
+    }
+
+    // clears twint flag after all operations have been done
+    TwiClearInt();
 }
 
-void TimeDecrement(Time* time){
-	time->minutes--;
-	TimeValidate(time);
+void RtcInit(void)
+{
+    TwiInit();
+    TwiClearInt();
+    TwiStart();
+    rtcTwiState = RtcTwiStateStart;
 }
 
-void TimeValidate(Time* time){
-	if(time->minutes==60){
-		time->minutes=0;
-		time->hours++;}
-	if(time->minutes<0){
-		time->minutes=59;
-		time->hours--;
-	}
-	if (time->hours>=24)
-		time->hours=0;
-	if (time->hours<0)
-		time->hours=24;
+TimeBCD* GetRtcTime(void){
+    return &timeBcd;
+}
+
+void RtcSla(void)
+{
+    if (rtcTwiTask == RtcTwiTaskRead) {
+        TwiWrite(RTC_SLA_R);
+        rtcTwiData = RtcTwiDataMinutes;
+        rtcTwiTask = RtcTwiTaskWrite;
+    } else if (rtcTwiTask == RtcTwiTaskWrite) {
+        TwiWrite(RTC_SLA_W);
+        rtcTwiData = RtcTwiDataReg;
+    }
+}
+
+void RtcRegister(void)
+{
+        TwiWrite(MINUTES_REGISTER);
+        if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
+            rtcTwiData = RtcTwiDataMinutes;
+        } else if (rtcTwiTaskData == RtcTwiTaskDataRead) {
+            rtcTwiTask = RtcTwiTaskRead;
+            rtcTwiState = RtcTwiStateRestart;
+        }
+}
+
+void RtcMinutes(void)
+{
+    if (rtcTwiTaskData == RtcTwiTaskDataRead) {
+        timeBcd.minutes.byte = TwiRead();
+    } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
+        TwiWrite(desiredTimeBcd.minutes.byte);
+    }
+    rtcTwiData = RtcTwiDataHours;
+}
+
+void RtcHours(void)
+{
+    if (rtcTwiTaskData == RtcTwiTaskDataRead) {
+        timeBcd.hours.byte = TwiRead();
+    } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
+        TwiWrite(desiredTimeBcd.hours.byte);
+        rtcTwiTaskData = RtcTwiTaskDataRead;
+        rtcTwiTask = RtcTwiTaskWrite;
+    }
+    rtcTwiState = RtcTwiStateStop;
+}
+
+void RtcSetTime(TimeBCD time){
+    desiredTimeBcd = time;
+    /* rtcTwiTaskData = RtcTwiTaskDataWrite; */
+}
+
+void TimeIncrement(Time* time)
+{
+    time->minutes++;
+    TimeValidate(time);
+}
+
+void TimeDecrement(Time* time)
+{
+    time->minutes--;
+    TimeValidate(time);
+}
+
+void TimeValidate(Time* time)
+{
+    if (time->minutes == 60) {
+        time->minutes = 0;
+        time->hours++;
+    }
+    if (time->minutes < 0) {
+        time->minutes = 59;
+        time->hours--;
+    }
+    if (time->hours >= 24)
+        time->hours = 0;
+    if (time->hours < 0)
+        time->hours = 24;
 }

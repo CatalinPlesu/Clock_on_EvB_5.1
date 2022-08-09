@@ -8,9 +8,9 @@ CFLAGS = -Wall -Os -mmcu=$(MCU) -funsigned-char -funsigned-bitfields -ffunction-
 # CFLAGS = -Wall -Os -mmcu=$(MCU) 
 
 SRC = main
-DEPS = {Adc,Button,Led,Rtc,SevSeg,Timer}/*.c
+DEPS = {Adc,Button,Led,Rtc,SevSeg,Timer,Twi}/*.c
 # DEPS =
-INCLUDE = -I{Adc,Button,Led,Rtc,SevSeg,Timer}
+INCLUDE = -I{Adc,Button,Led,Rtc,SevSeg,Timer,Twi}
 # INCLUDE = 
 
 all: compile install clean

@@ -92,6 +92,16 @@ StatusError SevSegSetTimeVal(Time time)
 	return StatusErrNone;
 }
 
+StatusError SevSegSetTimeBcd(TimeBCD time){
+
+    digitsValue[0] = segCode[time.hours.bits.tens];
+    digitsValue[1] = segCode[time.hours.bits.units] | segCode[COMA_INDEX];
+    digitsValue[2] = segCode[time.minutes.bits.tens];
+    digitsValue[3] = segCode[time.minutes.bits.units];
+
+	return StatusErrNone;
+}
+
 StatusError SevSegSetFloatVal(float value)
 {
 	FloatToBuff(value,digitsValue);

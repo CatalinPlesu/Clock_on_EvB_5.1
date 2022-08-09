@@ -14,12 +14,16 @@
 #include "config.h"
 
 DeviceState deviceState = DeviceStateStartup;
-DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock;
-DisplayState displayState = DisplayStateOff;
+DeviceDisplayState deviceDisplayState = DeviceDisplayStateTemperature;
+/* DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; */
+/* DisplayState displayState = DisplayStateOff; */
+DisplayState displayState = DisplayStateNormal;
 EditState editState = EditStateHours;
 
 static TimerSwHandle timerSwHandle;
 const AdcValue* adcValue = NULL;
+
+const TimeBCD* ptrTimeBcd = NULL;
 
 Time timeTrackers[] = {
     [DeviceDisplayStateClock] = { 12, 42 },
@@ -71,6 +75,9 @@ int main(void)
         AdcInit();
         adcValue = GetAdcValue();
 
+        RtcInit();
+        ptrTimeBcd = GetRtcTime();
+
         sei();
 
         err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
@@ -78,6 +85,13 @@ int main(void)
             TimerSwStartup(&timerSwHandle, 1000);
         }
     }
+
+    TimeBCD desiredTimeBcd = {};
+    desiredTimeBcd.minutes.bits.tens = 2;
+    desiredTimeBcd.minutes.bits.units = 5;
+    desiredTimeBcd.hours.bits.tens = 1;
+    desiredTimeBcd.hours.bits.units = 4;
+    RtcSetTime(desiredTimeBcd);
 
     while (1) {
         ButtonRoutine();
@@ -198,7 +212,10 @@ void DeviceDisplayStateLedEdit(void)
 void SevSegRefresh(void)
 {
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        SevSegSetFloatVal(temperature);
+        /* SevSegSetFloatVal(temperature); */
+        /* SevSegSetFloatVal(ptrTimeBcd->minutes.bits.units); */
+        /* SevSegSetTimeBcd(*ptrTimeBcd); */
+        SevSegSetTimeBcd(*ptrTimeBcd);
     } else {
         SevSegSetTimeVal(timeTrackers[deviceDisplayState]);
     }
