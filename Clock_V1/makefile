@@ -4,14 +4,14 @@ PORT = usb
 # PROGRAMMER = avrisp
 # PORT = /dev/ttyUSB0
 CC = avr-gcc 
-CFLAGS = -Wall -g -Os -mmcu=$(MCU) 
+CFLAGS = -Wall -Os -mmcu=$(MCU) -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -std=gnu99 
+# CFLAGS = -Wall -Os -mmcu=$(MCU) 
 
 SRC = main
-DEPS = {Timer,SevSeg,Rtc,Control}/*.c
+DEPS = {Adc,Button,Led,Rtc,SevSeg,Timer}/*.c
 # DEPS =
-INCLUDE = -I{Timer,SevSeg,Rtc,Control}
+INCLUDE = -I{Adc,Button,Led,Rtc,SevSeg,Timer}
 # INCLUDE = 
-
 
 all: compile install clean
 

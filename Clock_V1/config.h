@@ -13,7 +13,7 @@ typedef enum
 	DeviceDisplayStateClock,
 	DeviceDisplayStateTimer,
 	DeviceDisplayStateAlarm,
-	DeviceDisplayStateContdown,
+	DeviceDisplayStateCountdown,
 	DeviceDisplayStateTemperature,
 }DeviceDisplayState;
 
