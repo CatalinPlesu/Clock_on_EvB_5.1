@@ -1,16 +1,16 @@
 MCU = atmega32
 PROGRAMMER = usbasp 
 PORT = usb
-# PROGRAMMER = avrisp
-# PORT = /dev/ttyUSB0
+	# PROGRAMMER = avrisp
+	# PORT = /dev/ttyUSB0
 CC = avr-gcc 
 CFLAGS = -Wall -Os -mmcu=$(MCU) -funsigned-char -funsigned-bitfields -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -std=gnu99 
 # CFLAGS = -Wall -Os -mmcu=$(MCU) 
 
 SRC = main
-DEPS = {Adc,Button,Led,Rtc,SevSeg,Timer,Twi}/*.c
+DEPS = {Adc,Button,Led,Rtc,SevSeg,Timer,I2c}/*.c
 # DEPS =
-INCLUDE = -I{Adc,Button,Led,Rtc,SevSeg,Timer,Twi}
+INCLUDE = -I{Adc,Button,Led,Rtc,SevSeg,Timer,I2c}
 # INCLUDE = 
 
 all: compile install clean

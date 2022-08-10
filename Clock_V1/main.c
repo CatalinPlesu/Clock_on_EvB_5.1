@@ -75,6 +75,14 @@ int main(void)
         AdcInit();
         adcValue = GetAdcValue();
 
+
+        TimeBCD desiredTimeBcd = {};
+        desiredTimeBcd.minutes.bits.tens = 1;
+        desiredTimeBcd.minutes.bits.units = 1;
+        desiredTimeBcd.hours.bits.tens = 3;
+        desiredTimeBcd.hours.bits.units = 1;
+        RtcSetTime(desiredTimeBcd);
+
         RtcInit();
         ptrTimeBcd = GetRtcTime();
 
@@ -85,13 +93,6 @@ int main(void)
             TimerSwStartup(&timerSwHandle, 1000);
         }
     }
-
-    TimeBCD desiredTimeBcd = {};
-    desiredTimeBcd.minutes.bits.tens = 5;
-    desiredTimeBcd.minutes.bits.units = 6;
-    desiredTimeBcd.hours.bits.tens = 1;
-    desiredTimeBcd.hours.bits.units = 3;
-    RtcSetTime(desiredTimeBcd);
 
     while (1) {
         ButtonRoutine();
@@ -104,6 +105,7 @@ int main(void)
             SevSegRefresh();
 
             TimerSwStartup(&timerSwHandle, 1000);
+            RtcReadTime();
         }
 
         /* SevSegRefresh(); */

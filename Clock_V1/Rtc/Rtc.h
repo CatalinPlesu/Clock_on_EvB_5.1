@@ -63,6 +63,8 @@ typedef struct{
 }TimeBCD;
 
 void RtcInit(void);
+void RtcReadTime(void);
+void RtcWriteTime(void);
 TimeBCD* GetRtcTime(void);
 
 void RtcSla(void);

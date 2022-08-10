@@ -1,48 +1,65 @@
 #include "Rtc.h"
-#include "Twi.h"
+/* #include "Twi.h" */
 #include <avr/interrupt.h>
 #include <stddef.h>
 
 static TimeBCD timeBcd = {};
 static TimeBCD desiredTimeBcd = {};
 
-RtcTwiState rtcTwiState = RtcTwiStateIdle;
-RtcTwiTask rtcTwiTask = RtcTwiTaskWrite;
+/* RtcTwiState rtcTwiState = RtcTwiStateIdle; */
+/* RtcTwiTask rtcTwiTask = RtcTwiTaskWrite; */
 /* RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataWrite; */
-RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataRead;
-RtcTwiData rtcTwiData = RtcTwiDataSla;
+/* RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataRead; */
+/* RtcTwiData rtcTwiData = RtcTwiDataSla; */
 
-void (*RtcFuncArray[])(void) = {
-    RtcSla,
-    RtcRegister,
-    RtcMinutes,
-    RtcHours
-};
+/* void (*RtcFuncArray[])(void) = { */
+/*     RtcSla, */
+/*     RtcRegister, */
+/*     RtcMinutes, */
+/*     RtcHours */
+/* }; */
 
-ISR(TWI_vect)
-{
-    TwiStartClear();
-    if (rtcTwiState == RtcTwiStateStop) {
-        TwiStop();
-        rtcTwiState = RtcTwiStateRestart;
-    } else if (rtcTwiState == RtcTwiStateRestart) {
-        TwiStart();
-        rtcTwiData = RtcTwiDataSla;
-        rtcTwiState = RtcTwiStateStart;
-    } else {
-        RtcFuncArray[rtcTwiData]();
-    }
+/* ISR(TWI_vect) */
+/* { */
+/*     TwiStartClear(); */
+/*     if (rtcTwiState == RtcTwiStateStop) { */
+/*         TwiStop(); */
+/*         rtcTwiState = RtcTwiStateRestart; */
+/*     } else if (rtcTwiState == RtcTwiStateRestart) { */
+/*         TwiStart(); */
+/*         rtcTwiData = RtcTwiDataSla; */
+/*         rtcTwiState = RtcTwiStateStart; */
+/*     } else { */
+/*         RtcFuncArray[rtcTwiData](); */
+/*     } */
 
-    // clears twint flag after all operations have been done
-    TwiClearInt();
-}
+/*     // clears twint flag after all operations have been done */
+/*     TwiClearInt(); */
+/* } */
 
 void RtcInit(void)
 {
-    TwiInit();
-    TwiClearInt();
-    TwiStart();
-    rtcTwiState = RtcTwiStateStart;
+    init_i2c();
+    RtcWriteTime();
+    RtcReadTime();
+}
+
+void RtcReadTime(void)
+{
+    i2c_start(RTC_SLA_W);
+    i2c_write(MINUTES_REGISTER);
+    i2c_start(RTC_SLA_R);
+    timeBcd.minutes.byte = i2c_readNack();
+    timeBcd.hours.byte = i2c_readNack();
+    i2c_stop();
+}
+
+void RtcWriteTime(void){
+    i2c_start(RTC_SLA_W);
+    i2c_write(MINUTES_REGISTER);
+    i2c_write(desiredTimeBcd.minutes.byte);
+    i2c_write(desiredTimeBcd.hours.byte);
+    i2c_stop();
 }
 
 TimeBCD* GetRtcTime(void)
@@ -50,55 +67,55 @@ TimeBCD* GetRtcTime(void)
     return &timeBcd;
 }
 
-void RtcSla(void)
-{
-    if (rtcTwiTask == RtcTwiTaskRead) {
-        TwiWrite(RTC_SLA_R);
-        rtcTwiData = RtcTwiDataMinutes;
-        rtcTwiTask = RtcTwiTaskWrite;
-    } else if (rtcTwiTask == RtcTwiTaskWrite) {
-        TwiWrite(RTC_SLA_W);
-        rtcTwiData = RtcTwiDataReg;
-    }
-}
+/* void RtcSla(void) */
+/* { */
+/*     if (rtcTwiTask == RtcTwiTaskRead) { */
+/*         TwiWrite(RTC_SLA_R); */
+/*         rtcTwiData = RtcTwiDataMinutes; */
+/*         rtcTwiTask = RtcTwiTaskWrite; */
+/*     } else if (rtcTwiTask == RtcTwiTaskWrite) { */
+/*         TwiWrite(RTC_SLA_W); */
+/*         rtcTwiData = RtcTwiDataReg; */
+/*     } */
+/* } */
 
-void RtcRegister(void)
-{
-    TwiWrite(MINUTES_REGISTER);
-    if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
-        rtcTwiData = RtcTwiDataMinutes;
-    } else if (rtcTwiTaskData == RtcTwiTaskDataRead) {
-        rtcTwiTask = RtcTwiTaskRead;
-        rtcTwiState = RtcTwiStateRestart;
-    }
-}
+/* void RtcRegister(void) */
+/* { */
+/*     TwiWrite(MINUTES_REGISTER); */
+/*     if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
+/*         rtcTwiData = RtcTwiDataMinutes; */
+/*     } else if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
+/*         rtcTwiTask = RtcTwiTaskRead; */
+/*         rtcTwiState = RtcTwiStateRestart; */
+/*     } */
+/* } */
 
-void RtcMinutes(void)
-{
-    if (rtcTwiTaskData == RtcTwiTaskDataRead) {
-        timeBcd.minutes.byte = TwiRead();
-    } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
-        TwiWrite(desiredTimeBcd.minutes.byte);
-    }
-    rtcTwiData = RtcTwiDataHours;
-}
+/* void RtcMinutes(void) */
+/* { */
+/*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
+/*         timeBcd.minutes.byte = TwiRead(); */
+/*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
+/*         TwiWrite(desiredTimeBcd.minutes.byte); */
+/*     } */
+/*     rtcTwiData = RtcTwiDataHours; */
+/* } */
 
-void RtcHours(void)
-{
-    if (rtcTwiTaskData == RtcTwiTaskDataRead) {
-        timeBcd.hours.byte = TwiRead();
-    } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
-        TwiWrite(desiredTimeBcd.hours.byte);
-        rtcTwiTaskData = RtcTwiTaskDataRead;
-        rtcTwiTask = RtcTwiTaskWrite;
-    }
-    rtcTwiState = RtcTwiStateStop;
-}
+/* void RtcHours(void) */
+/* { */
+/*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
+/*         timeBcd.hours.byte = TwiRead(); */
+/*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
+/*         TwiWrite(desiredTimeBcd.hours.byte); */
+/*         rtcTwiTaskData = RtcTwiTaskDataRead; */
+/*         rtcTwiTask = RtcTwiTaskWrite; */
+/*     } */
+/*     rtcTwiState = RtcTwiStateStop; */
+/* } */
 
 void RtcSetTime(TimeBCD time)
 {
     desiredTimeBcd = time;
-    rtcTwiTaskData = RtcTwiTaskDataWrite;
+    /* rtcTwiTaskData = RtcTwiTaskDataWrite; */
 }
 
 void TimeIncrement(Time* time)
