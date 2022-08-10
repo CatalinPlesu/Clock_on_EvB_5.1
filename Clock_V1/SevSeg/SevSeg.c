@@ -6,9 +6,9 @@
  */ 
 
 #include "SevSeg.h"
-#include "Rtc.h"
 #include "SevSegCfg.h"
 #include "TimerCfg.h"
+#include "Rtc.h"
 #include <math.h>
 
 #define COMA_INDEX		10
@@ -38,8 +38,6 @@ uint8_t segCode[12]= {
 };
 
 /* local functions */
-static void TimeToBuff(Time time,uint8_t * data);
-
 static void FloatToBuff(float value,uint8_t * data);
 
 /* Global functions */
@@ -85,19 +83,12 @@ void SevSegRutine(void)
 	}
 }
 
-StatusError SevSegSetTimeVal(Time time)
-{
-	TimeToBuff(time,digitsValue);
-	
-	return StatusErrNone;
-}
+StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes){
 
-StatusError SevSegSetTimeBcd(TimeBCD time){
-
-    digitsValue[0] = segCode[time.hours.bits.tens];
-    digitsValue[1] = segCode[time.hours.bits.units] | segCode[COMA_INDEX];
-    digitsValue[2] = segCode[time.minutes.bits.tens];
-    digitsValue[3] = segCode[time.minutes.bits.units];
+	digitsValue[0] = segCode[HOURS_MASK_TENS(hours)];
+	digitsValue[1] = segCode[HOURS_MASK_UNITS(hours)] | segCode[COMA_INDEX];
+	digitsValue[2] = segCode[MINUTES_MASK_TENS(minutes)];
+	digitsValue[3] = segCode[MINUTES_MASK_UNITS(minutes)];
 
 	return StatusErrNone;
 }
@@ -145,40 +136,6 @@ StatusError SevSegSetByDigitCostum(uint8_t digitIndex, uint8_t digitValue)
 		return StatusErrIndex;
 	}
 }
-
-void TimeToBuff(Time time,uint8_t * data)
-{
-	uint8_t localdigitCount = 0;
-	
-    if(time.hours<10)
-    {
-        data[localdigitCount] = segCode[0];
-        localdigitCount++;
-    }else{
-        uint8_t tmp = time.hours / 10;
-        data[localdigitCount] = segCode[tmp];
-        localdigitCount++;
-        time.hours %= 10;
-    }
-    data[localdigitCount] = segCode[time.hours] | segCode[COMA_INDEX];
-    localdigitCount++;
-	
-    if(time.minutes<10)
-    {
-        data[localdigitCount] = segCode[0];
-        localdigitCount++;
-    }else{
-        uint8_t tmp = time.minutes / 10;
-        data[localdigitCount] = segCode[tmp];
-        localdigitCount++;
-        time.minutes %= 10;
-    }
-    data[localdigitCount] = segCode[time.minutes];
-    localdigitCount++;
-	
-	return;
-}
-
 
 static void FloatToBuff(float value,uint8_t * data)
 {

@@ -117,6 +117,7 @@
       <Value>../Adc</Value>
       <Value>../Button</Value>
       <Value>../Led</Value>
+      <Value>../I2c</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize debugging experience (-Og)</avrgcc.compiler.optimization.level>
@@ -158,6 +159,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2c\I2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="I2c\I2c.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Led\Led.c">
@@ -227,6 +234,7 @@
   <ItemGroup>
     <Folder Include="Adc" />
     <Folder Include="Button" />
+    <Folder Include="I2c\" />
     <Folder Include="Led" />
     <Folder Include="SevSeg" />
     <Folder Include="Rtc" />

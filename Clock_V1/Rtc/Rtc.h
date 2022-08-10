@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include "RtcCfg.h"
 
+#define SECONDS_MASK_TENS(byte) ((byte>>4)&0x7)
+#define SECONDS_MASK_UNITS(byte) ((byte)&0xf)
+#define MINUTES_MASK_TENS(byte) ((byte>>4)&0x7)
+#define MINUTES_MASK_UNITS(byte) ((byte)&0xf)
+#define HOURS_MASK_TENS(byte) ((byte>>4)&0x3)
+#define HOURS_MASK_UNITS(byte) ((byte)&0xf)
+
 typedef enum
 {
 	RtcTwiStateIdle,
@@ -30,49 +37,23 @@ typedef enum{
     RtcTwiDataHours,
 }RtcTwiData;
 
-struct MinutesBCD{
-    uint8_t unused:1;
-    uint8_t tens:3;
-    uint8_t units:4;
-};
-
-typedef union{
-    uint8_t byte;
-    struct MinutesBCD bits;
-}Minutes;
-
-struct HoursBCD{
-    uint8_t unused:2;
-    uint8_t tens:2;
-    uint8_t units:4;
-};
-
-typedef union{
-    uint8_t byte;
-    struct HoursBCD bits;
-}Hours;
-
 typedef struct{
     uint8_t hours;
     uint8_t minutes;
 }Time;
 
-typedef struct{
-    Minutes minutes;
-    Hours hours;
-}TimeBCD;
-
 void RtcInit(void);
 void RtcReadTime(void);
 void RtcWriteTime(void);
-TimeBCD* GetRtcTime(void);
+Time* GetRtcTime(void);
 
 void RtcSla(void);
 void RtcRegister(void);
 void RtcMinutes(void);
 void RtcHours(void);
 
-void RtcSetTime(TimeBCD time);
+void RtcSetTime(Time time);
+Time RtcCreateTime(uint8_t hours, uint8_t minutes);
 
 void TimeIncrement(Time* time);
 void TimeDecrement(Time* time);

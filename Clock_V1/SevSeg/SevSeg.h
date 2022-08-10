@@ -12,15 +12,12 @@
 #include "StatuError.h"
 #include "SevSegCfg.h"
 #include "TimerSw.h"
-#include "Rtc.h"
 
 void SevSegInit(void);
 
 void SevSegRutine(void);
 
-StatusError SevSegSetTimeVal(Time time);
-
-StatusError SevSegSetTimeBcd(TimeBCD time);
+StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes);
 
 StatusError SevSegSetFloatVal(float value);
 

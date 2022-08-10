@@ -1,10 +1,11 @@
 #include "Rtc.h"
+#include "I2c.h"
 /* #include "Twi.h" */
 #include <avr/interrupt.h>
 #include <stddef.h>
 
-static TimeBCD timeBcd = {};
-static TimeBCD desiredTimeBcd = {};
+static Time time = {};
+static Time desiredTime = {};
 
 /* RtcTwiState rtcTwiState = RtcTwiStateIdle; */
 /* RtcTwiTask rtcTwiTask = RtcTwiTaskWrite; */
@@ -40,8 +41,6 @@ static TimeBCD desiredTimeBcd = {};
 void RtcInit(void)
 {
     init_i2c();
-    RtcWriteTime();
-    RtcReadTime();
 }
 
 void RtcReadTime(void)
@@ -49,22 +48,23 @@ void RtcReadTime(void)
     i2c_start(RTC_SLA_W);
     i2c_write(MINUTES_REGISTER);
     i2c_start(RTC_SLA_R);
-    timeBcd.minutes.byte = i2c_readNack();
-    timeBcd.hours.byte = i2c_readNack();
+    time.minutes = i2c_readNack();
+	i2c_start(RTC_SLA_R);
+    time.hours = i2c_readNack();
     i2c_stop();
 }
 
 void RtcWriteTime(void){
     i2c_start(RTC_SLA_W);
     i2c_write(MINUTES_REGISTER);
-    i2c_write(desiredTimeBcd.minutes.byte);
-    i2c_write(desiredTimeBcd.hours.byte);
+    i2c_write(desiredTime.minutes);
+    i2c_write(desiredTime.hours);
     i2c_stop();
 }
 
-TimeBCD* GetRtcTime(void)
+Time* GetRtcTime(void)
 {
-    return &timeBcd;
+    return &time;
 }
 
 /* void RtcSla(void) */
@@ -93,9 +93,9 @@ TimeBCD* GetRtcTime(void)
 /* void RtcMinutes(void) */
 /* { */
 /*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
-/*         timeBcd.minutes.byte = TwiRead(); */
+/*         time.minutes.byte = TwiRead(); */
 /*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
-/*         TwiWrite(desiredTimeBcd.minutes.byte); */
+/*         TwiWrite(desiredTime.minutes.byte); */
 /*     } */
 /*     rtcTwiData = RtcTwiDataHours; */
 /* } */
@@ -103,19 +103,28 @@ TimeBCD* GetRtcTime(void)
 /* void RtcHours(void) */
 /* { */
 /*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
-/*         timeBcd.hours.byte = TwiRead(); */
+/*         time.hours.byte = TwiRead(); */
 /*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
-/*         TwiWrite(desiredTimeBcd.hours.byte); */
+/*         TwiWrite(desiredTime.hours.byte); */
 /*         rtcTwiTaskData = RtcTwiTaskDataRead; */
 /*         rtcTwiTask = RtcTwiTaskWrite; */
 /*     } */
 /*     rtcTwiState = RtcTwiStateStop; */
 /* } */
 
-void RtcSetTime(TimeBCD time)
+void RtcSetTime(Time time)
 {
-    desiredTimeBcd = time;
+    desiredTime = time;
+	RtcWriteTime();
     /* rtcTwiTaskData = RtcTwiTaskDataWrite; */
+}
+
+Time RtcCreateTime(uint8_t hours, uint8_t minutes)
+{
+	Time time = {};
+	time.hours = ((hours/10)<<4)|(hours%10);
+	time.minutes = ((minutes/10)<<4)|(minutes%10);
+	return time;
 }
 
 void TimeIncrement(Time* time)

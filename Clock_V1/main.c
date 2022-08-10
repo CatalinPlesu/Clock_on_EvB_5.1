@@ -23,7 +23,7 @@ EditState editState = EditStateHours;
 static TimerSwHandle timerSwHandle;
 const AdcValue* adcValue = NULL;
 
-const TimeBCD* ptrTimeBcd = NULL;
+const Time* ptrTime = NULL;
 
 Time timeTrackers[] = {
     [DeviceDisplayStateClock] = { 12, 42 },
@@ -76,15 +76,11 @@ int main(void)
         adcValue = GetAdcValue();
 
 
-        TimeBCD desiredTimeBcd = {};
-        desiredTimeBcd.minutes.bits.tens = 1;
-        desiredTimeBcd.minutes.bits.units = 1;
-        desiredTimeBcd.hours.bits.tens = 3;
-        desiredTimeBcd.hours.bits.units = 1;
-        RtcSetTime(desiredTimeBcd);
+        Time desiredTime = RtcCreateTime(18, 8);
 
         RtcInit();
-        ptrTimeBcd = GetRtcTime();
+        ptrTime = GetRtcTime();
+        RtcSetTime(desiredTime);
 
         sei();
 
@@ -215,10 +211,10 @@ void SevSegRefresh(void)
 {
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
         /* SevSegSetFloatVal(temperature); */
-        /* SevSegSetFloatVal(ptrTimeBcd->minutes.bits.units); */
-        /* SevSegSetTimeBcd(*ptrTimeBcd); */
-        SevSegSetTimeBcd(*ptrTimeBcd);
+        /* SevSegSetFloatVal(ptrTime->minutes.bits.units); */
+        /* SevSegSetTimeBcd(*ptrTime); */
+        SevSegSetTimeVal(ptrTime->hours, ptrTime->minutes);
     } else {
-        SevSegSetTimeVal(timeTrackers[deviceDisplayState]);
+        SevSegSetTimeVal(timeTrackers[deviceDisplayState].hours, timeTrackers[deviceDisplayState].minutes);
     }
 }
