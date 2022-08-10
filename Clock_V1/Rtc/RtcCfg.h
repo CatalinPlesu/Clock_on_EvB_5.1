@@ -5,7 +5,8 @@
 #define RTC_SLA_R    0xA3
 #define RTC_SLA_W    0xA2
 
-#define MINUTES_REGISTER 0x03
+/* #define MINUTES_REGISTER 0x03 */
+#define MINUTES_REGISTER 0x02
 
 // CPU clock frequency in the slave must be at least 16 times higher than the
 // SCL frequency 2kHz

@@ -8,6 +8,9 @@
 
 void TwiInit(void)
 {
+    PORTC |= (1 << PC0);    // SCL pull up resistor
+    PORTC |= (1 << PC1);    // SDA pull up resistor
+
     TWBR = 250;
 
     TWCR |= (1 << TWINT); // clears int flag
@@ -24,6 +27,11 @@ void TwiClearInt(void)
 void TwiStart(void)
 {
     TWCR |= (1 << TWSTA);      // start bit
+}
+
+void TwiStartClear(void)
+{
+    TWCR &= ~(1 << TWSTA);      // start bit
 }
 
 void TwiStop(void)

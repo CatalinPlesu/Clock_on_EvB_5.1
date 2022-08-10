@@ -8,6 +8,7 @@ static TimeBCD desiredTimeBcd = {};
 
 RtcTwiState rtcTwiState = RtcTwiStateIdle;
 RtcTwiTask rtcTwiTask = RtcTwiTaskWrite;
+/* RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataWrite; */
 RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataRead;
 RtcTwiData rtcTwiData = RtcTwiDataSla;
 
@@ -20,11 +21,11 @@ void (*RtcFuncArray[])(void) = {
 
 ISR(TWI_vect)
 {
+    TwiStartClear();
     if (rtcTwiState == RtcTwiStateStop) {
         TwiStop();
         rtcTwiState = RtcTwiStateRestart;
-    }
-    else if (rtcTwiState == RtcTwiStateRestart) {
+    } else if (rtcTwiState == RtcTwiStateRestart) {
         TwiStart();
         rtcTwiData = RtcTwiDataSla;
         rtcTwiState = RtcTwiStateStart;
@@ -44,7 +45,8 @@ void RtcInit(void)
     rtcTwiState = RtcTwiStateStart;
 }
 
-TimeBCD* GetRtcTime(void){
+TimeBCD* GetRtcTime(void)
+{
     return &timeBcd;
 }
 
@@ -62,13 +64,13 @@ void RtcSla(void)
 
 void RtcRegister(void)
 {
-        TwiWrite(MINUTES_REGISTER);
-        if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
-            rtcTwiData = RtcTwiDataMinutes;
-        } else if (rtcTwiTaskData == RtcTwiTaskDataRead) {
-            rtcTwiTask = RtcTwiTaskRead;
-            rtcTwiState = RtcTwiStateRestart;
-        }
+    TwiWrite(MINUTES_REGISTER);
+    if (rtcTwiTaskData == RtcTwiTaskDataWrite) {
+        rtcTwiData = RtcTwiDataMinutes;
+    } else if (rtcTwiTaskData == RtcTwiTaskDataRead) {
+        rtcTwiTask = RtcTwiTaskRead;
+        rtcTwiState = RtcTwiStateRestart;
+    }
 }
 
 void RtcMinutes(void)
@@ -93,9 +95,10 @@ void RtcHours(void)
     rtcTwiState = RtcTwiStateStop;
 }
 
-void RtcSetTime(TimeBCD time){
+void RtcSetTime(TimeBCD time)
+{
     desiredTimeBcd = time;
-    /* rtcTwiTaskData = RtcTwiTaskDataWrite; */
+    rtcTwiTaskData = RtcTwiTaskDataWrite;
 }
 
 void TimeIncrement(Time* time)

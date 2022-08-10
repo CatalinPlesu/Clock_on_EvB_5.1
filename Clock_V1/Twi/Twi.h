@@ -33,6 +33,7 @@ void TwiInit(void);
 
 void TwiClearInt(void);
 void TwiStart(void);
+void TwiStartClear(void);
 void TwiStop(void);
 
 uint8_t TwiRead(void);

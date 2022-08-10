@@ -87,10 +87,10 @@ int main(void)
     }
 
     TimeBCD desiredTimeBcd = {};
-    desiredTimeBcd.minutes.bits.tens = 2;
-    desiredTimeBcd.minutes.bits.units = 5;
+    desiredTimeBcd.minutes.bits.tens = 5;
+    desiredTimeBcd.minutes.bits.units = 6;
     desiredTimeBcd.hours.bits.tens = 1;
-    desiredTimeBcd.hours.bits.units = 4;
+    desiredTimeBcd.hours.bits.units = 3;
     RtcSetTime(desiredTimeBcd);
 
     while (1) {
