@@ -4,13 +4,6 @@
 #include <stdint.h>
 #include "RtcCfg.h"
 
-#define SECONDS_MASK_TENS(byte) ((byte>>4)&0x7)
-#define SECONDS_MASK_UNITS(byte) ((byte)&0xf)
-#define MINUTES_MASK_TENS(byte) ((byte>>4)&0x7)
-#define MINUTES_MASK_UNITS(byte) ((byte)&0xf)
-#define HOURS_MASK_TENS(byte) ((byte>>4)&0x3)
-#define HOURS_MASK_UNITS(byte) ((byte)&0xf)
-
 typedef enum
 {
 	RtcTwiStateIdle,

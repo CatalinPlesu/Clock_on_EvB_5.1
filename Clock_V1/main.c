@@ -76,11 +76,11 @@ int main(void)
         adcValue = GetAdcValue();
 
 
-        Time desiredTime = RtcCreateTime(18, 8);
-
         RtcInit();
         ptrTime = GetRtcTime();
-        RtcSetTime(desiredTime);
+		
+        //Time desiredTime = RtcCreateTime(12, 58);
+        //RtcSetTime(desiredTime);
 
         sei();
 

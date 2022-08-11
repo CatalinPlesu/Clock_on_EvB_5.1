@@ -5,11 +5,17 @@
 #define RTC_SLA_R    0xA3
 #define RTC_SLA_W    0xA2
 
-#define MINUTES_REGISTER 0x03
-#define HOURS_REGISTER 0x04
+#define REGISTER_SECUNDES  0x02
+#define REGISTER_MINUTES   0x03
+#define REGISTER_HOURS     0x04
 
-// CPU clock frequency in the slave must be at least 16 times higher than the
-// SCL frequency 2kHz
-// twbr 250 prescaler 2
+
+
+#define SECONDS_MASK_TENS(byte) ((byte>>4)&0x7)
+#define SECONDS_MASK_UNITS(byte) ((byte)&0xf)
+#define MINUTES_MASK_TENS(byte) ((byte>>4)&0x7)
+#define MINUTES_MASK_UNITS(byte) ((byte)&0xf)
+#define HOURS_MASK_TENS(byte) ((byte>>4)&0x3)
+#define HOURS_MASK_UNITS(byte) ((byte)&0xf)
 
 #endif

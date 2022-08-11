@@ -41,12 +41,13 @@ static Time desiredTime = {};
 void RtcInit(void)
 {
     init_i2c();
+	RtcReadTime();
 }
 
 void RtcReadTime(void)
 {
     i2c_start(RTC_SLA_W);
-    i2c_write(MINUTES_REGISTER);
+    i2c_write(REGISTER_MINUTES);
     i2c_start(RTC_SLA_R);
     time.minutes = i2c_readNack();
 	i2c_start(RTC_SLA_R);
@@ -56,7 +57,8 @@ void RtcReadTime(void)
 
 void RtcWriteTime(void){
     i2c_start(RTC_SLA_W);
-    i2c_write(MINUTES_REGISTER);
+    i2c_write(REGISTER_SECUNDES);
+	i2c_write(0);
     i2c_write(desiredTime.minutes);
     i2c_write(desiredTime.hours);
     i2c_stop();
