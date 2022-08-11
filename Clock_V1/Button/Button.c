@@ -1,11 +1,16 @@
 #include "Button.h"
 #include "Led.h"
+#include "SevSeg.h"
+#include "SevSegCfg.h"
+#include "TimerCfg.h"
 
 static ButtonHandleConfig buttonHandleConfig;
 
 static TogglState togglState[BUTTON_COUNT] = {};
 static ButtonState buttonState[BUTTON_COUNT] = {};
 static uint8_t counter[BUTTON_COUNT] = {};
+static TimerSwHandle timerSwHandle[BUTTON_COUNT] = {};
+StatusError err;
 
 ButtonFunctionPtr* buttonFunctionPtr;
 
@@ -28,33 +33,55 @@ void ButtonInit(ButtonFunctionPtr* _buttonFuctionPtr){
 	// enables pull up resistor for all buttons
 	for(uint8_t i = 0; i < buttonHandleConfig.count; i++)
 		PORT_BUTTON |= (1 << buttonHandleConfig.pinValue[i]);
+		
+	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
+	
+	for(uint8_t i = 0; i < buttonHandleConfig.count; i++){
+		err = TimerSwInit(pTimerSwInitParam,&timerSwHandle[i]);
+		if (err == StatusErrNone)
+		{
+			TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
+		}
+	}
 }
 
 void ButtonRoutine(void)
 {
 	for (uint8_t i = 0; i < buttonHandleConfig.count; i++) {
+			if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
+				if (counter[i] != 0)
+					counter[i]--;
+				 else
+					buttonState[i] = ButtonStateRealesed;
+				} 
+				else { // pressed
+				if (counter[i] <= MAX_COUNTER_VALUE) 
+					counter[i]++;
+				else
+					buttonState[i] = ButtonStatePressed;
+			}
 
-		if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) {
-			if (counter[i] != 0) 
-				counter[i]--;
-			 else
-				buttonState[i] = ButtonStateRealesed;
-			} 
-			else {
-			if (counter[i] <= MAX_COUNTER_VALUE) 
-				counter[i]++;
-			else
-				buttonState[i] = ButtonStatePressed;
-		}
+			if (buttonState[i] == ButtonStateRealesed) 
+				togglState[i] = TogglStateNo;
+			else if (togglState[i] == TogglStateNo){
+				togglState[i] = TogglStateWaiting;
+				TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
+			}
 
-		if (buttonState[i] == ButtonStateRealesed) 
-			togglState[i] = TogglStateNo;
-		else if (togglState[i] == TogglStateNo) 
-			togglState[i] = TogglStateWaiting;
-
-		if (togglState[i] == TogglStateWaiting) {
-			(*buttonFunctionPtr)[i](i);
-			togglState[i] = TogglStateDone;
-		}
+			if (togglState[i] == TogglStateWaiting) {
+				//err = TimerSwIsExpired(&timerSwHandle[i]);
+				//if (err == StatusErrTime)
+				//{
+					//(*buttonFunctionPtr)[i](1);
+					//TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
+					//togglState[i] = TogglStateDone;
+				//}
+				//else if (buttonState[i] == ButtonStateRealesed){
+					//(*buttonFunctionPtr)[i](0);
+					//togglState[i] = TogglStateDone;
+				//}
+				(*buttonFunctionPtr)[i](i);
+				togglState[i] = TogglStateDone;
+			}
 	}
 }

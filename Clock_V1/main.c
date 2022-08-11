@@ -25,7 +25,7 @@ const AdcValue* adcValue = NULL;
 
 Time* ptrTimeTrackers[4] = {NULL, NULL, NULL, NULL};
 
-Time  desiredTimeTrackers[] = {
+Time desiredTimeTrackers[] = {
 	[DeviceDisplayStateClock] = { 1, 2 },
 	[DeviceDisplayStateTimer] = { 3, 4 },
 	[DeviceDisplayStateAlarm] = { 5, 6 },
@@ -224,7 +224,7 @@ void SevSegRefresh(void)
         SevSegSetFloatVal(temperature);
     } else {
 		if (displayState == DisplayStateNormal){
-			SevSegSetTimeVal((*ptrTimeTrackers)[deviceDisplayState].hours, (*ptrTimeTrackers)[deviceDisplayState].minutes);
+			SevSegSetTimeVal(ptrTimeTrackers[deviceDisplayState]->hours, ptrTimeTrackers[deviceDisplayState]->minutes);
 		}
 		else if (displayState == DisplayStateEdit){
 			SevSegSetTimeVal(desiredTimeTrackers[deviceDisplayState].hours, desiredTimeTrackers[deviceDisplayState].minutes);

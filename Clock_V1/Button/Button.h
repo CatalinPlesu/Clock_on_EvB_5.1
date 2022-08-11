@@ -16,6 +16,7 @@
 #define BUTTON_COUNT 7
 
 #define MAX_COUNTER_VALUE 100
+#define BUTTON_TIMER_MS 1000
 
 typedef enum
 {

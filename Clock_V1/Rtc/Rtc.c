@@ -5,9 +5,9 @@
 #include <stddef.h>
 
 static Time time = {};
-static Time timer = {};
-static Time alarm = {};
-static Time countdown = {};
+static Time timer = {5, 5};
+static Time alarm = {4, 4};
+static Time countdown = {3, 3};
 	
 static Time desiredTime = {};
 
@@ -46,9 +46,6 @@ void RtcInit(void)
 {
     init_i2c();
 	RtcReadTime();
-	timer = RtcCreateTime(11,11);
-	alarm = RtcCreateTime(22,22);
-	countdown = RtcCreateTime(12,34);
 }
 
 void RtcReadTime(void)
