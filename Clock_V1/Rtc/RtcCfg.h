@@ -9,8 +9,6 @@
 #define REGISTER_MINUTES   0x03
 #define REGISTER_HOURS     0x04
 
-
-
 #define SECONDS_MASK_TENS(byte) ((byte>>4)&0x7)
 #define SECONDS_MASK_UNITS(byte) ((byte)&0xf)
 #define MINUTES_MASK_TENS(byte) ((byte>>4)&0x7)

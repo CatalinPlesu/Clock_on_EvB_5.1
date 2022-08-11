@@ -21,7 +21,7 @@ typedef enum
 {
 	ButtonPower,
 	ButtonNext,
-	ButtonToggle,
+	ButtonNextDigit,
 	ButtonIncrease,
 	ButtonDecrease,
 	ButtonOk,

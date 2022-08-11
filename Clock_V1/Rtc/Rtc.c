@@ -5,6 +5,10 @@
 #include <stddef.h>
 
 static Time time = {};
+static Time timer = {};
+static Time alarm = {};
+static Time countdown = {};
+	
 static Time desiredTime = {};
 
 /* RtcTwiState rtcTwiState = RtcTwiStateIdle; */
@@ -42,6 +46,9 @@ void RtcInit(void)
 {
     init_i2c();
 	RtcReadTime();
+	timer = RtcCreateTime(11,11);
+	alarm = RtcCreateTime(22,22);
+	countdown = RtcCreateTime(12,34);
 }
 
 void RtcReadTime(void)
@@ -67,6 +74,15 @@ void RtcWriteTime(void){
 Time* GetRtcTime(void)
 {
     return &time;
+}
+Time* GetRtcTimer(void){
+	return &timer;
+}
+Time* GetRtcAlarm(void){
+	return &alarm;
+}
+Time* GetRtcCountdown(void){
+	return &countdown;
 }
 
 /* void RtcSla(void) */
@@ -129,30 +145,55 @@ Time RtcCreateTime(uint8_t hours, uint8_t minutes)
 	return time;
 }
 
-void TimeIncrement(Time* time)
-{
-    time->minutes++;
-    TimeValidate(time);
+void RtcHoursTensIncrease(Time* time){
+	time->hours=((0x3<<4)&(time->hours+(1<<4)))|HOURS_MASK_UNITS(time->hours);
+	if(HOURS_MASK_TENS(time->hours)>=3)
+		time->hours=HOURS_MASK_UNITS(time->hours);
+	if(HOURS_MASK_TENS(time->hours)*10+HOURS_MASK_UNITS(time->hours)>23)
+		time->hours = 0;
+}
+void RtcHoursTensDecrease(Time* time){
+	time->hours=((0x3<<4)&(time->hours-(1<<4)))|HOURS_MASK_UNITS(time->hours);
+	if(HOURS_MASK_TENS(time->hours)>=3)
+		time->hours=(2<<4)|HOURS_MASK_UNITS(time->hours);
+	if(HOURS_MASK_TENS(time->hours)*10+HOURS_MASK_UNITS(time->hours)>23)
+		time->hours = 0;
 }
 
-void TimeDecrement(Time* time)
-{
-    time->minutes--;
-    TimeValidate(time);
+void RtcHoursUnitsIncrease(Time* time){
+	time->hours=(0xf&(time->hours+1))|(HOURS_MASK_TENS(time->hours)<<4);
+	if(HOURS_MASK_UNITS(time->hours)>=10)
+		time->hours=(HOURS_MASK_TENS(time->hours)<<4);
+	if(HOURS_MASK_TENS(time->hours)*10+HOURS_MASK_UNITS(time->hours)>23)
+		time->hours = 0;
 }
 
-void TimeValidate(Time* time)
-{
-    if (time->minutes == 60) {
-        time->minutes = 0;
-        time->hours++;
-    }
-    if (time->minutes < 0) {
-        time->minutes = 59;
-        time->hours--;
-    }
-    if (time->hours >= 24)
-        time->hours = 0;
-    if (time->hours < 0)
-        time->hours = 24;
+void RtcHoursUnitsDecrease(Time* time){
+	time->hours=(0xf&(time->hours-1))|(HOURS_MASK_TENS(time->hours)<<4);
+	if(HOURS_MASK_UNITS(time->hours)>=10)
+		time->hours=(HOURS_MASK_TENS(time->hours)<<4)|9;
+	if(HOURS_MASK_TENS(time->hours)*10+HOURS_MASK_UNITS(time->hours)>23)
+		time->hours = 0;
+}
+
+void RtcMinutesTensIncrease(Time* time){
+	time->minutes=((0x7<<4)&(time->minutes+(1<<4)))|MINUTES_MASK_UNITS(time->minutes);
+	if(MINUTES_MASK_TENS(time->minutes)>=6)
+		time->minutes=MINUTES_MASK_UNITS(time->minutes);
+}
+void RtcMinutesTensDecrease(Time* time){
+	time->minutes=((0x7<<4)&(time->minutes-(1<<4)))|MINUTES_MASK_UNITS(time->minutes);
+	if(MINUTES_MASK_TENS(time->minutes)>=6)
+		time->minutes=(5<<4)|MINUTES_MASK_UNITS(time->minutes);
+}
+
+void RtcMinutesUnitsIncrease(Time* time){
+	time->minutes=(0xf&(time->minutes+1))|(MINUTES_MASK_TENS(time->minutes)<<4);
+	if(MINUTES_MASK_UNITS(time->minutes)>=10)
+		time->minutes=MINUTES_MASK_TENS(time->minutes);
+}
+void RtcMinutesUnitsDecrease(Time* time){
+	time->minutes=(0xf&(time->minutes-1))|(MINUTES_MASK_TENS(time->minutes)<<4);
+	if(MINUTES_MASK_UNITS(time->minutes)>=10)
+		time->minutes=(MINUTES_MASK_TENS(time->minutes)<<4)|9;
 }

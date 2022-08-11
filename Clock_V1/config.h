@@ -26,8 +26,10 @@ typedef enum
 
 typedef enum
 {
-	EditStateHours,
-	EditStateMinutes,
+	EditStateHoursTens,
+	EditStateHoursUnits,
+	EditStateMinutesTens,
+	EditStateMinutesUnits,
 }EditState;
 
 #endif /* CONFIG_H_ */

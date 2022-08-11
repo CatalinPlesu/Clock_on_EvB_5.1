@@ -14,29 +14,29 @@
 #include "config.h"
 
 DeviceState deviceState = DeviceStateStartup;
-DeviceDisplayState deviceDisplayState = DeviceDisplayStateTemperature;
-/* DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; */
+//DeviceDisplayState deviceDisplayState = DeviceDisplayStateTemperature;
+DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; 
 /* DisplayState displayState = DisplayStateOff; */
 DisplayState displayState = DisplayStateNormal;
-EditState editState = EditStateHours;
+EditState editState = EditStateHoursTens;
 
 static TimerSwHandle timerSwHandle;
 const AdcValue* adcValue = NULL;
 
-const Time* ptrTime = NULL;
+Time* ptrTimeTrackers[4] = {NULL, NULL, NULL, NULL};
 
-Time timeTrackers[] = {
-    [DeviceDisplayStateClock] = { 12, 42 },
-    [DeviceDisplayStateTimer] = { 01, 20 },
-    [DeviceDisplayStateAlarm] = { 13, 30 },
-    [DeviceDisplayStateCountdown] = { 1, 30 }
+Time  desiredTimeTrackers[] = {
+	[DeviceDisplayStateClock] = { 1, 2 },
+	[DeviceDisplayStateTimer] = { 3, 4 },
+	[DeviceDisplayStateAlarm] = { 5, 6 },
+	[DeviceDisplayStateCountdown] = { 7, 8 }
 };
 
-uint16_t temperature = 27;
+uint16_t temperature = 25;
 
 void ButtonPowerFunction(uint8_t index);
 void ButtonNextFunction(uint8_t index);
-void ButtonToggleFunction(uint8_t index);
+void ButtonNextDigitFunction(uint8_t index);
 void ButtonIncreaseFunction(uint8_t index);
 void ButtonDecreaseFunction(uint8_t index);
 void ButtonOkFunction(uint8_t index);
@@ -47,7 +47,7 @@ void SevSegRefresh(void);
 static ButtonFunctionPtr buttonFunctionPtr = {
     ButtonPowerFunction,
     ButtonNextFunction,
-    ButtonToggleFunction,
+    ButtonNextDigitFunction,
     ButtonIncreaseFunction,
     ButtonDecreaseFunction,
     ButtonOkFunction,
@@ -77,10 +77,11 @@ int main(void)
 
 
         RtcInit();
-        ptrTime = GetRtcTime();
-		
-        //Time desiredTime = RtcCreateTime(12, 58);
-        //RtcSetTime(desiredTime);
+		ptrTimeTrackers[DeviceDisplayStateClock] = GetRtcTime();
+		ptrTimeTrackers[DeviceDisplayStateTimer] = GetRtcTimer();
+		ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
+		ptrTimeTrackers[DeviceDisplayStateCountdown] = GetRtcCountdown();
+        //RtcSetTime(RtcCreateTime(13, 31));
 
         sei();
 
@@ -95,8 +96,6 @@ int main(void)
 
         err = TimerSwIsExpired(&timerSwHandle);
         if (err == StatusErrTime && !(deviceDisplayState == DeviceDisplayStateClock && displayState == DisplayStateEdit)) {
-
-            TimeIncrement(&timeTrackers[DeviceDisplayStateClock]);
 
             SevSegRefresh();
 
@@ -137,49 +136,53 @@ void ButtonNextFunction(uint8_t index)
     SevSegRefresh();
 }
 
-void ButtonToggleFunction(uint8_t index)
+void ButtonNextDigitFunction(uint8_t index)
 {
     if (displayState != DisplayStateEdit)
         return;
 
-    if (editState == EditStateHours)
-        editState = EditStateMinutes;
+    if (editState == EditStateMinutesUnits)
+        editState = EditStateHoursTens;
     else
-        editState = EditStateHours;
+        editState++;
 }
 
 void ButtonIncreaseFunction(uint8_t index)
 {
+	static void (*ptrIncreaseFunction[])(Time*) = {
+		[EditStateHoursTens] =     RtcHoursTensIncrease,
+		[EditStateHoursUnits] =    RtcHoursUnitsIncrease,
+		[EditStateMinutesTens] =   RtcMinutesTensIncrease,
+		[EditStateMinutesUnits] =  RtcMinutesUnitsIncrease,
+	};
+
     if (displayState != DisplayStateEdit)
         return;
 
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
         temperature++;
     } else {
-        if (editState == EditStateHours) {
-            timeTrackers[deviceDisplayState ].hours++;
-        } else {
-            timeTrackers[deviceDisplayState ].minutes++;
-        }
-        TimeValidate(&timeTrackers[deviceDisplayState ]);
+		ptrIncreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
     }
     SevSegRefresh();
 }
 
 void ButtonDecreaseFunction(uint8_t index)
 {
+	static void (*ptrDecreaseFunction[])(Time*) = {
+		[EditStateHoursTens] =     RtcHoursTensDecrease,
+		[EditStateHoursUnits] =    RtcHoursUnitsDecrease,
+		[EditStateMinutesTens] =   RtcMinutesTensDecrease,
+		[EditStateMinutesUnits] =  RtcMinutesUnitsDecrease,
+	};
+
     if (displayState != DisplayStateEdit)
         return;
 
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
         temperature--;
     } else {
-        if (editState == EditStateHours) {
-            timeTrackers[deviceDisplayState ].hours--;
-        } else {
-            timeTrackers[deviceDisplayState ].minutes--;
-        }
-        TimeValidate(&timeTrackers[deviceDisplayState ]);
+		ptrDecreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
     }
     SevSegRefresh();
 }
@@ -187,12 +190,20 @@ void ButtonDecreaseFunction(uint8_t index)
 void ButtonOkFunction(uint8_t index)
 {
     displayState = DisplayStateNormal;
+	if(deviceDisplayState==DeviceDisplayStateClock){
+		RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
+	}
     DeviceDisplayStateLedNormal();
 }
 void ButtonEditFunction(uint8_t index)
 {
+	if (displayState == DisplayStateEdit)
+		return;
+		
     displayState = DisplayStateEdit;
     DeviceDisplayStateLedEdit();
+	desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
+	SevSegRefresh();
 }
 
 void DeviceDisplayStateLedNormal(void)
@@ -210,11 +221,13 @@ void DeviceDisplayStateLedEdit(void)
 void SevSegRefresh(void)
 {
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        /* SevSegSetFloatVal(temperature); */
-        /* SevSegSetFloatVal(ptrTime->minutes.bits.units); */
-        /* SevSegSetTimeBcd(*ptrTime); */
-        SevSegSetTimeVal(ptrTime->hours, ptrTime->minutes);
+        SevSegSetFloatVal(temperature);
     } else {
-        SevSegSetTimeVal(timeTrackers[deviceDisplayState].hours, timeTrackers[deviceDisplayState].minutes);
+		if (displayState == DisplayStateNormal){
+			SevSegSetTimeVal((*ptrTimeTrackers)[deviceDisplayState].hours, (*ptrTimeTrackers)[deviceDisplayState].minutes);
+		}
+		else if (displayState == DisplayStateEdit){
+			SevSegSetTimeVal(desiredTimeTrackers[deviceDisplayState].hours, desiredTimeTrackers[deviceDisplayState].minutes);
+		}
     }
 }

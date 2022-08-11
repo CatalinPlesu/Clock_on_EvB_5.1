@@ -38,7 +38,11 @@ typedef struct{
 void RtcInit(void);
 void RtcReadTime(void);
 void RtcWriteTime(void);
+
 Time* GetRtcTime(void);
+Time* GetRtcTimer(void);
+Time* GetRtcAlarm(void);
+Time* GetRtcCountdown(void);
 
 void RtcSla(void);
 void RtcRegister(void);
@@ -48,8 +52,14 @@ void RtcHours(void);
 void RtcSetTime(Time time);
 Time RtcCreateTime(uint8_t hours, uint8_t minutes);
 
-void TimeIncrement(Time* time);
-void TimeDecrement(Time* time);
-void TimeValidate(Time* time);
+void RtcHoursTensIncrease(Time* time);
+void RtcHoursUnitsIncrease(Time* time);
+void RtcMinutesTensIncrease(Time* time);
+void RtcMinutesUnitsIncrease(Time* time);
+void RtcHoursTensDecrease(Time* time);
+void RtcHoursUnitsDecrease(Time* time);
+void RtcMinutesTensDecrease(Time* time);
+void RtcMinutesUnitsDecrease(Time* time);
+
 
 #endif
