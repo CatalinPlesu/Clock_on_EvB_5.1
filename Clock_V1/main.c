@@ -14,9 +14,8 @@
 #include "config.h"
 
 DeviceState deviceState = DeviceStateStartup;
-//DeviceDisplayState deviceDisplayState = DeviceDisplayStateTemperature;
 DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; 
-/* DisplayState displayState = DisplayStateOff; */
+//DisplayState displayState = DisplayStateOff; 
 DisplayState displayState = DisplayStateNormal;
 EditState editState = EditStateHoursTens;
 
@@ -24,6 +23,7 @@ static TimerSwHandle timerSwHandle;
 const AdcValue* adcValue = NULL;
 
 Time* ptrTimeTrackers[4] = {NULL, NULL, NULL, NULL};
+Time oldTime = {};
 
 Time desiredTimeTrackers[] = {
 	[DeviceDisplayStateClock] = { 1, 2 },
@@ -32,7 +32,8 @@ Time desiredTimeTrackers[] = {
 	[DeviceDisplayStateCountdown] = { 7, 8 }
 };
 
-uint16_t temperature = 25;
+uint8_t temperature = 25;
+uint8_t oldTemperature = 0;
 
 void ButtonPowerFunction(uint8_t index);
 void ButtonNextFunction(uint8_t index);
@@ -93,17 +94,25 @@ int main(void)
 
     while (1) {
         ButtonRoutine();
+        RtcReadTime();
 
-        err = TimerSwIsExpired(&timerSwHandle);
-        if (err == StatusErrTime && !(deviceDisplayState == DeviceDisplayStateClock && displayState == DisplayStateEdit)) {
-
-            SevSegRefresh();
-
-            TimerSwStartup(&timerSwHandle, 1000);
-            RtcReadTime();
-        }
-
-        /* SevSegRefresh(); */
+        //err = TimerSwIsExpired(&timerSwHandle);
+        //if (err == StatusErrTime) {
+            //TimerSwStartup(&timerSwHandle, 1000);
+        //}
+		
+		if(deviceDisplayState==DeviceDisplayStateTemperature){
+			if(oldTemperature!=temperature)
+			{
+				oldTemperature = temperature;
+				SevSegRefresh();
+			}
+		}else{
+			if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours && oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes){
+				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
+				SevSegRefresh();
+			}
+		}
 
         if (displayState == DisplayStateOff)
             SevSegCfgAllDigitsOff();
@@ -116,6 +125,7 @@ void ButtonPowerFunction(uint8_t index)
 {
     if (displayState == DisplayStateOff) {
         displayState = DisplayStateNormal;
+		SevSegRefresh();
         DeviceDisplayStateLedNormal();
     } else {
         displayState = DisplayStateOff;
@@ -142,22 +152,26 @@ void ButtonNextDigitFunction(uint8_t index)
         return;
 
     if (editState == EditStateMinutesUnits)
-        editState = EditStateHoursTens;
-    else
-        editState++;
+       { editState = EditStateHoursTens;}
+    else {
+		if(index)
+			editState+=2;
+		else
+		   editState++;
+    }
 }
 
 void ButtonIncreaseFunction(uint8_t index)
-{
+{  
+	if (displayState != DisplayStateEdit)
+		return;
+
 	static void (*ptrIncreaseFunction[])(Time*) = {
 		[EditStateHoursTens] =     RtcHoursTensIncrease,
 		[EditStateHoursUnits] =    RtcHoursUnitsIncrease,
 		[EditStateMinutesTens] =   RtcMinutesTensIncrease,
 		[EditStateMinutesUnits] =  RtcMinutesUnitsIncrease,
 	};
-
-    if (displayState != DisplayStateEdit)
-        return;
 
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
         temperature++;
@@ -169,15 +183,15 @@ void ButtonIncreaseFunction(uint8_t index)
 
 void ButtonDecreaseFunction(uint8_t index)
 {
+	if (displayState != DisplayStateEdit)
+		return;
+		
 	static void (*ptrDecreaseFunction[])(Time*) = {
 		[EditStateHoursTens] =     RtcHoursTensDecrease,
 		[EditStateHoursUnits] =    RtcHoursUnitsDecrease,
 		[EditStateMinutesTens] =   RtcMinutesTensDecrease,
 		[EditStateMinutesUnits] =  RtcMinutesUnitsDecrease,
 	};
-
-    if (displayState != DisplayStateEdit)
-        return;
 
     if (deviceDisplayState == DeviceDisplayStateTemperature) {
         temperature--;
@@ -188,7 +202,9 @@ void ButtonDecreaseFunction(uint8_t index)
 }
 
 void ButtonOkFunction(uint8_t index)
-{
+{	if(displayState!=DisplayStateEdit)
+		return;
+		
     displayState = DisplayStateNormal;
 	if(deviceDisplayState==DeviceDisplayStateClock){
 		RtcSetTime(desiredTimeTrackers[deviceDisplayState]);

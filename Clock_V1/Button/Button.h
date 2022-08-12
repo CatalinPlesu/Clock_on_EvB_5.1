@@ -15,8 +15,9 @@
 #define PIN_BUTTON_ABORT PD6
 #define BUTTON_COUNT 7
 
-#define MAX_COUNTER_VALUE 100
-#define BUTTON_TIMER_MS 1000
+#define MAX_COUNTER_VALUE 50
+#define BUTTON_TIMER_MS 1
+#define BUTTON_TIMER_HELD_MS 1000
 
 typedef enum
 {
@@ -38,8 +39,9 @@ typedef enum
 
 typedef enum
 {
-	ButtonStatePressed,
 	ButtonStateRealesed,
+	ButtonStateHeld,
+	ButtonStatePressed,
 }ButtonState;
 
 typedef struct

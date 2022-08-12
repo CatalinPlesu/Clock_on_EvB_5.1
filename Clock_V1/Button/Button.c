@@ -28,12 +28,12 @@ void ButtonInit(ButtonFunctionPtr* _buttonFuctionPtr){
 
 	// makes button pins input
 	for (uint8_t i = 0; i < buttonHandleConfig.count; i++)
-		PORT_DIRECTION_BUTTON &= ~(1 << buttonHandleConfig.pinValue[i]);
+	PORT_DIRECTION_BUTTON &= ~(1 << buttonHandleConfig.pinValue[i]);
 
 	// enables pull up resistor for all buttons
 	for(uint8_t i = 0; i < buttonHandleConfig.count; i++)
-		PORT_BUTTON |= (1 << buttonHandleConfig.pinValue[i]);
-		
+	PORT_BUTTON |= (1 << buttonHandleConfig.pinValue[i]);
+	
 	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
 	
 	for(uint8_t i = 0; i < buttonHandleConfig.count; i++){
@@ -48,40 +48,34 @@ void ButtonInit(ButtonFunctionPtr* _buttonFuctionPtr){
 void ButtonRoutine(void)
 {
 	for (uint8_t i = 0; i < buttonHandleConfig.count; i++) {
-			if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
-				if (counter[i] != 0)
-					counter[i]--;
-				 else
-					buttonState[i] = ButtonStateRealesed;
-				} 
-				else { // pressed
-				if (counter[i] <= MAX_COUNTER_VALUE) 
-					counter[i]++;
-				else
-					buttonState[i] = ButtonStatePressed;
-			}
+		err = TimerSwIsExpired(&timerSwHandle[i]);
+		if (err == StatusErrTime)
+		{
+		if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
+			if (counter[i] != 0)
+			counter[i]--;
+			else
+			buttonState[i] = ButtonStateRealesed;
+		}
+		else { // pressed
+			if (counter[i] <= MAX_COUNTER_VALUE)
+			counter[i]++;
+			else
+			buttonState[i] = ButtonStatePressed;
+		}
 
-			if (buttonState[i] == ButtonStateRealesed) 
-				togglState[i] = TogglStateNo;
-			else if (togglState[i] == TogglStateNo){
-				togglState[i] = TogglStateWaiting;
-				TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
-			}
+		if (buttonState[i] == ButtonStateRealesed)
+		togglState[i] = TogglStateNo;
+		else if (togglState[i] == TogglStateNo){
+			togglState[i] = TogglStateWaiting;
+			TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
+		}
 
-			if (togglState[i] == TogglStateWaiting) {
-				//err = TimerSwIsExpired(&timerSwHandle[i]);
-				//if (err == StatusErrTime)
-				//{
-					//(*buttonFunctionPtr)[i](1);
-					//TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
-					//togglState[i] = TogglStateDone;
-				//}
-				//else if (buttonState[i] == ButtonStateRealesed){
-					//(*buttonFunctionPtr)[i](0);
-					//togglState[i] = TogglStateDone;
-				//}
-				(*buttonFunctionPtr)[i](i);
-				togglState[i] = TogglStateDone;
-			}
+		if (togglState[i] == TogglStateWaiting) {
+			(*buttonFunctionPtr)[i](i);
+			togglState[i] = TogglStateDone;
+		}
+		TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
+	}
 	}
 }
