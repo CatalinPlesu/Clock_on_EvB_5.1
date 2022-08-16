@@ -14,6 +14,9 @@
 #ifndef I2C_H_
 #define I2C_H_
 
+#define F_CPU 16000000
+#define SCL_CLOCK  100000 //100 kHz
+
 void    init_i2c(void);
 void    i2c_stop(void);
 uint8_t i2c_start(uint8_t addr);

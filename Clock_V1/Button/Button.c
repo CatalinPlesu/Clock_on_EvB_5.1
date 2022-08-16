@@ -19,11 +19,11 @@ void ButtonInit(ButtonFunctionPtr* _buttonFuctionPtr){
 
 	buttonHandleConfig.pinValue[0] = PIN_BUTTON_POWER;
 	buttonHandleConfig.pinValue[1] = PIN_BUTTON_NEXT;
-	buttonHandleConfig.pinValue[2] = PIN_BUTTON_TOGGLE;
+	buttonHandleConfig.pinValue[2] = PIN_BUTTON_NEXT_DIGIT;
 	buttonHandleConfig.pinValue[3] = PIN_BUTTON_INCREASE;
 	buttonHandleConfig.pinValue[4] = PIN_BUTTON_DECREASE;
 	buttonHandleConfig.pinValue[5] = PIN_BUTTON_OK;
-	buttonHandleConfig.pinValue[6] = PIN_BUTTON_ABORT;
+	buttonHandleConfig.pinValue[6] = PIN_BUTTON_EDIT;
 	buttonHandleConfig.count = BUTTON_COUNT;
 
 	// makes button pins input
@@ -51,31 +51,31 @@ void ButtonRoutine(void)
 		err = TimerSwIsExpired(&timerSwHandle[i]);
 		if (err == StatusErrTime)
 		{
-		if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
-			if (counter[i] != 0)
-			counter[i]--;
-			else
-			buttonState[i] = ButtonStateRealesed;
-		}
-		else { // pressed
-			if (counter[i] <= MAX_COUNTER_VALUE)
-			counter[i]++;
-			else
-			buttonState[i] = ButtonStatePressed;
-		}
+			if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
+				if (counter[i] != 0)
+				counter[i]--;
+				else
+				buttonState[i] = ButtonStateRealesed;
+			}
+			else { // pressed
+				if (counter[i] <= MAX_COUNTER_VALUE)
+				counter[i]++;
+				else
+				buttonState[i] = ButtonStatePressed;
+			}
 
-		if (buttonState[i] == ButtonStateRealesed)
-		togglState[i] = TogglStateNo;
-		else if (togglState[i] == TogglStateNo){
-			togglState[i] = TogglStateWaiting;
+			if (buttonState[i] == ButtonStateRealesed)
+			togglState[i] = TogglStateNo;
+			else if (togglState[i] == TogglStateNo){
+				togglState[i] = TogglStateWaiting;
+			}
+
+			if (togglState[i] == TogglStateWaiting) {
+				(*buttonFunctionPtr)[i](i);
+				togglState[i] = TogglStateDone;
+				buttonState[i] = ButtonStateUnpressed;
+			}
 			TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
 		}
-
-		if (togglState[i] == TogglStateWaiting) {
-			(*buttonFunctionPtr)[i](i);
-			togglState[i] = TogglStateDone;
-		}
-		TimerSwStartup(&timerSwHandle[i],BUTTON_TIMER_MS);
-	}
 	}
 }

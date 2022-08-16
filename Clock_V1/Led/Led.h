@@ -2,15 +2,7 @@
 #define LED_H_
 
 #include <avr/io.h>
-
-#define PORT_DIRECTION_LED DDRA
-#define PORT_LED PORTA
-#define PIN_LED_CLOCK PA0
-#define PIN_LED_TIMER PA1
-#define PIN_LED_ALARM PA2
-#define PIN_LED_CONTDOWN PA3
-#define PIN_LED_TEMPERATURE PA4
-#define LED_COUNT 5
+#include "LedCfg.h"
 
 typedef struct
 {

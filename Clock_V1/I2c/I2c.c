@@ -14,8 +14,6 @@
 #include <avr/io.h>
 #include<util/twi.h>
 #include "I2c.h"
-#define F_CPU 16000000
-#define SCL_CLOCK  100000 //100 kHz
 /*************************************************************************
  Initialization of the I2C bus interface. Need to be called only once
 *************************************************************************/

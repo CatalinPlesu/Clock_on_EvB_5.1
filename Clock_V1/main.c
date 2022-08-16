@@ -11,7 +11,7 @@
 #include "SevSeg.h"
 #include "TimerCfg.h"
 #include "TimerSw.h"
-#include "config.h"
+#include "main.h"
 
 DeviceState deviceState = DeviceStateStartup;
 DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; 
@@ -26,10 +26,10 @@ Time* ptrTimeTrackers[4] = {NULL, NULL, NULL, NULL};
 Time oldTime = {};
 
 Time desiredTimeTrackers[] = {
-	[DeviceDisplayStateClock] = { 1, 2 },
-	[DeviceDisplayStateTimer] = { 3, 4 },
-	[DeviceDisplayStateAlarm] = { 5, 6 },
-	[DeviceDisplayStateCountdown] = { 7, 8 }
+	[DeviceDisplayStateClock] = { (1<<4)|2, 0 },
+	[DeviceDisplayStateTimer] = { 0, 0 },
+	[DeviceDisplayStateAlarm] = { (1<<4)|2, 0 },
+	[DeviceDisplayStateCountdown] = { 0, 5 }
 };
 
 uint8_t temperature = 25;
@@ -101,18 +101,7 @@ int main(void)
             //TimerSwStartup(&timerSwHandle, 1000);
         //}
 		
-		if(deviceDisplayState==DeviceDisplayStateTemperature){
-			if(oldTemperature!=temperature)
-			{
-				oldTemperature = temperature;
-				SevSegRefresh();
-			}
-		}else{
-			if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours && oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes){
-				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
-				SevSegRefresh();
-			}
-		}
+		SevSegRefresh();
 
         if (displayState == DisplayStateOff)
             SevSegCfgAllDigitsOff();
@@ -131,6 +120,8 @@ void ButtonPowerFunction(uint8_t index)
         displayState = DisplayStateOff;
         LedAllOff();
     }
+	LedAllOff();
+	LedOn(index);
 }
 
 void ButtonNextFunction(uint8_t index)
@@ -154,10 +145,7 @@ void ButtonNextDigitFunction(uint8_t index)
     if (editState == EditStateMinutesUnits)
        { editState = EditStateHoursTens;}
     else {
-		if(index)
-			editState+=2;
-		else
-		   editState++;
+	   editState++;
     }
 }
 
@@ -210,6 +198,7 @@ void ButtonOkFunction(uint8_t index)
 		RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
 	}
     DeviceDisplayStateLedNormal();
+	SevSegRefresh();
 }
 void ButtonEditFunction(uint8_t index)
 {
@@ -236,14 +225,21 @@ void DeviceDisplayStateLedEdit(void)
 
 void SevSegRefresh(void)
 {
-    if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        SevSegSetFloatVal(temperature);
-    } else {
+	if (deviceDisplayState == DeviceDisplayStateTemperature) {
+		if(oldTemperature!=temperature)
+		{
+			oldTemperature = temperature;
+			SevSegSetFloatVal(temperature);
+		}
+		} else {
 		if (displayState == DisplayStateNormal){
-			SevSegSetTimeVal(ptrTimeTrackers[deviceDisplayState]->hours, ptrTimeTrackers[deviceDisplayState]->minutes);
+			if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours && oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes){
+				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
+				SevSegSetTimeVal(ptrTimeTrackers[deviceDisplayState]->hours, ptrTimeTrackers[deviceDisplayState]->minutes);
+			}
 		}
 		else if (displayState == DisplayStateEdit){
 			SevSegSetTimeVal(desiredTimeTrackers[deviceDisplayState].hours, desiredTimeTrackers[deviceDisplayState].minutes);
 		}
-    }
+	}
 }
