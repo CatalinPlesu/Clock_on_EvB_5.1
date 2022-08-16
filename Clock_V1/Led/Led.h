@@ -6,8 +6,10 @@
 
 typedef struct
 {
-	uint8_t count;
+	volatile uint8_t *ddr[LED_COUNT];
+	volatile uint8_t *port[LED_COUNT];
 	uint8_t pinValue[LED_COUNT];
+	uint8_t count;
 }LedHandleConfig;
 
 void LedInit(void);

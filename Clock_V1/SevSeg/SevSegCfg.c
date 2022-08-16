@@ -6,51 +6,70 @@
  */ 
 #include "SevSegCfg.h"
 
-static SevSegHandleConfig disp7SegHandleConfig;
+static SevSegHandleConfig sevsegHandleConfig;
+
+
+
+
 
 SevSegHandleConfig* SevSegCfgInitAndGet()
 {
-	disp7SegHandleConfig.port = DISPLAY_7_SEGMENT_PORT;
-	disp7SegHandleConfig.portDig = DISPLAY_7_SEGMENT_DIGIT_PORT;
+	SevSegHandleConfig sevseg_handle_config = {
+		.ddrSeg = { &SEVSEG_0_DDR, &SEVSEG_1_DDR, &SEVSEG_2_DDR, &SEVSEG_3_DDR, &SEVSEG_4_DDR, &SEVSEG_5_DDR, &SEVSEG_6_DDR, &SEVSEG_7_DDR },
+		.portSeg = { &SEVSEG_0_PORT, &SEVSEG_1_PORT, &SEVSEG_2_PORT, &SEVSEG_3_PORT, &SEVSEG_4_PORT, &SEVSEG_5_PORT, &SEVSEG_6_PORT, &SEVSEG_7_PORT },
+		.portSegValue = { SEVSEG_1_PORT_VALUE, SEVSEG_2_PORT_VALUE, SEVSEG_3_PORT_VALUE, SEVSEG_4_PORT_VALUE, SEVSEG_5_PORT_VALUE, SEVSEG_6_PORT_VALUE, SEVSEG_7_PORT_VALUE, },
+		.ddrDIgit={ &SEVSEG_DIGIT_1_DDR, &SEVSEG_DIGIT_2_DDR, &SEVSEG_DIGIT_3_DDR, &SEVSEG_DIGIT_4_DDR, },
+		.portDigit={ &SEVSEG_DIGIT_1_PORT, &SEVSEG_DIGIT_2_PORT, &SEVSEG_DIGIT_3_PORT, &SEVSEG_DIGIT_4_PORT, },
+		.portDigitValue={ SEVSEG_DIGIT_2_PORT_VALUE, SEVSEG_DIGIT_3_PORT_VALUE, SEVSEG_DIGIT_4_PORT_VALUE, },
+		.digitsCount = SEVSEG_DIGITS_COUNT
+	};
+
+
+	sevsegHandleConfig = sevseg_handle_config;
 	
-	DISPLAY_7_SEGMENT_PORT_DIR = 0xFF;
+	// makes all segment ports output
+	for(uint8_t i = 0; i < 8; i++){
+		*sevsegHandleConfig.ddrSeg[i] |= (0x01 << sevsegHandleConfig.portSegValue[i]);
+	}
 	
-	disp7SegHandleConfig.digitsPinValue[0] = DISPLAY_7_SEGMENT_DIGIT_1_PIN;
-	disp7SegHandleConfig.digitsPinValue[1] = DISPLAY_7_SEGMENT_DIGIT_2_PIN;
-	disp7SegHandleConfig.digitsPinValue[2] = DISPLAY_7_SEGMENT_DIGIT_3_PIN;
-	disp7SegHandleConfig.digitsPinValue[3] = DISPLAY_7_SEGMENT_DIGIT_4_PIN;
-		
-	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_1_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_2_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_3_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT_DIR |= (1 << DISPLAY_7_SEGMENT_DIGIT_4_PIN);
+	// makes all digit ports output
+	for(uint8_t i = 0; i < sevsegHandleConfig.digitsCount; i++){
+		*sevsegHandleConfig.ddrDIgit[i] |=	(0x01 << sevsegHandleConfig.portDigitValue[i]);
+	}
 	
-	return &disp7SegHandleConfig;
+	return &sevsegHandleConfig;
 }
 
 void SevSegCfgAllDigitsOff(void)
 {
-	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_1_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_2_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_3_PIN);
-	DISPLAY_7_SEGMENT_DIGIT_PORT |= (1 << DISPLAY_7_SEGMENT_DIGIT_4_PIN);
-	
+	for(uint8_t i = 0; i < sevsegHandleConfig.digitsCount; i++){
+		*sevsegHandleConfig.portDigit[i] |= (0x01 << sevsegHandleConfig.portDigitValue[i]);
+	}
 }
 
 void SevSegCfgSetDigitValue(uint8_t value)
 {
-#if (DISPLAY_7_SEGMENT_MODE == COMUN_POWER_SUPPLY)
-	DISPLAY_7_SEGMENT_PORT = ~value;
-#else
-	DISPLAY_7_SEGMENT_PORT = value;
-#endif
+	for(uint8_t i = 0; i < 8; i++){
+		#if (SEVSEG_SEGMENT_MODE == COMUN_POWER_SUPPLY)
+			uint8_t bit_value = (~value)&(0x01 << sevsegHandleConfig.portSegValue[i]);
+		#else
+			uint8_t bit_value = value&(0x01 << sevsegHandleConfig.portSegValue[i]);
+		#endif
+
+		if(bit_value){
+			*sevsegHandleConfig.portSeg[i] |= (0x01<<sevsegHandleConfig.portSegValue[i]);
+		}else
+		{
+			*sevsegHandleConfig.portSeg[i] &= (0x01<<sevsegHandleConfig.portSegValue[i]);
+		}
+	}
 }
 
 void SevSegCfgDigitOn(uint8_t digit)
 {
-	if (digit < DISPLAY_7_SEGMENT_DIGITS_COUNT)
+	if (digit < SEVSEG_DIGITS_COUNT)
 	{
-		DISPLAY_7_SEGMENT_DIGIT_PORT &= ~(1 << disp7SegHandleConfig.digitsPinValue[digit]);		
+		*sevsegHandleConfig.portDigit[digit] &= ~(1 << sevsegHandleConfig.portDigitValue[digit]);		
 	}	
 }
 

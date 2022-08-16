@@ -11,7 +11,7 @@ typedef struct
 {
 	uint8_t adcActiveChannel;
 	uint8_t adcChannelsCount;
-	uint8_t adcPinValue[ADC_CHANNELS_USED];
+	uint8_t adcpin[ADC_CHANNELS_USED];
 }AdcHandleConfig;
 
 AdcHandleConfig* AdcCfgInitAndGet(void);

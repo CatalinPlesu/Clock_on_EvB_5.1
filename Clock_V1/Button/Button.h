@@ -31,8 +31,11 @@ typedef enum
 
 typedef struct
 {
-	uint8_t count;
+	volatile uint8_t *ddr[BUTTON_COUNT];
+	volatile uint8_t *port[BUTTON_COUNT];
+	volatile uint8_t *pin[BUTTON_COUNT];
 	uint8_t pinValue[BUTTON_COUNT];
+	uint8_t count;
 }ButtonHandleConfig;
 
 // index 1:3 - number of clicks

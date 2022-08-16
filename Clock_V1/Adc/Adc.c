@@ -17,7 +17,7 @@ ISR(ADC_vect){
 		adcHandleConfig->adcActiveChannel = 0;
 	
 	ADMUX &= 0xF0;																 // Clear the older channel that was read
-	ADMUX |= adcHandleConfig->adcPinValue[adcHandleConfig->adcActiveChannel];    // Defines the new ADC channel to be read
+	ADMUX |= adcHandleConfig->adcpin[adcHandleConfig->adcActiveChannel];    // Defines the new ADC channel to be read
 }
 
 void AdcInit(void){

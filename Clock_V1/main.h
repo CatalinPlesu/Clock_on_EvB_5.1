@@ -1,6 +1,10 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#include <avr/interrupt.h>
+#include <avr/io.h>
+#include <stdbool.h>
+
 typedef enum
 {	DeviceStateStartup,
 	DeviceStateInit,

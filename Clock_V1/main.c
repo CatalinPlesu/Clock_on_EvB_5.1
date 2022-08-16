@@ -1,9 +1,7 @@
 // ./avrdude.exe -p atmega32 -P usb -c usbasp -U flash:w:../Clock_V1/Clock_V1/Debug/Clock_V1.hex:i
 
-#include <avr/interrupt.h>
-#include <avr/io.h>
-#include <stdbool.h>
 
+#include "main.h"
 #include "Adc.h"
 #include "Button.h"
 #include "Led.h"
@@ -11,7 +9,7 @@
 #include "SevSeg.h"
 #include "TimerCfg.h"
 #include "TimerSw.h"
-#include "main.h"
+#include "Ds18b20.h"
 
 DeviceState deviceState = DeviceStateStartup;
 DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock; 

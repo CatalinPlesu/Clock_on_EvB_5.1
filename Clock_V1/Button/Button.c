@@ -16,23 +16,28 @@ ButtonFunctionPtr* buttonFunctionPtr;
 
 void ButtonInit(ButtonFunctionPtr* _buttonFuctionPtr){
 	buttonFunctionPtr = _buttonFuctionPtr;
-
-	buttonHandleConfig.pinValue[0] = PIN_BUTTON_POWER;
-	buttonHandleConfig.pinValue[1] = PIN_BUTTON_NEXT;
-	buttonHandleConfig.pinValue[2] = PIN_BUTTON_NEXT_DIGIT;
-	buttonHandleConfig.pinValue[3] = PIN_BUTTON_INCREASE;
-	buttonHandleConfig.pinValue[4] = PIN_BUTTON_DECREASE;
-	buttonHandleConfig.pinValue[5] = PIN_BUTTON_OK;
-	buttonHandleConfig.pinValue[6] = PIN_BUTTON_EDIT;
-	buttonHandleConfig.count = BUTTON_COUNT;
+	
+	ButtonHandleConfig button_handle_config = {
+		.ddr = {&BUTTON0_DDR, &BUTTON1_DDR, &BUTTON2_DDR, &BUTTON3_DDR,
+			&BUTTON4_DDR, &BUTTON5_DDR, &BUTTON7_DDR},
+		.port = {&BUTTON0_PORT, &BUTTON1_PORT, &BUTTON2_PORT, &BUTTON3_PORT,
+			&BUTTON4_PORT, &BUTTON5_PORT, &BUTTON7_PORT},
+		.pin = {&BUTTON0_PIN, &BUTTON1_PIN, &BUTTON2_PIN,
+			&BUTTON3_PIN, &BUTTON4_PIN, &BUTTON5_PIN, &BUTTON7_PIN},
+		.pinValue = {BUTTON0_PIN_VALUE, BUTTON1_PIN_VALUE, BUTTON2_PIN_VALUE, 
+			BUTTON3_PIN_VALUE, BUTTON4_PIN_VALUE, BUTTON5_PIN_VALUE, BUTTON7_PIN_VALUE},
+		.count = BUTTON_COUNT,
+	};
+	buttonHandleConfig = button_handle_config;
 
 	// makes button pins input
-	for (uint8_t i = 0; i < buttonHandleConfig.count; i++)
-	PORT_DIRECTION_BUTTON &= ~(1 << buttonHandleConfig.pinValue[i]);
+	for (uint8_t i = 0; i < buttonHandleConfig.count; i++){
+	    *buttonHandleConfig.ddr[i] &= ~(0x01 << buttonHandleConfig.pinValue[i]);
+	}
 
 	// enables pull up resistor for all buttons
 	for(uint8_t i = 0; i < buttonHandleConfig.count; i++)
-	PORT_BUTTON |= (1 << buttonHandleConfig.pinValue[i]);
+	    *buttonHandleConfig.port[i] |= (0x1 << buttonHandleConfig.pinValue[i]);
 	
 	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
 	
@@ -51,7 +56,7 @@ void ButtonRoutine(void)
 		err = TimerSwIsExpired(&timerSwHandle[i]);
 		if (err == StatusErrTime)
 		{
-			if (PIN_BUTTON & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
+			if (*buttonHandleConfig.pin[i] & (1 << buttonHandleConfig.pinValue[i])) { // not pressed
 				if (counter[i] != 0)
 				counter[i]--;
 				else

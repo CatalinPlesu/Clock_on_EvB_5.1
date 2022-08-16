@@ -18,9 +18,9 @@
 
 
 static uint8_t digitCount = 0;
-static SevSegHandleConfig* disp7SegHandleConfig;
+static SevSegHandleConfig* sevsegHandleConfig;
 TimerSwHandle timerSwHandle;
-uint8_t digitsValue[DISPLAY_7_SEGMENT_DIGITS_COUNT];
+uint8_t digitsValue[SEVSEG_DIGITS_COUNT];
 uint8_t segCode[12]= {
 	//  . a  b  c  d  e  f  g  
 	0b01111110,  // 0
@@ -44,11 +44,11 @@ static void FloatToBuff(float value,uint8_t * data);
 void SevSegInit(void)
 {
 	StatusError err;
-	for(uint8_t index = 0; index < DISPLAY_7_SEGMENT_DIGITS_COUNT; index++)
+	for(uint8_t index = 0; index < SEVSEG_DIGITS_COUNT; index++)
 	{
 		digitsValue[index] = 0;
 	}
-	disp7SegHandleConfig = SevSegCfgInitAndGet();	
+	sevsegHandleConfig = SevSegCfgInitAndGet();	
 	
 	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
 	
@@ -56,7 +56,7 @@ void SevSegInit(void)
 	
 	if (err == StatusErrNone)
 	{
-		TimerSwStartup(&timerSwHandle,DISPLAY_7_SEGMENT_TIMER_MS);
+		TimerSwStartup(&timerSwHandle,SEVSEG_TIMER_MS);
 	}
 	digitCount = 0;
 }
@@ -67,7 +67,7 @@ void SevSegRutine(void)
 	err = TimerSwIsExpired(&timerSwHandle);
 	if (err == StatusErrTime)
 	{
-		if (digitCount >= DISPLAY_7_SEGMENT_DIGITS_COUNT)
+		if (digitCount >= SEVSEG_DIGITS_COUNT)
 		{
 			digitCount = 0;
 		}
@@ -77,7 +77,7 @@ void SevSegRutine(void)
 		
 		SevSegCfgDigitOn(digitCount);
 		
-		TimerSwStartup(&timerSwHandle,DISPLAY_7_SEGMENT_TIMER_MS);
+		TimerSwStartup(&timerSwHandle,SEVSEG_TIMER_MS);
 		
 		digitCount++;
 	}
@@ -103,7 +103,7 @@ StatusError SevSegSetFloatVal(float value)
 StatusError SevSegSetByDigit(uint8_t digitIndex, uint8_t digitValue, bool withComa)
 {
 	uint8_t localDigitValue;
-	if (digitIndex < DISPLAY_7_SEGMENT_DIGITS_COUNT)
+	if (digitIndex < SEVSEG_DIGITS_COUNT)
 	{
 		if (digitValue > MAX_DIGIT_VALUE)
 		{
@@ -126,7 +126,7 @@ StatusError SevSegSetByDigit(uint8_t digitIndex, uint8_t digitValue, bool withCo
 
 StatusError SevSegSetByDigitCostum(uint8_t digitIndex, uint8_t digitValue)
 {
-	if (digitIndex < DISPLAY_7_SEGMENT_DIGITS_COUNT)
+	if (digitIndex < SEVSEG_DIGITS_COUNT)
 	{
 		digitsValue[digitIndex] = digitValue;
 		return StatusErrNone;
@@ -145,18 +145,18 @@ static void FloatToBuff(float value,uint8_t * data)
 	uint8_t tmp;
 	float localVlaue, localdecValue, decimalMultipler;
 	
-	decimalMultipler = (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT - 1));
+	decimalMultipler = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1));
 	
 	if (value < 0)
 	{
 		value *= -1;
 		data[localdigitCount] = segCode[MINUS_INDEX];
 		localdigitCount++;
-		decVal = (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT - 2));
+		decVal = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 2));
 		
-		if (value >= (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT - 1)))
+		if (value >= (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1)))
 		{
-			localVlaue = (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT - 1)) - 1;
+			localVlaue = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1)) - 1;
 		}
 		else
 		{
@@ -165,11 +165,11 @@ static void FloatToBuff(float value,uint8_t * data)
 	}
 	else
 	{
-		decVal = (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT - 1));
+		decVal = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1));
 		
-		if (value >= (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT)))
+		if (value >= (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT)))
 		{
-			localVlaue = (float)pow((double)10,(double)(DISPLAY_7_SEGMENT_DIGITS_COUNT)) - 1;
+			localVlaue = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT)) - 1;
 		}
 		else
 		{
@@ -198,7 +198,7 @@ static void FloatToBuff(float value,uint8_t * data)
 		
 	}
 	
-	if (localdigitCount >= DISPLAY_7_SEGMENT_DIGITS_COUNT)
+	if (localdigitCount >= SEVSEG_DIGITS_COUNT)
 	{
 		return;
 	}
@@ -213,7 +213,7 @@ static void FloatToBuff(float value,uint8_t * data)
 	
 	decVal = decimalMultipler / 10;
 	
-	while(localdigitCount <= DISPLAY_7_SEGMENT_DIGITS_COUNT)
+	while(localdigitCount <= SEVSEG_DIGITS_COUNT)
 	{
 		tmp = (uint8_t)(localdecValue / decVal);
 		data[localdigitCount] = segCode[tmp];
