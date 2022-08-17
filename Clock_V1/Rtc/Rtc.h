@@ -3,28 +3,17 @@
 
 #include <stdint.h>
 #include "RtcCfg.h"
-
-typedef enum{
-	RtcTimerStateIdle,
-	RtcTimerStateRunning,
-}RtcTimerState;
-
-typedef struct{
-	uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hours;
-}Time;
+ 
+void RtcInit(void (*ptrAlarmFunction)(void));
 
 Time* GetRtcTime(void);
 Time* GetRtcTimer(void);
 Time* GetRtcAlarm(void);
 Time* GetRtcCountdown(void);
 
-void RtcInit(void);
 void RtcReadTime(void);
-void RtcWriteTime(void);
-void RtcSetTime(Time time);
-Time RtcCreateTime(uint8_t hours, uint8_t minutes, uint8_t seconds);
+void RtcSetTime(Time desiredTime );
+Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds);
 
 void RtcTimerToggle(void);
 void RtcTimerRestart(void);

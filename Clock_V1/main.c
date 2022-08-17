@@ -55,6 +55,7 @@ static ButtonFunctionPtr buttonFunctionPtr = {
 
 void DeviceDisplayStateLedNormal(void);
 void DeviceDisplayStateLedEdit(void);
+void BuzzerFunction(void);
 
 int main(void)
 {
@@ -75,7 +76,7 @@ int main(void)
 		adcValue = GetAdcValue();
 
 
-		RtcInit();
+		RtcInit(BuzzerFunction);
 		ptrTimeTrackers[DeviceDisplayStateClock] = GetRtcTime();
 		ptrTimeTrackers[DeviceDisplayStateTimer] = GetRtcTimer();
 		ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
@@ -267,4 +268,8 @@ void SevSegRefresh(bool optional)
 			SevSegSetTimeHoursVal(desiredTimeTrackers[deviceDisplayState].hours, desiredTimeTrackers[deviceDisplayState].minutes);
 		}
 	}
+}
+
+void BuzzerFunction(void){
+    //call buzzer
 }
