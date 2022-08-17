@@ -60,11 +60,11 @@ typedef struct
 {
 	volatile uint8_t* ddrSeg[8];
 	volatile uint8_t* portSeg[8];
-	uint8_t portSegValue[8];
+	uint8_t pinSegValue[8];
 
 	volatile uint8_t* ddrDIgit[SEVSEG_DIGITS_COUNT];
 	volatile uint8_t* portDigit[SEVSEG_DIGITS_COUNT];
-	uint8_t portDigitValue[SEVSEG_DIGITS_COUNT];
+	uint8_t pinDigitValue[SEVSEG_DIGITS_COUNT];
 
 	uint8_t digitsCount;
 }SevSegHandleConfig;

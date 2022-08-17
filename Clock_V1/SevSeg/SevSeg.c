@@ -44,7 +44,7 @@ static void FloatToBuff(float value,uint8_t * data);
 void SevSegInit(void)
 {
 	StatusError err;
-	for(uint8_t index = 0; index < SEVSEG_DIGITS_COUNT; index++)
+	for(uint8_t index = 0; index < sevsegHandleConfig->digitsCount; index++)
 	{
 		digitsValue[index] = 0;
 	}
@@ -67,7 +67,7 @@ void SevSegRutine(void)
 	err = TimerSwIsExpired(&timerSwHandle);
 	if (err == StatusErrTime)
 	{
-		if (digitCount >= SEVSEG_DIGITS_COUNT)
+		if (digitCount >= sevsegHandleConfig->digitsCount)
 		{
 			digitCount = 0;
 		}
@@ -103,7 +103,7 @@ StatusError SevSegSetFloatVal(float value)
 StatusError SevSegSetByDigit(uint8_t digitIndex, uint8_t digitValue, bool withComa)
 {
 	uint8_t localDigitValue;
-	if (digitIndex < SEVSEG_DIGITS_COUNT)
+	if (digitIndex < sevsegHandleConfig->digitsCount)
 	{
 		if (digitValue > MAX_DIGIT_VALUE)
 		{
@@ -126,7 +126,7 @@ StatusError SevSegSetByDigit(uint8_t digitIndex, uint8_t digitValue, bool withCo
 
 StatusError SevSegSetByDigitCostum(uint8_t digitIndex, uint8_t digitValue)
 {
-	if (digitIndex < SEVSEG_DIGITS_COUNT)
+	if (digitIndex < sevsegHandleConfig->digitsCount)
 	{
 		digitsValue[digitIndex] = digitValue;
 		return StatusErrNone;
@@ -145,18 +145,18 @@ static void FloatToBuff(float value,uint8_t * data)
 	uint8_t tmp;
 	float localVlaue, localdecValue, decimalMultipler;
 	
-	decimalMultipler = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1));
+	decimalMultipler = (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount - 1));
 	
 	if (value < 0)
 	{
 		value *= -1;
 		data[localdigitCount] = segCode[MINUS_INDEX];
 		localdigitCount++;
-		decVal = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 2));
+		decVal = (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount - 2));
 		
-		if (value >= (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1)))
+		if (value >= (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount - 1)))
 		{
-			localVlaue = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1)) - 1;
+			localVlaue = (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount - 1)) - 1;
 		}
 		else
 		{
@@ -165,11 +165,11 @@ static void FloatToBuff(float value,uint8_t * data)
 	}
 	else
 	{
-		decVal = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT - 1));
+		decVal = (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount - 1));
 		
-		if (value >= (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT)))
+		if (value >= (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount)))
 		{
-			localVlaue = (float)pow((double)10,(double)(SEVSEG_DIGITS_COUNT)) - 1;
+			localVlaue = (float)pow((double)10,(double)(sevsegHandleConfig->digitsCount)) - 1;
 		}
 		else
 		{
@@ -198,7 +198,7 @@ static void FloatToBuff(float value,uint8_t * data)
 		
 	}
 	
-	if (localdigitCount >= SEVSEG_DIGITS_COUNT)
+	if (localdigitCount >= sevsegHandleConfig->digitsCount)
 	{
 		return;
 	}
@@ -213,7 +213,7 @@ static void FloatToBuff(float value,uint8_t * data)
 	
 	decVal = decimalMultipler / 10;
 	
-	while(localdigitCount <= SEVSEG_DIGITS_COUNT)
+	while(localdigitCount <= sevsegHandleConfig->digitsCount)
 	{
 		tmp = (uint8_t)(localdecValue / decVal);
 		data[localdigitCount] = segCode[tmp];
