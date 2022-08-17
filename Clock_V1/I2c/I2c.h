@@ -14,6 +14,8 @@
 #ifndef I2C_H_
 #define I2C_H_
 
+#include <stdint.h>
+
 #define F_CPU 16000000
 #define SCL_CLOCK  100000 //100 kHz
 

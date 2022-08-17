@@ -2,35 +2,45 @@
 #include <stddef.h>
 
 #include "Rtc.h"
-ISR(EXT_INT1_vect){
 
+void (*PtrAlarmFunction)(void) = NULL;
+
+ISR(INT1_vect)
+{
+    PtrAlarmFunction();
+    RtcCfgAlamFlagClear();
 }
 
 PCF8563ConfigHandle* pcf8563ConfigHandle = NULL;
-void (*PtrAlarmFunction)(void) = NULL;
 static Time time = {};
 
 static Time timerStarted = { 0, 0 };
 static Time timer = { 0, 0 };
 static RtcTimerState rtcTimerState = RtcTimerStateIdle;
 
-static Time alarm = { 4, 4 };
-
-static Time countdown = { 3, 3 };
+static Time alarm = { 1 << 4 | 2, 0 };
+static RtcAlarmInterrupt rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
+static Time countdown = { 3 << 4 | 0, 5 };
 
 static uint8_t hours_to_uint8_t(uint8_t hours);
 static uint8_t minutes_to_uint8_t(uint8_t minutes);
 static uint8_t seconds_to_uint8_t(uint8_t seconds);
 
-void RtcInit(void (*ptrAlarmFunction)(void)){
+void RtcInit(void (*ptrAlarmFunction)(void))
+{
     pcf8563ConfigHandle = RtcCfgInitAndGet();
     alarm.minutes = pcf8563ConfigHandle->minute_alarm;
     alarm.hours = pcf8563ConfigHandle->hour_alarm;
-    PtrAlarmFunction =  ptrAlarmFunction;
+    PtrAlarmFunction = ptrAlarmFunction;
 
-	GICR = (0x01<<INT1);					/* Enable INT1*/
-	MCUCR = (1<<ISC11 | 0<<ISC10);	/* Trigger INT0 on rising edge */
+    GICR = (0x01 << INT1);             /* Enable INT1*/
+    MCUCR = (1 << ISC11 | 0 << ISC10); /* Trigger INT0 on rising edge */
 
+    if (pcf8563ConfigHandle->control_status_2 & (0x01 << AIE)) {
+        rtcAlarmInterrupt = RtcAlarmInterruptEnabled;
+    } else {
+        rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
+    }
 }
 
 Time* GetRtcTime(void)
@@ -182,5 +192,16 @@ void RtcTimerRoutine(void)
         timer = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timerStarted.hours),
             minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timerStarted.minutes),
             seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timerStarted.seconds));
+    }
+}
+
+void RtcAlarmToggle(void)
+{
+    if (rtcAlarmInterrupt == RtcAlarmInterruptDisabled) {
+        RtcCfgAlarmEnable();
+        rtcAlarmInterrupt = RtcAlarmInterruptEnabled;
+    } else {
+        RtcCfgAlarmDisable();
+        rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
     }
 }

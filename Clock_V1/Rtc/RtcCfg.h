@@ -1,8 +1,8 @@
 #ifndef RTCCFG_H_
 #define RTCCFG_H_
 
-#include <stdint.h>
 #include "I2c.h"
+#include <stdint.h>
 
 // PCF8563 32.768 kHz
 #define RTC_SLA_R 0xA3
@@ -11,13 +11,13 @@
 #define AF 3
 #define AIE 1
 
-#define REGISTER_CONTROL_STATUS_1      0x00
-#define REGISTER_CONTROL_STATUS_2      0x01
-#define REGISTER_SECUNDES              0x02
-#define REGISTER_MINUTES               0x03
-#define REGISTER_HOURS                 0x04
-#define REGISTER_ALARM_MINUTE          0x09
-#define REGISTER_ALARM_HOUR            0x0a
+#define REGISTER_CONTROL_STATUS_1 0x00
+#define REGISTER_CONTROL_STATUS_2 0x01
+#define REGISTER_SECUNDES 0x02
+#define REGISTER_MINUTES 0x03
+#define REGISTER_HOURS 0x04
+#define REGISTER_ALARM_MINUTE 0x09
+#define REGISTER_ALARM_HOUR 0x0a
 
 #define SECONDS_MASK_TENS(byte) ((byte >> 4) & 0x7)
 #define SECONDS_MASK_UNITS(byte) ((byte)&0xf)
@@ -30,6 +30,11 @@ typedef enum {
     RtcTimerStateIdle,
     RtcTimerStateRunning,
 } RtcTimerState;
+
+typedef enum {
+    RtcAlarmInterruptDisabled,
+    RtcAlarmInterruptEnabled,
+} RtcAlarmInterrupt;
 
 typedef struct {
     uint8_t seconds;
