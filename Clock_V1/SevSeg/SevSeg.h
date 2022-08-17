@@ -17,7 +17,8 @@ void SevSegInit(void);
 
 void SevSegRutine(void);
 
-StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes);
+StatusError SevSegSetTimeHoursVal(uint8_t hours, uint8_t minutes);
+StatusError SevSegSetTimeMinutesVal(uint8_t minutes, uint8_t seconds);
 
 StatusError SevSegSetTemperatureVal(int8_t value);
 

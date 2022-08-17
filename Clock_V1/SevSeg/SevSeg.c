@@ -85,12 +85,20 @@ void SevSegRutine(void)
 	}
 }
 
-StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes){
-
+StatusError SevSegSetTimeHoursVal(uint8_t hours, uint8_t minutes){
 	digitsValue[0] = segCode[HOURS_MASK_TENS(hours)];
 	digitsValue[1] = segCode[HOURS_MASK_UNITS(hours)] | segCode[COMA_INDEX];
 	digitsValue[2] = segCode[MINUTES_MASK_TENS(minutes)];
 	digitsValue[3] = segCode[MINUTES_MASK_UNITS(minutes)];
+
+	return StatusErrNone;
+}
+
+StatusError SevSegSetTimeMinutesVal(uint8_t minutes, uint8_t seconds){
+	digitsValue[0] = segCode[MINUTES_MASK_TENS(minutes)];
+	digitsValue[1] = segCode[MINUTES_MASK_UNITS(minutes)] | segCode[COMA_INDEX];
+	digitsValue[2] = segCode[SECONDS_MASK_TENS(seconds)];
+	digitsValue[3] = segCode[SECONDS_MASK_UNITS(seconds)];
 
 	return StatusErrNone;
 }

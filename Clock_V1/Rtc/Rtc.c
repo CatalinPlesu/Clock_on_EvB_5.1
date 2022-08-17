@@ -5,11 +5,21 @@
 #include <stddef.h>
 
 static Time time = {};
-static Time timer = {5, 5};
+static Time desiredTime = {};
+
+static Time timerStarted = {0, 0};
+static Time timer = {0, 0};
+static RtcTimerState rtcTimerState = RtcTimerStateIdle;
+
 static Time alarm = {4, 4};
+	
 static Time countdown = {3, 3};
 	
-static Time desiredTime = {};
+
+static uint8_t hours_to_uint8_t(uint8_t hours);
+static uint8_t minutes_to_uint8_t(uint8_t minutes);
+static uint8_t seconds_to_uint8_t(uint8_t seconds);
+	
 
 void RtcInit(void)
 {
@@ -20,7 +30,9 @@ void RtcInit(void)
 void RtcReadTime(void)
 {
     i2c_start(RTC_SLA_W);
-    i2c_write(REGISTER_MINUTES);
+    i2c_write(REGISTER_SECUNDES);
+	i2c_start(RTC_SLA_R);
+	time.seconds = i2c_readNack();
     i2c_start(RTC_SLA_R);
     time.minutes = i2c_readNack();
 	i2c_start(RTC_SLA_R);
@@ -51,51 +63,6 @@ Time* GetRtcCountdown(void){
 	return &countdown;
 }
 
-/* void RtcSla(void) */
-/* { */
-/*     if (rtcTwiTask == RtcTwiTaskRead) { */
-/*         TwiWrite(RTC_SLA_R); */
-/*         rtcTwiData = RtcTwiDataMinutes; */
-/*         rtcTwiTask = RtcTwiTaskWrite; */
-/*     } else if (rtcTwiTask == RtcTwiTaskWrite) { */
-/*         TwiWrite(RTC_SLA_W); */
-/*         rtcTwiData = RtcTwiDataReg; */
-/*     } */
-/* } */
-
-/* void RtcRegister(void) */
-/* { */
-/*     TwiWrite(MINUTES_REGISTER); */
-/*     if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
-/*         rtcTwiData = RtcTwiDataMinutes; */
-/*     } else if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
-/*         rtcTwiTask = RtcTwiTaskRead; */
-/*         rtcTwiState = RtcTwiStateRestart; */
-/*     } */
-/* } */
-
-/* void RtcMinutes(void) */
-/* { */
-/*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
-/*         time.minutes.byte = TwiRead(); */
-/*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
-/*         TwiWrite(desiredTime.minutes.byte); */
-/*     } */
-/*     rtcTwiData = RtcTwiDataHours; */
-/* } */
-
-/* void RtcHours(void) */
-/* { */
-/*     if (rtcTwiTaskData == RtcTwiTaskDataRead) { */
-/*         time.hours.byte = TwiRead(); */
-/*     } else if (rtcTwiTaskData == RtcTwiTaskDataWrite) { */
-/*         TwiWrite(desiredTime.hours.byte); */
-/*         rtcTwiTaskData = RtcTwiTaskDataRead; */
-/*         rtcTwiTask = RtcTwiTaskWrite; */
-/*     } */
-/*     rtcTwiState = RtcTwiStateStop; */
-/* } */
-
 void RtcSetTime(Time time)
 {
     desiredTime = time;
@@ -103,11 +70,25 @@ void RtcSetTime(Time time)
     /* rtcTwiTaskData = RtcTwiTaskDataWrite; */
 }
 
-Time RtcCreateTime(uint8_t hours, uint8_t minutes)
-{
+Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds)
+{	
+	if(seconds<0){
+		minutes-=1;
+		seconds+=60
+	}
+	if(minutes<0){
+		hours-=1;
+		minutes+=60;
+	}
+	if(hours<0){
+		hours+=24;
+	}
+
+
 	Time time = {};
 	time.hours = ((hours/10)<<4)|(hours%10);
 	time.minutes = ((minutes/10)<<4)|(minutes%10);
+	time.seconds = ((seconds/10)<<4)|(seconds%10);
 	return time;
 }
 
@@ -162,4 +143,42 @@ void RtcMinutesUnitsDecrease(Time* time){
 	time->minutes=(0xf&(time->minutes-1))|(MINUTES_MASK_TENS(time->minutes)<<4);
 	if(MINUTES_MASK_UNITS(time->minutes)>=10)
 		time->minutes=(MINUTES_MASK_TENS(time->minutes)<<4)|9;
+}
+
+static uint8_t hours_to_uint8_t(uint8_t hours){
+	return (HOURS_MASK_TENS(hours)*10 + HOURS_MASK_UNITS(hours));
+}
+
+static uint8_t minutes_to_uint8_t(uint8_t minutes){
+	return (MINUTES_MASK_TENS(minutes)*10 + MINUTES_MASK_UNITS(minutes));
+}
+
+static uint8_t seconds_to_uint8_t(uint8_t seconds){
+	return (SECONDS_MASK_TENS(seconds)*10 + SECONDS_MASK_UNITS(seconds));
+}
+
+void RtcTimerToggle(void){
+	if(rtcTimerState == RtcTimerStateIdle){
+		rtcTimerState = RtcTimerStateRunning;
+		timerStarted = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timer.hours),
+		minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timer.minutes),
+		seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timer.seconds));
+	}
+	else{
+		rtcTimerState = RtcTimerStateIdle;
+	}
+}
+
+void RtcTimerRestart(void){
+	rtcTimerState = RtcTimerStateRunning;
+	timerStarted = time;
+	timer = (Time){};
+}
+
+void RtcTimerRoutine(void){
+	if (rtcTimerState == RtcTimerStateRunning){
+		timer = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timerStarted.hours),
+		    				  minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timerStarted.minutes),
+							  seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timerStarted.seconds));
+	}
 }
