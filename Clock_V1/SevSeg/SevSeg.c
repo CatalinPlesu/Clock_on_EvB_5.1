@@ -13,6 +13,7 @@
 
 #define COMA_INDEX		10
 #define MINUS_INDEX		11
+#define CELSIUS_INDEX	12
 #define ZERO_INDEX		0
 #define MAX_DIGIT_VALUE 9
 
@@ -21,7 +22,7 @@ static uint8_t digitCount = 0;
 static SevSegHandleConfig* sevsegHandleConfig;
 TimerSwHandle timerSwHandle;
 uint8_t digitsValue[SEVSEG_DIGITS_COUNT];
-uint8_t segCode[12]= {
+uint8_t segCode[13]= {
 	//  . a  b  c  d  e  f  g  
 	0b01111110,  // 0
 	0b00110000,  // 1
@@ -34,7 +35,8 @@ uint8_t segCode[12]= {
 	0b01111111,  // 8
 	0b01111011,  // 9
 	0b10000000,  // .
-	0b00000001   // -
+	0b00000001,   // -
+	0b01001110,   // C
 };
 
 /* local functions */
@@ -89,6 +91,32 @@ StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes){
 	digitsValue[1] = segCode[HOURS_MASK_UNITS(hours)] | segCode[COMA_INDEX];
 	digitsValue[2] = segCode[MINUTES_MASK_TENS(minutes)];
 	digitsValue[3] = segCode[MINUTES_MASK_UNITS(minutes)];
+
+	return StatusErrNone;
+}
+
+StatusError SevSegSetTemperatureVal(int8_t value){
+	
+	if(value<0){
+		digitsValue[0] = segCode[MINUS_INDEX];
+		value*=-1;
+	}else {
+		digitsValue[0] = 0x00;
+	}
+	if(value>=99){
+			digitsValue[1] = segCode[9];
+			digitsValue[2] = segCode[9];
+	}
+	else if (value <10) {
+		digitsValue[1] = 0x00;
+		digitsValue[2] = segCode[value];
+	}
+	else{
+			digitsValue[1] = segCode[value/10];
+			digitsValue[2] = segCode[value%10];
+	}
+
+	digitsValue[3] = segCode[CELSIUS_INDEX] | segCode[COMA_INDEX];
 
 	return StatusErrNone;
 }

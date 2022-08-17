@@ -19,6 +19,8 @@ void SevSegRutine(void);
 
 StatusError SevSegSetTimeVal(uint8_t hours, uint8_t minutes);
 
+StatusError SevSegSetTemperatureVal(int8_t value);
+
 StatusError SevSegSetFloatVal(float value);
 
 StatusError SevSegSetByDigit(uint8_t digitIndex, uint8_t digitValue, bool withComa);

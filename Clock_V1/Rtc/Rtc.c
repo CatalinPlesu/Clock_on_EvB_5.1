@@ -11,37 +11,6 @@ static Time countdown = {3, 3};
 	
 static Time desiredTime = {};
 
-/* RtcTwiState rtcTwiState = RtcTwiStateIdle; */
-/* RtcTwiTask rtcTwiTask = RtcTwiTaskWrite; */
-/* RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataWrite; */
-/* RtcTwiTaskData rtcTwiTaskData = RtcTwiTaskDataRead; */
-/* RtcTwiData rtcTwiData = RtcTwiDataSla; */
-
-/* void (*RtcFuncArray[])(void) = { */
-/*     RtcSla, */
-/*     RtcRegister, */
-/*     RtcMinutes, */
-/*     RtcHours */
-/* }; */
-
-/* ISR(TWI_vect) */
-/* { */
-/*     TwiStartClear(); */
-/*     if (rtcTwiState == RtcTwiStateStop) { */
-/*         TwiStop(); */
-/*         rtcTwiState = RtcTwiStateRestart; */
-/*     } else if (rtcTwiState == RtcTwiStateRestart) { */
-/*         TwiStart(); */
-/*         rtcTwiData = RtcTwiDataSla; */
-/*         rtcTwiState = RtcTwiStateStart; */
-/*     } else { */
-/*         RtcFuncArray[rtcTwiData](); */
-/*     } */
-
-/*     // clears twint flag after all operations have been done */
-/*     TwiClearInt(); */
-/* } */
-
 void RtcInit(void)
 {
     init_i2c();

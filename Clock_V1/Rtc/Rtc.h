@@ -44,11 +44,6 @@ Time* GetRtcTimer(void);
 Time* GetRtcAlarm(void);
 Time* GetRtcCountdown(void);
 
-void RtcSla(void);
-void RtcRegister(void);
-void RtcMinutes(void);
-void RtcHours(void);
-
 void RtcSetTime(Time time);
 Time RtcCreateTime(uint8_t hours, uint8_t minutes);
 

@@ -30,8 +30,8 @@ Time desiredTimeTrackers[] = {
 	[DeviceDisplayStateCountdown] = { 0, 5 }
 };
 
-uint8_t temperature = 25;
-uint8_t oldTemperature = 0;
+int8_t temperature = 5;
+int8_t oldTemperature = 0;
 
 void ButtonPowerFunction(uint8_t index);
 void ButtonNextFunction(uint8_t index);
@@ -41,7 +41,7 @@ void ButtonDecreaseFunction(uint8_t index);
 void ButtonOkFunction(uint8_t index);
 void ButtonEditFunction(uint8_t index);
 
-void SevSegRefresh(void);
+void SevSegRefresh(bool optional);
 
 static ButtonFunctionPtr buttonFunctionPtr = {
     ButtonPowerFunction,
@@ -99,7 +99,7 @@ int main(void)
             //TimerSwStartup(&timerSwHandle, 1000);
         //}
 		
-		SevSegRefresh();
+		SevSegRefresh(true);
 
         if (displayState == DisplayStateOff)
             SevSegCfgAllDigitsOff();
@@ -112,14 +112,12 @@ void ButtonPowerFunction(uint8_t index)
 {
     if (displayState == DisplayStateOff) {
         displayState = DisplayStateNormal;
-		SevSegRefresh();
+		SevSegRefresh(false);
         DeviceDisplayStateLedNormal();
     } else {
         displayState = DisplayStateOff;
         LedAllOff();
     }
-	LedAllOff();
-	LedOn(index);
 }
 
 void ButtonNextFunction(uint8_t index)
@@ -132,7 +130,7 @@ void ButtonNextFunction(uint8_t index)
     else
         deviceDisplayState++;
     DeviceDisplayStateLedNormal();
-    SevSegRefresh();
+    SevSegRefresh(false);
 }
 
 void ButtonNextDigitFunction(uint8_t index)
@@ -164,7 +162,7 @@ void ButtonIncreaseFunction(uint8_t index)
     } else {
 		ptrIncreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
     }
-    SevSegRefresh();
+    SevSegRefresh(false);
 }
 
 void ButtonDecreaseFunction(uint8_t index)
@@ -184,7 +182,7 @@ void ButtonDecreaseFunction(uint8_t index)
     } else {
 		ptrDecreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
     }
-    SevSegRefresh();
+    SevSegRefresh(false);
 }
 
 void ButtonOkFunction(uint8_t index)
@@ -195,8 +193,9 @@ void ButtonOkFunction(uint8_t index)
 	if(deviceDisplayState==DeviceDisplayStateClock){
 		RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
 	}
+	
     DeviceDisplayStateLedNormal();
-	SevSegRefresh();
+	SevSegRefresh(false);
 }
 void ButtonEditFunction(uint8_t index)
 {
@@ -205,8 +204,12 @@ void ButtonEditFunction(uint8_t index)
 		
     displayState = DisplayStateEdit;
     DeviceDisplayStateLedEdit();
-	desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
-	SevSegRefresh();
+	if(deviceDisplayState == DeviceDisplayStateTemperature){
+		oldTemperature = temperature;
+	}else{
+		desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
+	}
+	SevSegRefresh(false);
 }
 
 void DeviceDisplayStateLedNormal(void)
@@ -221,17 +224,19 @@ void DeviceDisplayStateLedEdit(void)
     LedOff(deviceDisplayState);
 }
 
-void SevSegRefresh(void)
+void SevSegRefresh(bool optional)
 {
 	if (deviceDisplayState == DeviceDisplayStateTemperature) {
-		if(oldTemperature!=temperature)
+		if(oldTemperature!=temperature || !optional)
 		{
 			oldTemperature = temperature;
-			SevSegSetFloatVal(temperature);
+			SevSegSetTemperatureVal(temperature);
 		}
 		} else {
 		if (displayState == DisplayStateNormal){
-			if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours && oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes){
+			if ((oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours 
+			&& oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes)
+			|| !optional){
 				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
 				SevSegSetTimeVal(ptrTimeTrackers[deviceDisplayState]->hours, ptrTimeTrackers[deviceDisplayState]->minutes);
 			}
