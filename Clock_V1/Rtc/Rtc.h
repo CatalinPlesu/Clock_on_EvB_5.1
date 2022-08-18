@@ -5,15 +5,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void RtcInit(void (*ptrAlarmFunction)(void));
+void RtcInit(void);
 
-RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex, bool enableBlink);
+RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex);
 
 Time* GetRtcTime(void);
 Time* GetRtcTimer(void);
 Time* GetRtcAlarm(void);
 Time* GetRtcCountdown(void);
 
+void RtcTimeTick(void);
 void RtcReadTime(void);
 void RtcSetTime(Time desiredTime);
 Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds);

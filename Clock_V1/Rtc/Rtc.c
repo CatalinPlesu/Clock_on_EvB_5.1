@@ -3,8 +3,6 @@
 
 #include "Rtc.h"
 
-void (*PtrAlarmFunction)(void) = NULL;
-
 PCF8563ConfigHandle* pcf8563ConfigHandle = NULL;
 static Time time = {};
 
@@ -14,14 +12,13 @@ static RtcTimerState rtcTimerState = RtcTimerStateIdle;
 
 static Time alarm = { 1 << 4 | 2, 0 };
 static RtcAlarmInterrupt rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
-static Time countdown = { 3 << 4 | 0, 5 };
+static Time countdown = { 3 << 4 , 0, 5 };
 
-void RtcInit(void (*ptrAlarmFunction)(void))
+void RtcInit(void)
 {
 	pcf8563ConfigHandle = RtcCfgInitAndGet();
 	alarm.minutes = pcf8563ConfigHandle->minute_alarm;
 	alarm.hours = pcf8563ConfigHandle->hour_alarm;
-	PtrAlarmFunction = ptrAlarmFunction;
 
 	if (pcf8563ConfigHandle->control_status_2 & (0x01 << AIE)) {
 		rtcAlarmInterrupt = RtcAlarmInterruptEnabled;
@@ -30,7 +27,7 @@ void RtcInit(void (*ptrAlarmFunction)(void))
 	}
 }
 
-RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex, bool enableBlink){
+RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex){
 	RtcDisplayData rtcDisplayData  = {};
 	uint8_t digits[6] = {
 		HOURS_MASK_TENS(timeTracker.hours),
@@ -54,28 +51,18 @@ RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex,
 		}else{
 		editIndex = 0;
 	}
-	if(enableBlink){
-		rtcDisplayData.dots|=(0x01<<(4+blink_position)); // will enable blinking
+	rtcDisplayData.dots|=(0x01<<(4+blink_position)); // will enable blinking
+	
+	if (isTimer && !timeTracker.hours){
+		editIndex = 2;
 	}
 	
-	if (isTimer){
-		for (uint8_t i = 0; i < 6; i++){
-			if(digits[i] !=0 || j != 0){
-				rtcDisplayData.digit[j] = digits[i];
-				if(i & 0x01 && j!=3){
-					rtcDisplayData.dots |= (0x01 << j);
-				}
-				j++;
-			}
+	for(uint8_t i = editIndex; i < editIndex + 4; i++){
+		rtcDisplayData.digit[j] = digits[i];
+		if(i & 0x01  && j!=3){
+			rtcDisplayData.dots |= (0x01 << j);
 		}
-		}else{
-		for(uint8_t i = editIndex; i < editIndex + 4; i++){
-			rtcDisplayData.digit[j] = digits[i];
-			if(i & 0x01  && j!=3){
-				rtcDisplayData.dots |= (0x01 << j);
-			}
-			j++;
-		}
+		j++;
 	}
 	return rtcDisplayData;
 }
@@ -97,6 +84,12 @@ Time* GetRtcCountdown(void)
 	return &countdown;
 }
 
+void RtcTimeTick(void){
+	time = RtcCreateTime(hours_to_uint8_t(time.hours),
+		minutes_to_uint8_t(time.minutes),
+		seconds_to_uint8_t(time.seconds) + 1);
+}
+
 void RtcReadTime(void)
 {
 	time = RtcCfgReadTime();
@@ -104,6 +97,7 @@ void RtcReadTime(void)
 
 void RtcSetTime(Time desiredTime)
 {
+	time = desiredTime;
 	RtcCfgWriteTime(desiredTime);
 }
 
@@ -156,16 +150,21 @@ void RtcTimerToggle(void)
 	if (rtcTimerState == RtcTimerStateIdle) {
 		rtcTimerState = RtcTimerStateRunning;
 		timerStarted = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timer.hours),
-		minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timer.minutes),
-		seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timer.seconds));
+			minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timer.minutes),
+			seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timer.seconds));
 		} else {
-		rtcTimerState = RtcTimerStateIdle;
+			rtcTimerState = RtcTimerStateIdle;
 	}
 }
 
 void RtcTimerRestart(void)
 {
-	rtcTimerState = RtcTimerStateRunning;
+	if (rtcTimerState == RtcTimerStateIdle) {
+		rtcTimerState = RtcTimerStateRunning;
+		} 
+		else {
+		rtcTimerState = RtcTimerStateIdle;
+	}
 	timerStarted = time;
 	timer = (Time) {};
 }
@@ -173,12 +172,9 @@ void RtcTimerRestart(void)
 void RtcTimerRoutine(void)
 {
 	if (rtcTimerState == RtcTimerStateRunning) {
-		//timer = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timerStarted.hours),
-		//minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timerStarted.minutes),
-		//seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timerStarted.seconds));
-		timer = RtcCreateTime(hours_to_uint8_t(timer.hours),
-		minutes_to_uint8_t(timer.minutes),
-		seconds_to_uint8_t(timer.seconds)+1);
+		timer = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timerStarted.hours),
+			minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timerStarted.minutes),
+			seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timerStarted.seconds));
 	}
 }
 

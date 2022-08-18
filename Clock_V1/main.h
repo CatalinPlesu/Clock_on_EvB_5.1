@@ -38,4 +38,20 @@ typedef enum
 	EditStateSecondsUnits,
 }EditState;
 
+
+void ButtonPowerFunction(uint8_t index);
+void ButtonNextFunction(uint8_t index);
+void ButtonNextDigitFunction(uint8_t index);
+void ButtonIncreaseFunction(uint8_t index);
+void ButtonDecreaseFunction(uint8_t index);
+void ButtonOkFunction(uint8_t index);
+void ButtonEditFunction(uint8_t index);
+
+void SevSegRefresh(bool optional);
+
+
+void DeviceDisplayStateLedNormal(void);
+void DeviceDisplayStateLedEdit(void);
+void BuzzerFunction(void);
+
 #endif /* MAIN_H_ */
