@@ -9,6 +9,8 @@
 #ifndef DISP7SEG_H_
 #define DISP7SEG_H_
 
+#include <stdint.h>
+
 #include "StatuError.h"
 #include "SevSegCfg.h"
 #include "TimerSw.h"
@@ -17,8 +19,7 @@ void SevSegInit(void);
 
 void SevSegRutine(void);
 
-StatusError SevSegSetTimeHoursVal(uint8_t hours, uint8_t minutes);
-StatusError SevSegSetTimeMinutesVal(uint8_t minutes, uint8_t seconds);
+StatusError SevSegSetTimeVal(uint8_t digits[4], uint8_t dots);
 
 StatusError SevSegSetTemperatureVal(int8_t value);
 

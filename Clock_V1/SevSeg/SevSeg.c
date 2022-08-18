@@ -21,6 +21,11 @@
 static uint8_t digitCount = 0;
 static SevSegHandleConfig* sevsegHandleConfig;
 TimerSwHandle timerSwHandle;
+
+uint8_t unlitTimes = 0;
+bool blinkExecuted = false;
+uint8_t blink = 0;            //bits i+4 will store which digit should blink
+
 uint8_t digitsValue[SEVSEG_DIGITS_COUNT];
 uint8_t segCode[13]= {
 	//  . a  b  c  d  e  f  g  
@@ -55,11 +60,11 @@ void SevSegInit(void)
 	TimerSwInitParam *pTimerSwInitParam = TimerGetIntervalPointerCfg();
 	
 	err = TimerSwInit(pTimerSwInitParam,&timerSwHandle);
-	
 	if (err == StatusErrNone)
 	{
 		TimerSwStartup(&timerSwHandle,SEVSEG_TIMER_MS);
 	}
+
 	digitCount = 0;
 }
 
@@ -77,7 +82,20 @@ void SevSegRutine(void)
 		
 		SevSegCfgSetDigitValue(digitsValue[digitCount]);
 		
-		SevSegCfgDigitOn(digitCount);
+		unlitTimes++;
+		if(unlitTimes>SEVSEG_BLINK_TIMER_SKIPS){
+			unlitTimes = 0;
+			blinkExecuted = blinkExecuted?false:true;
+		}
+		
+		if(blink&(0x01<<(digitCount+4)))
+		{
+			if(blinkExecuted){
+				SevSegCfgDigitOn(digitCount);
+			}
+		}else{
+			SevSegCfgDigitOn(digitCount);
+		}
 		
 		TimerSwStartup(&timerSwHandle,SEVSEG_TIMER_MS);
 		
@@ -85,20 +103,14 @@ void SevSegRutine(void)
 	}
 }
 
-StatusError SevSegSetTimeHoursVal(uint8_t hours, uint8_t minutes){
-	digitsValue[0] = segCode[HOURS_MASK_TENS(hours)];
-	digitsValue[1] = segCode[HOURS_MASK_UNITS(hours)] | segCode[COMA_INDEX];
-	digitsValue[2] = segCode[MINUTES_MASK_TENS(minutes)];
-	digitsValue[3] = segCode[MINUTES_MASK_UNITS(minutes)];
-
-	return StatusErrNone;
-}
-
-StatusError SevSegSetTimeMinutesVal(uint8_t minutes, uint8_t seconds){
-	digitsValue[0] = segCode[MINUTES_MASK_TENS(minutes)];
-	digitsValue[1] = segCode[MINUTES_MASK_UNITS(minutes)] | segCode[COMA_INDEX];
-	digitsValue[2] = segCode[SECONDS_MASK_TENS(seconds)];
-	digitsValue[3] = segCode[SECONDS_MASK_UNITS(seconds)];
+StatusError SevSegSetTimeVal(uint8_t digits[4], uint8_t dots){
+	blink = dots;
+	for (uint8_t i = 0; i < 4; i++){
+		digitsValue[i] = segCode[digits[i]];
+		if(dots&(0x01<<i)){
+			digitsValue[i] |= segCode[COMA_INDEX];
+		}
+	}
 
 	return StatusErrNone;
 }

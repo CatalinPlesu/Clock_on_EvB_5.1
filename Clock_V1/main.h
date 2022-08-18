@@ -34,6 +34,8 @@ typedef enum
 	EditStateHoursUnits,
 	EditStateMinutesTens,
 	EditStateMinutesUnits,
+	EditStateSecondsTens,
+	EditStateSecondsUnits,
 }EditState;
 
 #endif /* MAIN_H_ */

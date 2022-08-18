@@ -49,6 +49,11 @@ typedef struct {
     uint8_t hour_alarm;
 } PCF8563ConfigHandle;
 
+typedef struct{
+		uint8_t digit[4];
+		uint8_t dots;
+} RtcDisplayData;
+
 PCF8563ConfigHandle* RtcCfgInitAndGet(void);
 Time RtcCfgReadTime(void);
 void RtcCfgWriteTime(Time time);

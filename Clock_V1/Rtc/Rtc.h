@@ -3,8 +3,11 @@
 
 #include "RtcCfg.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 void RtcInit(void (*ptrAlarmFunction)(void));
+
+RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex, bool enableBlink);
 
 Time* GetRtcTime(void);
 Time* GetRtcTimer(void);
@@ -15,19 +18,14 @@ void RtcReadTime(void);
 void RtcSetTime(Time desiredTime);
 Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds);
 
+uint8_t hours_to_uint8_t(uint8_t hours);
+uint8_t minutes_to_uint8_t(uint8_t minutes);
+uint8_t seconds_to_uint8_t(uint8_t seconds);
+
 void RtcTimerToggle(void);
 void RtcTimerRestart(void);
 void RtcTimerRoutine(void);
 
 void RtcAlarmToggle(void);
-
-void RtcHoursTensIncrease(Time* time);
-void RtcHoursUnitsIncrease(Time* time);
-void RtcMinutesTensIncrease(Time* time);
-void RtcMinutesUnitsIncrease(Time* time);
-void RtcHoursTensDecrease(Time* time);
-void RtcHoursUnitsDecrease(Time* time);
-void RtcMinutesTensDecrease(Time* time);
-void RtcMinutesUnitsDecrease(Time* time);
 
 #endif

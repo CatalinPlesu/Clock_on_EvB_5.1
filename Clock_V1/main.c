@@ -23,10 +23,10 @@ Time* ptrTimeTrackers[4] = { NULL, NULL, NULL, NULL };
 Time oldTime = {};
 
 Time desiredTimeTrackers[] = {
-    [DeviceDisplayStateClock] = { (1 << 4) | 2, 0 },
-    [DeviceDisplayStateTimer] = { 0, 0 },
-    [DeviceDisplayStateAlarm] = { (1 << 4) | 2, 0 },
-    [DeviceDisplayStateCountdown] = { 0, 5 }
+	[DeviceDisplayStateClock] = { (1 << 4) | 2, 0 },
+	[DeviceDisplayStateTimer] = { 0, 0 },
+	[DeviceDisplayStateAlarm] = { (1 << 4) | 2, 0 },
+	[DeviceDisplayStateCountdown] = { 0, 5 }
 };
 
 int8_t temperature = 5;
@@ -43,13 +43,13 @@ void ButtonEditFunction(uint8_t index);
 void SevSegRefresh(bool optional);
 
 static ButtonFunctionPtr buttonFunctionPtr = {
-    ButtonPowerFunction,
-    ButtonNextFunction,
-    ButtonNextDigitFunction,
-    ButtonIncreaseFunction,
-    ButtonDecreaseFunction,
-    ButtonOkFunction,
-    ButtonEditFunction
+	ButtonPowerFunction,
+	ButtonNextFunction,
+	ButtonNextDigitFunction,
+	ButtonIncreaseFunction,
+	ButtonDecreaseFunction,
+	ButtonOkFunction,
+	ButtonEditFunction
 };
 
 void DeviceDisplayStateLedNormal(void);
@@ -58,214 +58,253 @@ void BuzzerFunction(void);
 
 int main(void)
 {
-    StatusError err;
-    TimerSwInitParam* pTimerSwInitParam = TimerGetIntervalPointerCfg();
+	StatusError err;
+	TimerSwInitParam* pTimerSwInitParam = TimerGetIntervalPointerCfg();
 
-    if (deviceState == DeviceStateStartup) {
-        deviceState = DeviceStateInit;
+	if (deviceState == DeviceStateStartup) {
+		deviceState = DeviceStateInit;
 
-        TimerInitCfg();
-        TimerEnableCfg(true);
+	TimerInitCfg();
+	TimerEnableCfg(true);
 
-        SevSegInit();
-        ButtonInit(&buttonFunctionPtr);
-        LedInit();
+		SevSegInit();
+		ButtonInit(&buttonFunctionPtr);
+		LedInit();
 
-        AdcInit();
-        adcValue = GetAdcValue();
+		AdcInit();
+		adcValue = GetAdcValue();
 
-        RtcInit(BuzzerFunction);
-        ptrTimeTrackers[DeviceDisplayStateClock] = GetRtcTime();
-        ptrTimeTrackers[DeviceDisplayStateTimer] = GetRtcTimer();
-        ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
-        ptrTimeTrackers[DeviceDisplayStateCountdown] = GetRtcCountdown();
-        // RtcSetTime(RtcCreateTime(13, 31));
+		RtcInit(BuzzerFunction);
+		ptrTimeTrackers[DeviceDisplayStateClock] = GetRtcTime();
+		ptrTimeTrackers[DeviceDisplayStateTimer] = GetRtcTimer();
+		ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
+		ptrTimeTrackers[DeviceDisplayStateCountdown] = GetRtcCountdown();
+		// RtcSetTime(RtcCreateTime(13, 31));
 
-        sei();
+		sei();
 
-        err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
-        if (err == StatusErrNone) {
-            TimerSwStartup(&timerSwHandle, 1000);
-        }
-    }
+		err = TimerSwInit(pTimerSwInitParam, &timerSwHandle);
+		if (err == StatusErrNone) {
+			TimerSwStartup(&timerSwHandle, 1000);
+		}
+		DeviceDisplayStateLedNormal();
+	}
 
-    while (1) {
-        ButtonRoutine();
-        RtcReadTime();
+	while (1) {
+		ButtonRoutine();
+		RtcReadTime();
 
-        // err = TimerSwIsExpired(&timerSwHandle);
-        // if (err == StatusErrTime) {
-        // TimerSwStartup(&timerSwHandle, 1000);
-        // }
-        if (deviceDisplayState == DeviceDisplayStateTimer) {
-            RtcTimerRoutine();
-        }
+		// err = TimerSwIsExpired(&timerSwHandle);
+		// if (err == StatusErrTime) {
+		// TimerSwStartup(&timerSwHandle, 1000);
+		// }
+		if (deviceDisplayState == DeviceDisplayStateTimer) {
+			RtcTimerRoutine();
+		}
 
-        SevSegRefresh(true);
+		SevSegRefresh(true);
 
-        if (displayState == DisplayStateOff)
-            SevSegCfgAllDigitsOff();
-        else
-            SevSegRutine();
-    }
+		if (displayState == DisplayStateOff)
+		SevSegCfgAllDigitsOff();
+		else
+		SevSegRutine();
+	}
 }
 
 void ButtonPowerFunction(uint8_t index)
 {
-    if (displayState == DisplayStateOff) {
-        displayState = DisplayStateNormal;
-        SevSegRefresh(false);
-        DeviceDisplayStateLedNormal();
-    } else {
-        displayState = DisplayStateOff;
-        LedAllOff();
-    }
+	if (displayState == DisplayStateOff) {
+		displayState = DisplayStateNormal;
+		SevSegRefresh(false);
+		DeviceDisplayStateLedNormal();
+		} else {
+		displayState = DisplayStateOff;
+		LedAllOff();
+	}
 }
 
 void ButtonNextFunction(uint8_t index)
 {
-    if (displayState != DisplayStateNormal)
-        return;
+	if (displayState != DisplayStateNormal)
+	return;
 
-    if (deviceDisplayState == DeviceDisplayStateTemperature)
-        deviceDisplayState = 0;
-    else
-        deviceDisplayState++;
-    DeviceDisplayStateLedNormal();
-    SevSegRefresh(false);
+	if (deviceDisplayState == DeviceDisplayStateTemperature)
+	deviceDisplayState = 0;
+	else
+	deviceDisplayState++;
+	DeviceDisplayStateLedNormal();
+	SevSegRefresh(false);
 }
 
 void ButtonNextDigitFunction(uint8_t index)
 {
-    if (displayState != DisplayStateEdit)
-        return;
+	if (displayState != DisplayStateEdit)
+	return;
 
-    if (editState == EditStateMinutesUnits) {
-        editState = EditStateHoursTens;
-    } else {
-        editState++;
-    }
+	if (editState == EditStateSecondsUnits) {
+		editState = EditStateHoursTens;
+		} else {
+		editState++;
+	}
 }
 
 void ButtonIncreaseFunction(uint8_t index)
 {
-    if (displayState != DisplayStateEdit)
-        return;
+	if (displayState != DisplayStateEdit)
+	return;
 
-    static void (*ptrIncreaseFunction[])(Time*) = {
-        [EditStateHoursTens] = RtcHoursTensIncrease,
-        [EditStateHoursUnits] = RtcHoursUnitsIncrease,
-        [EditStateMinutesTens] = RtcMinutesTensIncrease,
-        [EditStateMinutesUnits] = RtcMinutesUnitsIncrease,
-    };
+	// new time incrementation
 
-    if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        temperature++;
-    } else {
-        ptrIncreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
-    }
-    SevSegRefresh(false);
+	if (deviceDisplayState == DeviceDisplayStateTemperature) {
+		temperature++;
+		} else {
+		uint8_t seconds = seconds_to_uint8_t(desiredTimeTrackers[deviceDisplayState].seconds);
+		uint8_t minutes = minutes_to_uint8_t(desiredTimeTrackers[deviceDisplayState].minutes);
+		uint8_t hours = hours_to_uint8_t(desiredTimeTrackers[deviceDisplayState].hours);
+		
+		switch (editState) {
+			case EditStateHoursTens:
+			hours+=10;break;
+			case EditStateHoursUnits:
+			hours+=1;break;
+			case EditStateMinutesTens:
+			minutes+=10;break;
+			case EditStateMinutesUnits:
+			minutes+=1;break;
+			case EditStateSecondsTens:
+			seconds+=10;break;
+			case EditStateSecondsUnits:
+			seconds+=1;break;
+			default:break;
+		}
+		
+		desiredTimeTrackers[deviceDisplayState] = RtcCreateTime(hours, minutes, seconds);
+	}
+	SevSegRefresh(false);
 }
 
 void ButtonDecreaseFunction(uint8_t index)
 {
-    if (displayState != DisplayStateEdit)
-        return;
+	if (displayState != DisplayStateEdit)
+	return;
 
-    static void (*ptrDecreaseFunction[])(Time*) = {
-        [EditStateHoursTens] = RtcHoursTensDecrease,
-        [EditStateHoursUnits] = RtcHoursUnitsDecrease,
-        [EditStateMinutesTens] = RtcMinutesTensDecrease,
-        [EditStateMinutesUnits] = RtcMinutesUnitsDecrease,
-    };
-
-    if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        temperature--;
-    } else {
-        ptrDecreaseFunction[editState](&desiredTimeTrackers[deviceDisplayState]);
-    }
-    SevSegRefresh(false);
+	if (deviceDisplayState == DeviceDisplayStateTemperature) {
+		temperature--;
+		} else {
+		uint8_t seconds = seconds_to_uint8_t(desiredTimeTrackers[deviceDisplayState].seconds);
+		uint8_t minutes = minutes_to_uint8_t(desiredTimeTrackers[deviceDisplayState].minutes);
+		uint8_t hours = hours_to_uint8_t(desiredTimeTrackers[deviceDisplayState].hours);
+		
+		switch (editState) {
+			case EditStateHoursTens:
+			hours-=10;break;
+			case EditStateHoursUnits:
+			hours-=1;break;
+			case EditStateMinutesTens:
+			minutes-=10;break;
+			case EditStateMinutesUnits:
+			minutes-=1;break;
+			case EditStateSecondsTens:
+			seconds-=10;break;
+			case EditStateSecondsUnits:
+			seconds-=1;break;
+			default:break;
+		}
+		
+		desiredTimeTrackers[deviceDisplayState] = RtcCreateTime(hours, minutes, seconds);
+	}
+	SevSegRefresh(false);
 }
 
 void ButtonOkFunction(uint8_t index)
 {
-    if (displayState == DisplayStateEdit) {
-        displayState = DisplayStateNormal;
-        if (deviceDisplayState == DeviceDisplayStateClock) {
-            RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
-        } else if (deviceDisplayState == DeviceDisplayStateAlarm) {
-            RtcCfgWriteAlarm(desiredTimeTrackers[deviceDisplayState]);
-        }
-
-        DeviceDisplayStateLedNormal();
-        SevSegRefresh(false);
-    } else if (deviceDisplayState == DeviceDisplayStateTimer) {
-        RtcTimerToggle();
-        SevSegRefresh(false);
-    } else if (deviceDisplayState == DeviceDisplayStateAlarm) {
-        RtcAlarmToggle();
-    }
+	if (displayState == DisplayStateEdit) {
+		displayState = DisplayStateNormal;
+		if (deviceDisplayState == DeviceDisplayStateClock) {
+			RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
+		}
+		else if (deviceDisplayState == DeviceDisplayStateAlarm) {
+			RtcCfgWriteAlarm(desiredTimeTrackers[deviceDisplayState]);
+		}
+		DeviceDisplayStateLedNormal();
+		SevSegRefresh(false);
+		} else if (deviceDisplayState == DeviceDisplayStateTimer) {
+		RtcTimerToggle();
+		SevSegRefresh(false);
+	}
+	else if (deviceDisplayState == DeviceDisplayStateAlarm) {
+		RtcAlarmToggle();
+	}
 }
 
 void ButtonEditFunction(uint8_t index)
 {
-    if (deviceDisplayState == DeviceDisplayStateTimer) {
-        RtcTimerRestart();
-        SevSegRefresh(false);
-    } else if (displayState == DisplayStateNormal) {
-
-        displayState = DisplayStateEdit;
-        DeviceDisplayStateLedEdit();
-        if (deviceDisplayState == DeviceDisplayStateTemperature) {
-            oldTemperature = temperature;
-        } else {
-            desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
-        }
-        SevSegRefresh(false);
-    }
+	if (deviceDisplayState == DeviceDisplayStateTimer &&
+	displayState == DisplayStateNormal) {
+		RtcTimerRestart();
+		SevSegRefresh(false);
+	}
+	else if (displayState == DisplayStateNormal) {
+		displayState = DisplayStateEdit;
+		DeviceDisplayStateLedEdit();
+		if (deviceDisplayState == DeviceDisplayStateTemperature) {
+			oldTemperature = temperature;
+			}
+		 else {
+			desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
+		}
+		SevSegRefresh(false);
+		} else if (displayState == DisplayStateEdit) {
+		displayState = DisplayStateNormal;
+		SevSegRefresh(false);
+		DeviceDisplayStateLedNormal();
+	}
 }
 
 void DeviceDisplayStateLedNormal(void)
 {
-    LedAllOff();
-    LedOn(deviceDisplayState);
+	LedAllOff();
+	LedOn(deviceDisplayState);
 }
 
 void DeviceDisplayStateLedEdit(void)
 {
-    LedAllOn();
-    LedOff(deviceDisplayState);
+	LedAllOn();
+	LedOff(deviceDisplayState);
 }
 
 void SevSegRefresh(bool optional)
 {
-    if (deviceDisplayState == DeviceDisplayStateTemperature) {
-        if (oldTemperature != temperature || !optional) {
-            oldTemperature = temperature;
-            SevSegSetTemperatureVal(temperature);
-        }
-    } else {
-        if (displayState == DisplayStateNormal) {
-            if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours
-                || oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes
-                || oldTime.seconds != (*ptrTimeTrackers)[deviceDisplayState].seconds
-                || !optional) {
-                oldTime = (*ptrTimeTrackers)[deviceDisplayState];
-                if (deviceDisplayState == DeviceDisplayStateTimer && !(ptrTimeTrackers[deviceDisplayState]->hours)) {
-                    SevSegSetTimeMinutesVal(ptrTimeTrackers[deviceDisplayState]->minutes,
-                        ptrTimeTrackers[deviceDisplayState]->seconds);
-                } else {
-                    SevSegSetTimeHoursVal(ptrTimeTrackers[deviceDisplayState]->hours, ptrTimeTrackers[deviceDisplayState]->minutes);
-                }
-            }
-        } else if (displayState == DisplayStateEdit) {
-            SevSegSetTimeHoursVal(desiredTimeTrackers[deviceDisplayState].hours, desiredTimeTrackers[deviceDisplayState].minutes);
-        }
-    }
+	static RtcDisplayData rtcDisplayData = {};
+	if (deviceDisplayState == DeviceDisplayStateTemperature) {
+		if (oldTemperature != temperature || !optional) {
+			oldTemperature = temperature;
+			SevSegSetTemperatureVal(temperature);
+		}
+		} else {
+		if (displayState == DisplayStateNormal) {
+			if (oldTime.hours != (*ptrTimeTrackers)[deviceDisplayState].hours
+			|| oldTime.minutes != (*ptrTimeTrackers)[deviceDisplayState].minutes
+			|| oldTime.seconds != (*ptrTimeTrackers)[deviceDisplayState].seconds
+			|| !optional) {
+				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
+				if (deviceDisplayState == DeviceDisplayStateTimer) {
+						rtcDisplayData = RtcExtractTime(*ptrTimeTrackers[deviceDisplayState], true, 0, false);
+					} 
+				else {
+					rtcDisplayData = RtcExtractTime(*ptrTimeTrackers[deviceDisplayState], false, 0, false);
+				}
+				SevSegSetTimeVal(rtcDisplayData.digit, rtcDisplayData.dots);
+			}
+			} else if (displayState == DisplayStateEdit) {
+				rtcDisplayData = RtcExtractTime(desiredTimeTrackers[deviceDisplayState], false, editState, true);
+				SevSegSetTimeVal(rtcDisplayData.digit, rtcDisplayData.dots);
+		}
+	}
 }
 
 void BuzzerFunction(void)
 {
-    // call buzzer
-    LedAllOn();
+	// call buzzer
+	LedAllOn();
 }
