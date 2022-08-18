@@ -11,6 +11,8 @@
 
 
 void IntInit(void);
+void EnableInt(uint8_t n);
+void DisableInt(uint8_t n);
 
 
 #endif /* INT_H_ */

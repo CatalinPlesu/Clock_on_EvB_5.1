@@ -25,9 +25,13 @@ void RtcInit(void)
 		} else {
 		rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
 	}
+	RtcReadTime();
+	RtcTimerRestart();
 }
 
 RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex){
+	timeTracker.hours &= ~(0x01<<7);
+	timeTracker.minutes &= ~(0x01<<7);
 	RtcDisplayData rtcDisplayData  = {};
 	uint8_t digits[6] = {
 		HOURS_MASK_TENS(timeTracker.hours),
@@ -187,4 +191,14 @@ void RtcAlarmToggle(void)
 		RtcCfgAlarmDisable();
 		rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
 	}
+}
+
+void RtcAlarmIndicator(void){
+	if(rtcAlarmInterrupt==RtcAlarmInterruptEnabled){
+		LedOn(3);
+	}
+}
+
+void RtcAlarmSet(Time alarm){
+	RtcCfgWriteAlarm(alarm);
 }

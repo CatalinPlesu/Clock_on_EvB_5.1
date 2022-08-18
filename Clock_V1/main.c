@@ -67,7 +67,7 @@ int main(void)
 		ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
 		ptrTimeTrackers[DeviceDisplayStateCountdown] = GetRtcCountdown();
 		
-		IntInit();
+		//IntInit();
 
 		sei();
 
@@ -121,7 +121,7 @@ void ButtonNextFunction(uint8_t index)
 {
 	if (displayState != DisplayStateNormal)
 	return;
-
+	
 	if (deviceDisplayState == DeviceDisplayStateTemperature){
 		deviceDisplayState = 0;
 	}
@@ -220,7 +220,7 @@ void ButtonOkFunction(uint8_t index)
 			RtcSetTime(desiredTimeTrackers[deviceDisplayState]);
 		}
 		else if (deviceDisplayState == DeviceDisplayStateAlarm) {
-			RtcCfgWriteAlarm(desiredTimeTrackers[deviceDisplayState]);
+			RtcAlarmSet(desiredTimeTrackers[deviceDisplayState]);
 		}
 		DeviceDisplayStateLedNormal();
 		SevSegRefresh(false);
@@ -231,23 +231,20 @@ void ButtonOkFunction(uint8_t index)
 	}
 	else if (deviceDisplayState == DeviceDisplayStateAlarm) {
 		RtcAlarmToggle();
+		DeviceDisplayStateLedNormal();
 	}
 }
 
 void ButtonEditFunction(uint8_t index)
 {
-	if (deviceDisplayState == DeviceDisplayStateTimer &&
-	displayState == DisplayStateNormal) {
+	if (deviceDisplayState == DeviceDisplayStateTimer) {
 		RtcTimerRestart();
 		SevSegRefresh(false);
 	}
 	else if (displayState == DisplayStateNormal) {
 		displayState = DisplayStateEdit;
 		DeviceDisplayStateLedEdit();
-		if (deviceDisplayState == DeviceDisplayStateTemperature) {
-			oldTemperature = temperature;
-			}
-		 else {
+		if (deviceDisplayState != DeviceDisplayStateTemperature) {
 			desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
 		}
 		SevSegRefresh(false);
@@ -262,6 +259,9 @@ void DeviceDisplayStateLedNormal(void)
 {
 	LedAllOff();
 	LedOn(deviceDisplayState);
+	if(deviceDisplayState==DeviceDisplayStateAlarm){
+		RtcAlarmIndicator();
+	}
 }
 
 void DeviceDisplayStateLedEdit(void)
@@ -295,7 +295,7 @@ void SevSegRefresh(bool optional)
 					rtcDisplayData = RtcExtractTime(*ptrTimeTrackers[deviceDisplayState], false, 0);
 				}
 				SevSegSetTimeVal(rtcDisplayData.digit, rtcDisplayData.dots & 0x0f); // 0x0f to disable blink bits
-			}
+				}
 			} 
 			else if (displayState == DisplayStateEdit) {
 				rtcDisplayData = RtcExtractTime(desiredTimeTrackers[deviceDisplayState], false, editState);

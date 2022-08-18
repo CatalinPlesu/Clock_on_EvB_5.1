@@ -2,6 +2,7 @@
 #define RTC_H_
 
 #include "RtcCfg.h"
+#include "Led.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -28,5 +29,7 @@ void RtcTimerRestart(void);
 void RtcTimerRoutine(void);
 
 void RtcAlarmToggle(void);
+void RtcAlarmIndicator(void);
+void RtcAlarmSet(Time alarm);
 
 #endif

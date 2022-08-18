@@ -70,10 +70,12 @@ void RtcCfgReadAlarm(void)
 
 void RtcCfgWriteAlarm(Time alarm)
 {
+	pcf8563ConfigHandle.minute_alarm = alarm.minutes| 0x01<<7;
+	pcf8563ConfigHandle.hour_alarm = alarm.hours| 0x01<<7;
     i2c_start(RTC_SLA_W);
     i2c_write(REGISTER_ALARM_MINUTE);
-    i2c_write(alarm.minutes | 1 << 7);
-    i2c_write(alarm.hours | 1 << 7);
+    i2c_write(pcf8563ConfigHandle.minute_alarm);
+    i2c_write(pcf8563ConfigHandle.hour_alarm);
     i2c_stop();
 }
 
