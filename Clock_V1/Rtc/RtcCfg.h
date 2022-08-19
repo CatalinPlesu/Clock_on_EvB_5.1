@@ -32,9 +32,9 @@ typedef enum {
 } RtcTimerState;
 
 typedef enum {
-    RtcAlarmInterruptDisabled,
-    RtcAlarmInterruptEnabled,
-} RtcAlarmInterrupt;
+    ToggleStateDisabled,
+    ToggleStateEnabled,
+} ToggleState;
 
 typedef struct {
     uint8_t seconds;

@@ -81,13 +81,15 @@ void RtcCfgWriteAlarm(Time alarm)
 
 void RtcCfgAlarmEnable(void)
 {
-    pcf8563ConfigHandle.control_status_2 |= (0x01 << AIE);
+	RtcCfgReadConfig();
+    pcf8563ConfigHandle.control_status_2 |= (0x01 << AIE) | (0x01 << AF);
     RtcCfgWriteConfig();
 }
 
 void RtcCfgAlarmDisable(void)
 {
-    pcf8563ConfigHandle.control_status_2 &= ~(0x01 << AIE);
+	RtcCfgReadConfig();
+    pcf8563ConfigHandle.control_status_2 &= ~(0x01 << AIE) | (0x01 << AF);
     RtcCfgWriteConfig();
 }
 

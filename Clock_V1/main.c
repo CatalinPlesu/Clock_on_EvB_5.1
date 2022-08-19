@@ -85,8 +85,12 @@ int main(void)
 		 err = TimerSwIsExpired(&timerSwHandle);
 		 if (err == StatusErrTime) {
 			RtcTimeTick();
+			rtcCounter++;
 			if (deviceDisplayState == DeviceDisplayStateTimer) {
 				RtcTimerRoutine();
+			}
+			if (deviceDisplayState == DeviceDisplayStateCountdown) {
+				RtcCountdownRoutine();
 			}
 		    TimerSwStartup(&timerSwHandle, 1000);
 		 }
@@ -222,6 +226,9 @@ void ButtonOkFunction(uint8_t index)
 		else if (deviceDisplayState == DeviceDisplayStateAlarm) {
 			RtcAlarmSet(desiredTimeTrackers[deviceDisplayState]);
 		}
+		else if (deviceDisplayState == DeviceDisplayStateCountdown) {
+			RtcCountdownSet(desiredTimeTrackers[deviceDisplayState]);
+		}
 		DeviceDisplayStateLedNormal();
 		SevSegRefresh(false);
 		}
@@ -233,6 +240,9 @@ void ButtonOkFunction(uint8_t index)
 		RtcAlarmToggle();
 		DeviceDisplayStateLedNormal();
 	}
+	else if (deviceDisplayState == DeviceDisplayStateCountdown) {
+		RtcCountdownToggle();
+	}
 }
 
 void ButtonEditFunction(uint8_t index)
@@ -242,13 +252,15 @@ void ButtonEditFunction(uint8_t index)
 		SevSegRefresh(false);
 	}
 	else if (displayState == DisplayStateNormal) {
+		editState = EditStateHoursTens;
 		displayState = DisplayStateEdit;
 		DeviceDisplayStateLedEdit();
 		if (deviceDisplayState != DeviceDisplayStateTemperature) {
-			desiredTimeTrackers[deviceDisplayState] = (*ptrTimeTrackers)[deviceDisplayState];
+			desiredTimeTrackers[deviceDisplayState] = *ptrTimeTrackers[deviceDisplayState];
 		}
 		SevSegRefresh(false);
-		} else if (displayState == DisplayStateEdit) {
+	}
+	 else if (displayState == DisplayStateEdit) {
 		displayState = DisplayStateNormal;
 		SevSegRefresh(false);
 		DeviceDisplayStateLedNormal();
@@ -286,9 +298,9 @@ void SevSegRefresh(bool optional)
 			|| oldTime.seconds != ptrTimeTrackers[deviceDisplayState]->seconds
 			|| !optional) {
 				
-				oldTime = (*ptrTimeTrackers)[deviceDisplayState];
+				oldTime = *ptrTimeTrackers[deviceDisplayState];
 				
-				if (deviceDisplayState == DeviceDisplayStateTimer) {
+				if (deviceDisplayState == DeviceDisplayStateTimer || deviceDisplayState == DeviceDisplayStateCountdown) {
 					rtcDisplayData = RtcExtractTime(*ptrTimeTrackers[deviceDisplayState], true, 0);
 					} 
 				else {

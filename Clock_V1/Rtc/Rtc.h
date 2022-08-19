@@ -30,6 +30,10 @@ void RtcTimerRoutine(void);
 
 void RtcAlarmToggle(void);
 void RtcAlarmIndicator(void);
-void RtcAlarmSet(Time alarm);
+void RtcAlarmSet(Time desiredAlarm);
+
+void RtcCountdownSet(Time desiredCountdown);
+void RtcCountdownToggle();
+void RtcCountdownRoutine(void);
 
 #endif

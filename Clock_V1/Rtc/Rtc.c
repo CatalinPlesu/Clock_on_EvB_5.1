@@ -4,34 +4,30 @@
 #include "Rtc.h"
 
 PCF8563ConfigHandle* pcf8563ConfigHandle = NULL;
-static Time time = {};
+static Time time;
 
-static Time timerStarted = { 0, 0 };
-static Time timer = { 0, 0 };
-static RtcTimerState rtcTimerState = RtcTimerStateIdle;
+static Time timerStarted;
+static Time timer;
+static ToggleState timerState = ToggleStateDisabled;
 
-static Time alarm = { 1 << 4 | 2, 0 };
-static RtcAlarmInterrupt rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
-static Time countdown = { 3 << 4 , 0, 5 };
+static Time alarm;
+static ToggleState alarmState = ToggleStateDisabled;
+
+static Time countdown;
+static Time countdownFinish;
+static ToggleState countdownState = ToggleStateDisabled;
+
+static void RtcCfgCheckAlarmState(void);
 
 void RtcInit(void)
 {
 	pcf8563ConfigHandle = RtcCfgInitAndGet();
-	alarm.minutes = pcf8563ConfigHandle->minute_alarm;
-	alarm.hours = pcf8563ConfigHandle->hour_alarm;
-
-	if (pcf8563ConfigHandle->control_status_2 & (0x01 << AIE)) {
-		rtcAlarmInterrupt = RtcAlarmInterruptEnabled;
-		} else {
-		rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
-	}
+	RtcCfgCheckAlarmState();
 	RtcReadTime();
 	RtcTimerRestart();
 }
 
 RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex){
-	timeTracker.hours &= ~(0x01<<7);
-	timeTracker.minutes &= ~(0x01<<7);
 	RtcDisplayData rtcDisplayData  = {};
 	uint8_t digits[6] = {
 		HOURS_MASK_TENS(timeTracker.hours),
@@ -107,6 +103,9 @@ void RtcSetTime(Time desiredTime)
 
 Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds)
 {
+	//minutes += (-1 * seconds < 0) + (seconds > 60)
+	//seconds %= 60;
+	//seconds *= (-1 * seconds < 0) + (seconds > 60)
 	if (seconds < 0) {
 		minutes -= 1;
 		seconds += 60;
@@ -117,17 +116,19 @@ Time RtcCreateTime(int8_t hours, int8_t minutes, int8_t seconds)
 	if (minutes < 0) {
 		hours -= 1;
 		minutes += 60;
-		}else if(minutes >= 59){
+		}
+		else if(minutes >= 59){
 		minutes-=60;
 		hours+=1;
 	}
 	if (hours < 0) {
 		hours = 23;
-		} else if(hours>23){
-		hours=0;
+		}
+		 else if(hours>23){
+		 hours=0;
 	}
 
-	Time time = {};
+	Time time;
 	time.hours = ((hours / 10) << 4) | (hours % 10);
 	time.minutes = ((minutes / 10) << 4) | (minutes % 10);
 	time.seconds = ((seconds / 10) << 4) | (seconds % 10);
@@ -151,23 +152,23 @@ uint8_t seconds_to_uint8_t(uint8_t seconds)
 
 void RtcTimerToggle(void)
 {
-	if (rtcTimerState == RtcTimerStateIdle) {
-		rtcTimerState = RtcTimerStateRunning;
+	if (timerState == ToggleStateDisabled) {
+		timerState = ToggleStateEnabled;
 		timerStarted = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timer.hours),
 			minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timer.minutes),
 			seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timer.seconds));
 		} else {
-			rtcTimerState = RtcTimerStateIdle;
+			timerState = ToggleStateDisabled;
 	}
 }
 
 void RtcTimerRestart(void)
 {
-	if (rtcTimerState == RtcTimerStateIdle) {
-		rtcTimerState = RtcTimerStateRunning;
-		} 
-		else {
-		rtcTimerState = RtcTimerStateIdle;
+	if (timerState == ToggleStateDisabled) {
+			timerState  = ToggleStateEnabled;
+	} 
+	else {
+		timerState = ToggleStateDisabled;
 	}
 	timerStarted = time;
 	timer = (Time) {};
@@ -175,7 +176,7 @@ void RtcTimerRestart(void)
 
 void RtcTimerRoutine(void)
 {
-	if (rtcTimerState == RtcTimerStateRunning) {
+	if (timerState == ToggleStateEnabled) {
 		timer = RtcCreateTime(hours_to_uint8_t(time.hours) - hours_to_uint8_t(timerStarted.hours),
 			minutes_to_uint8_t(time.minutes) - minutes_to_uint8_t(timerStarted.minutes),
 			seconds_to_uint8_t(time.seconds) - seconds_to_uint8_t(timerStarted.seconds));
@@ -184,21 +185,61 @@ void RtcTimerRoutine(void)
 
 void RtcAlarmToggle(void)
 {
-	if (rtcAlarmInterrupt == RtcAlarmInterruptDisabled) {
+	if (alarmState == ToggleStateDisabled) {
 		RtcCfgAlarmEnable();
-		rtcAlarmInterrupt = RtcAlarmInterruptEnabled;
-		} else {
+		} else 
+	{
 		RtcCfgAlarmDisable();
-		rtcAlarmInterrupt = RtcAlarmInterruptDisabled;
 	}
+	RtcCfgCheckAlarmState();
 }
 
 void RtcAlarmIndicator(void){
-	if(rtcAlarmInterrupt==RtcAlarmInterruptEnabled){
+	if(alarmState==ToggleStateEnabled){
 		LedOn(3);
 	}
 }
 
-void RtcAlarmSet(Time alarm){
-	RtcCfgWriteAlarm(alarm);
+void RtcAlarmSet(Time desiredAlarm){
+	RtcCfgWriteAlarm(desiredAlarm);
+	alarm = desiredAlarm;
+}
+
+static void RtcCfgCheckAlarmState(void){
+	if (pcf8563ConfigHandle->control_status_2 & (0x01 << AIE)) {
+		alarmState = ToggleStateEnabled;
+		} else {
+		alarmState = ToggleStateDisabled;
+	}
+}
+
+
+void RtcCountdownSet(Time desiredCountdown){
+	countdownState = ToggleStateEnabled;
+	countdownFinish = RtcCreateTime(hours_to_uint8_t(desiredCountdown.hours) + hours_to_uint8_t(timer.hours),
+			minutes_to_uint8_t(desiredCountdown.minutes) + minutes_to_uint8_t(timer.minutes),
+			seconds_to_uint8_t(desiredCountdown.seconds) + seconds_to_uint8_t(timer.seconds));
+}
+
+void RtcCountdownToggle(){
+	if (countdownState == ToggleStateDisabled) {
+		RtcCountdownSet(countdown);
+		} else {
+			countdownState = ToggleStateDisabled;
+	}
+}
+
+void RtcCountdownRoutine(void){
+	if(countdownState == ToggleStateEnabled){
+		if(countdown.hours == 0 && countdown.minutes == 0 && countdown.seconds == 0)
+		{
+			countdownState = ToggleStateDisabled;
+			LedAllOn();
+		}else
+		{
+			countdown = RtcCreateTime(hours_to_uint8_t(countdownFinish.hours) - hours_to_uint8_t(time.hours),
+				minutes_to_uint8_t(countdownFinish.minutes) - minutes_to_uint8_t(time.minutes),
+				seconds_to_uint8_t(countdownFinish.seconds) - seconds_to_uint8_t(time.seconds));
+		}
+	}
 }

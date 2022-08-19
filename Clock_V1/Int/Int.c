@@ -4,26 +4,24 @@
 #include "Rtc.h"
 #include "SevSeg.h"
 
-ISR(INT0_vect)
-{		
-	if(GIFR&(0x01<<INTF0)){
-		LedAllOff();
-		LedOn(4);
-	}
-	// power on mcu
-}
+//ISR(INT0_vect)
+//{		
+	//if(GIFR&(0x01<<INTF0)){
+		//LedAllOff();
+		//LedOn(4);
+	//}
+	//// power on mcu
+//}
 
 ISR(INT1_vect)
 {
-	if(GIFR&(0x01<<INTF1)){
-		LedAllOff();
-		LedOn(1);
-	}
+	LedAllOff();
+	LedOn(4);
 	//RtcCfgAlamFlagClear();
 }
 
 void IntInit(void){
-	EnableInt(0);
+	//EnableInt(0);
 	EnableInt(1);
 	//MCUCR |= (1 << ISC01 | 1 << ISC00);  //  Trigger INT0 on rising edge
 	//MCUCR |= (1 << ISC11 | 1 << ISC10); /*  Trigger INT1 on rising edge */
