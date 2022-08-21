@@ -22,6 +22,8 @@ static void RtcCfgCheckAlarmState(void);
 void RtcInit(void)
 {
 	pcf8563ConfigHandle = RtcCfgInitAndGet();
+	alarm.minutes = pcf8563ConfigHandle->minute_alarm;
+	alarm.hours = pcf8563ConfigHandle->hour_alarm;
 	RtcCfgCheckAlarmState();
 	RtcReadTime();
 	RtcTimerRestart();
@@ -53,7 +55,7 @@ RtcDisplayData RtcExtractTime(Time timeTracker, bool isTimer, uint8_t editIndex)
 	}
 	rtcDisplayData.dots|=(0x01<<(4+blink_position)); // will enable blinking
 	
-	if (isTimer && !timeTracker.hours){
+	if (isTimer && timeTracker.hours == 0){
 		editIndex = 2;
 	}
 	
@@ -183,6 +185,12 @@ void RtcTimerRoutine(void)
 	}
 }
 
+void RtTimerIndicator(void){
+	if(timerState ==ToggleStateEnabled){
+		LedOn(2);
+	}
+}
+
 void RtcAlarmToggle(void)
 {
 	if (alarmState == ToggleStateDisabled) {
@@ -219,6 +227,7 @@ void RtcCountdownSet(Time desiredCountdown){
 	countdownFinish = RtcCreateTime(hours_to_uint8_t(desiredCountdown.hours) + hours_to_uint8_t(timer.hours),
 			minutes_to_uint8_t(desiredCountdown.minutes) + minutes_to_uint8_t(timer.minutes),
 			seconds_to_uint8_t(desiredCountdown.seconds) + seconds_to_uint8_t(timer.seconds));
+	countdown = desiredCountdown;
 }
 
 void RtcCountdownToggle(){
@@ -241,5 +250,11 @@ void RtcCountdownRoutine(void){
 				minutes_to_uint8_t(countdownFinish.minutes) - minutes_to_uint8_t(time.minutes),
 				seconds_to_uint8_t(countdownFinish.seconds) - seconds_to_uint8_t(time.seconds));
 		}
+	}
+}
+
+void RtcCountdownIndicator(void){
+	if(countdownState==ToggleStateEnabled){
+		LedOn(4);
 	}
 }

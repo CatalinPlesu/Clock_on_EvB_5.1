@@ -27,6 +27,7 @@ uint8_t seconds_to_uint8_t(uint8_t seconds);
 void RtcTimerToggle(void);
 void RtcTimerRestart(void);
 void RtcTimerRoutine(void);
+void RtTimerIndicator(void);
 
 void RtcAlarmToggle(void);
 void RtcAlarmIndicator(void);
@@ -35,5 +36,6 @@ void RtcAlarmSet(Time desiredAlarm);
 void RtcCountdownSet(Time desiredCountdown);
 void RtcCountdownToggle();
 void RtcCountdownRoutine(void);
+void RtcCountdownIndicator(void);
 
 #endif

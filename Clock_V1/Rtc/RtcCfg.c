@@ -14,7 +14,7 @@ static void RtcCfgReadConfig(void)
 }
 
 static void RtcCfgWriteConfig(void)
-{
+{	
     i2c_start(RTC_SLA_W);
     i2c_write(REGISTER_CONTROL_STATUS_1);
     i2c_write(pcf8563ConfigHandle.control_status_1);
@@ -70,8 +70,8 @@ void RtcCfgReadAlarm(void)
 
 void RtcCfgWriteAlarm(Time alarm)
 {
-	pcf8563ConfigHandle.minute_alarm = alarm.minutes| 0x01<<7;
-	pcf8563ConfigHandle.hour_alarm = alarm.hours| 0x01<<7;
+	pcf8563ConfigHandle.minute_alarm = alarm.minutes;
+	pcf8563ConfigHandle.hour_alarm = alarm.hours;
     i2c_start(RTC_SLA_W);
     i2c_write(REGISTER_ALARM_MINUTE);
     i2c_write(pcf8563ConfigHandle.minute_alarm);
@@ -82,8 +82,13 @@ void RtcCfgWriteAlarm(Time alarm)
 void RtcCfgAlarmEnable(void)
 {
 	RtcCfgReadConfig();
-    pcf8563ConfigHandle.control_status_2 |= (0x01 << AIE) | (0x01 << AF);
+    pcf8563ConfigHandle.control_status_2 |= (0x01 << AIE);
     RtcCfgWriteConfig();
+	i2c_start(RTC_SLA_W);
+	i2c_write(REGISTER_ALARM_MINUTE);
+	i2c_write(pcf8563ConfigHandle.minute_alarm);
+	i2c_write(pcf8563ConfigHandle.hour_alarm);
+	i2c_stop();
 }
 
 void RtcCfgAlarmDisable(void)
@@ -95,6 +100,7 @@ void RtcCfgAlarmDisable(void)
 
 void RtcCfgAlamFlagClear(void)
 {
+	RtcCfgReadConfig();
     pcf8563ConfigHandle.control_status_2 &= ~(0x01 << AF);
     RtcCfgWriteConfig();
 }

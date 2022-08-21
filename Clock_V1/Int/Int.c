@@ -1,5 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#define F_CPU 16000000
+#include <util/delay.h>
 #include "Led.h"
 #include "Rtc.h"
 #include "SevSeg.h"
@@ -15,14 +17,20 @@
 
 ISR(INT1_vect)
 {
-	LedAllOff();
-	LedOn(4);
-	//RtcCfgAlamFlagClear();
+	
+	#define buzzer_ddr DDRD
+	#define buzzer_port PORTD
+	#define buzzer_pin_value PD7
+	buzzer_ddr |= 0x01 << buzzer_pin_value;
+	buzzer_port &= ~(0x01 << buzzer_pin_value);
+	_delay_ms(250);
+	buzzer_port |= (0x01 << buzzer_pin_value);
+	RtcCfgAlamFlagClear();
 }
 
 void IntInit(void){
 	//EnableInt(0);
-	EnableInt(1);
+	EnableInt(0x01);
 	//MCUCR |= (1 << ISC01 | 1 << ISC00);  //  Trigger INT0 on rising edge
 	//MCUCR |= (1 << ISC11 | 1 << ISC10); /*  Trigger INT1 on rising edge */
 }

@@ -47,7 +47,11 @@ SevSegHandleConfig* SevSegCfgInitAndGet()
 void SevSegCfgAllDigitsOff(void)
 {
 	for(uint8_t i = 0; i < sevsegHandleConfig.digitsCount; i++){
-		*sevsegHandleConfig.portDigit[i] |= (0x01 << sevsegHandleConfig.pinDigitValue[i]);
+		#if (SEVSEG_DIGIT_MODE == 0)
+			*sevsegHandleConfig.portDigit[i] |= (0x01 << sevsegHandleConfig.pinDigitValue[i]);
+		#else
+			*sevsegHandleConfig.portDigit[i] &= ~(0x01 << sevsegHandleConfig.pinDigitValue[i]);	
+		#endif
 	}
 }
 
@@ -73,7 +77,11 @@ void SevSegCfgDigitOn(uint8_t digit)
 {
 	if (digit < sevsegHandleConfig.digitsCount)
 	{
-		*sevsegHandleConfig.portDigit[digit] &= ~(0x01 << sevsegHandleConfig.pinDigitValue[digit]);		
+		#if (SEVSEG_DIGIT_MODE == 0)
+			*sevsegHandleConfig.portDigit[digit] &= ~(0x01 << sevsegHandleConfig.pinDigitValue[digit]);
+		#else
+			*sevsegHandleConfig.portDigit[digit] |= (0x01 << sevsegHandleConfig.pinDigitValue[digit]);
+		#endif
 	}	
 }
 

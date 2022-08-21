@@ -67,7 +67,7 @@ int main(void)
 		ptrTimeTrackers[DeviceDisplayStateAlarm] = GetRtcAlarm();
 		ptrTimeTrackers[DeviceDisplayStateCountdown] = GetRtcCountdown();
 		
-		//IntInit();
+		IntInit();
 
 		sei();
 
@@ -132,6 +132,8 @@ void ButtonNextFunction(uint8_t index)
 	else{
 		deviceDisplayState++;
 	}
+	RtcTimerRoutine();
+	RtcCountdownRoutine();
 	DeviceDisplayStateLedNormal();
 	SevSegRefresh(false);
 }
@@ -225,24 +227,23 @@ void ButtonOkFunction(uint8_t index)
 		}
 		else if (deviceDisplayState == DeviceDisplayStateAlarm) {
 			RtcAlarmSet(desiredTimeTrackers[deviceDisplayState]);
+			*ptrTimeTrackers[deviceDisplayState] = desiredTimeTrackers[deviceDisplayState];
 		}
 		else if (deviceDisplayState == DeviceDisplayStateCountdown) {
 			RtcCountdownSet(desiredTimeTrackers[deviceDisplayState]);
 		}
-		DeviceDisplayStateLedNormal();
-		SevSegRefresh(false);
-		}
+	}
 	else if (deviceDisplayState == DeviceDisplayStateTimer) {
 		RtcTimerToggle();
-		SevSegRefresh(false);
 	}
 	else if (deviceDisplayState == DeviceDisplayStateAlarm) {
 		RtcAlarmToggle();
-		DeviceDisplayStateLedNormal();
 	}
 	else if (deviceDisplayState == DeviceDisplayStateCountdown) {
 		RtcCountdownToggle();
 	}
+	DeviceDisplayStateLedNormal();
+	SevSegRefresh(false);
 }
 
 void ButtonEditFunction(uint8_t index)
@@ -273,6 +274,11 @@ void DeviceDisplayStateLedNormal(void)
 	LedOn(deviceDisplayState);
 	if(deviceDisplayState==DeviceDisplayStateAlarm){
 		RtcAlarmIndicator();
+	}else if (deviceDisplayState == DeviceDisplayStateCountdown){
+		RtcCountdownIndicator();
+	}
+	else if (deviceDisplayState == DeviceDisplayStateTimer){
+		RtTimerIndicator();
 	}
 }
 
@@ -319,5 +325,11 @@ void SevSegRefresh(bool optional)
 void BuzzerFunction(void)
 {
 	// call buzzer
-	LedAllOn();
+	#define buzzer_ddr DDRD
+	#define buzzer_port PORTD
+	#define buzzer_pin_value PD7
+	buzzer_ddr |= 0x01 << buzzer_pin_value;
+	buzzer_port &= ~(0x01 << buzzer_pin_value);
+	
+	//LedAllOn();
 }
