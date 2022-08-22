@@ -10,6 +10,7 @@
 #include "TimerCfg.h"
 #include "TimerSw.h"
 #include "Int.h"
+#include "Pwm.h"
 
 DeviceState deviceState = DeviceStateStartup;
 DeviceDisplayState deviceDisplayState = DeviceDisplayStateClock;
@@ -77,6 +78,8 @@ int main(void)
 		}
 		DeviceDisplayStateLedNormal();
 		RtcReadTime();
+		
+		PwmInit();
 	}
 
 	while (1) {
@@ -92,6 +95,7 @@ int main(void)
 			if (deviceDisplayState == DeviceDisplayStateCountdown) {
 				RtcCountdownRoutine();
 			}
+			PwmSetDuty(adcValue->adcChannel[0]);
 		    TimerSwStartup(&timerSwHandle, 1000);
 		 }
 		 
@@ -322,14 +326,3 @@ void SevSegRefresh(bool optional)
 	}
 }
 
-void BuzzerFunction(void)
-{
-	// call buzzer
-	#define buzzer_ddr DDRD
-	#define buzzer_port PORTD
-	#define buzzer_pin_value PD7
-	buzzer_ddr |= 0x01 << buzzer_pin_value;
-	buzzer_port &= ~(0x01 << buzzer_pin_value);
-	
-	//LedAllOn();
-}

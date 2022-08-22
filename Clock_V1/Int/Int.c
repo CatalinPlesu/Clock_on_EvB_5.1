@@ -17,15 +17,9 @@
 
 ISR(INT1_vect)
 {
-	
-	#define buzzer_ddr DDRD
-	#define buzzer_port PORTD
-	#define buzzer_pin_value PD7
-	buzzer_ddr |= 0x01 << buzzer_pin_value;
-	buzzer_port &= ~(0x01 << buzzer_pin_value);
-	_delay_ms(250);
-	buzzer_port |= (0x01 << buzzer_pin_value);
+	PwmStart();
 	RtcCfgAlamFlagClear();
+	_delay_ms(100);
 }
 
 void IntInit(void){
